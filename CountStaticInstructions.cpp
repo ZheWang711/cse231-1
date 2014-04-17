@@ -5,10 +5,6 @@
 #include <iostream>
 // Include the Instruction Iterator for Functions.
 #include "llvm/Support/InstIterator.h"
-
-// Include DenseMap class.
-#include "llvm/ADT/DenseMap.h"
-
 #include <map>
 
 using namespace llvm;
@@ -25,32 +21,30 @@ namespace {
       std::map<int, int> instructionCount;
       
       for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI){
+        // MI is an iterator over functions in the program.
         for (inst_iterator I = inst_begin(MI), E = inst_end(MI); I != E; ++I){
-          // errs() << I->getOpcode() << "\n";
+          // I is an iterator over instructions in the function.
+          
+          // We map each instruction's opcode to the number of times it occurs.
           int inst = I->getOpcode();
-                
           if (instructionCount.count(inst) > 0){
             instructionCount[inst] = instructionCount[inst] + 1;
           }
           else{
             instructionCount[inst] = 1;
           }
-          //errs() << inst << "\n";
         }
       }
       
       
-      
+      // Now we loop over elements of the map and print out the number of times they occured.
       for (std::map<int, int>::iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
         errs() << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
       }
-      
-      // show content:
       return false;
     }
 
   };
 }
-
 char CountStaticInstructions::ID = 0;
 static RegisterPass<CountStaticInstructions> X("CountStaticInstructions", "CountStaticInstructions Pass", false, false);
