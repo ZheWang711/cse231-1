@@ -13,12 +13,14 @@ namespace {
   
   struct CountStaticInstructions : public ModulePass {
     static char ID;
-    CountStaticInstructions() : ModulePass(ID) {}
+
+    std::map<int, int> instructionCount; // maps instructions to the number of times they occur.
     
+    CountStaticInstructions() : ModulePass(ID) {}
     
     // This is the main body of our code.
     virtual bool runOnModule(Module &M){
-      std::map<int, int> instructionCount;
+      
       
       for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI){
         // MI is an iterator over functions in the program.
@@ -37,11 +39,16 @@ namespace {
       }
       
       
-      // Now we loop over elements of the map and print out the number of times they occured.
-      for (std::map<int, int>::iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
-        errs() << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
-      }
+
       return false;
+    }
+    
+    // Override print method to output.
+    virtual void print(llvm::raw_ostream &O, const Module *M){
+      // We loop over elements of the map and print out the number of times they occured.
+      for (std::map<int, int>::iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
+        O << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
+      }
     }
 
   };
