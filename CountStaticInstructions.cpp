@@ -20,8 +20,6 @@ namespace {
     
     // This is the main body of our code.
     virtual bool runOnModule(Module &M){
-      
-      
       for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI){
         // MI is an iterator over functions in the program.
         for (inst_iterator I = inst_begin(MI), E = inst_end(MI); I != E; ++I){
@@ -44,9 +42,10 @@ namespace {
     }
     
     // Override print method to output.
-    virtual void print(llvm::raw_ostream &O, const Module *M){
+    virtual void print(llvm::raw_ostream &O, const Module *M) const {
       // We loop over elements of the map and print out the number of times they occured.
-      for (std::map<int, int>::iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
+      // Because of various inheritance issues, it is a const_iterator.
+      for (std::map<int, int>::const_iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
         O << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
       }
     }
