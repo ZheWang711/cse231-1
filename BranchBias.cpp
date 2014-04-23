@@ -37,6 +37,17 @@ struct BranchBias: public ModulePass {
     Constant* c = M.getOrInsertFunction("_Z20countFuncBranchTakenPKcb", FuncTy);
     Function* countFuncBranch = dyn_cast<Function>(c);
 
+    // Function definition for printEverything
+    std::vector<Type*> VoidTy_args;
+    FunctionType* VoidTy = FunctionType::get(
+    /*Result=*/Type::getVoidTy(M.getContext()),
+    /*Params=*/VoidTy_args,
+    /*isVarArg=*/false);
+    Constant* c2 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
+    Function* printFunc = dyn_cast<Function>(c2);
+
+    IRBuilder<> builder(M.getContext());
+
     for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI) {
       // MI is an iterator over functions in the program.
 
@@ -55,7 +66,6 @@ struct BranchBias: public ModulePass {
         // BI is an iterator over basic blocks in the function.
 
         // Create an IRBuilder for this basic block
-        IRBuilder<> builder(BI);
 
         // Each basic block ends with a terminator; a terminator can be a branch
         BranchInst* terminator = dyn_cast<BranchInst>(BI->getTerminator());
@@ -65,8 +75,6 @@ struct BranchBias: public ModulePass {
           builder.SetInsertPoint(terminator);
 
           if (countFuncBranch) {
-            errs() << "inserting countFuncBranchBool\n";
-
             // get the branch condition
             Value *cond = terminator->getCondition();
 
@@ -83,27 +91,10 @@ struct BranchBias: public ModulePass {
             builder.CreateCall2(countFuncBranch, arr_ptr, cond);
           }
         }
-        // Print everything at the end (WHY IS THIS NOT WORKING?)
-        if (ME->getPrevNode() == MI && BE->getPrevNode() == BI) {
-
-          errs() << "test1 \n";
-          builder.SetInsertPoint(BI->getTerminator());
-          // Function definition for printEverything
-          std::vector<Type*> VoidTy_args;
-          FunctionType* VoidTy = FunctionType::get(
-          /*Result=*/Type::getVoidTy(M.getContext()),
-          /*Params=*/VoidTy_args,
-          /*isVarArg=*/false);
-          Constant* c2 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
-          Function* printFunc = dyn_cast<Function>(c2);
-
-          errs() << "test3\n";
-          builder.CreateCall(printFunc);
-          errs() << "test4\n";
-        }
       }
     }
 
+    builder.CreateCall(printFunc);
     return false;
   }
 

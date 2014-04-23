@@ -17,7 +17,6 @@ void printEverything() {
 
 // _Z20countFuncBranchTakenPKcb
 void countFuncBranchTaken(const char* funcName, bool isTrue) {
-  std::cout << "inside countFuncBranchTaken!\n";
   if (branchCount.count(funcName) > 0) {
     branchCount[funcName] = branchCount[funcName] + 1;
   } else {
@@ -28,7 +27,5 @@ void countFuncBranchTaken(const char* funcName, bool isTrue) {
   } else if (isTrue) {
     branchTaken[funcName] = 1;
   }
-  std::cout << funcName << " " << branchTaken[funcName] << "\n";
-  printEverything();
 }
 
