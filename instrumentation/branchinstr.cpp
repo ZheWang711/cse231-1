@@ -10,22 +10,23 @@ void printEverything() {
   printf("Function\tBias\tTaken\tTotal\n");
   for (std::map<const char*, int>::const_iterator it=branchCount.begin();
        it!=branchCount.end(); ++it){
-    double bias = branchTaken[it->first] / branchCount[it->first];
+    double bias = branchCount[it->first] > 0 ? branchTaken[it->first] / branchCount[it->first] : 0;
     printf("%s\t%f\t%d\t%d\n", it->first, bias, branchTaken[it->first], branchCount[it->first]);
+  }
+}
+
+void initFunc(const char* funcName) {
+  if (branchTaken.count(funcName) < 1) {
+    branchCount[funcName] = 0;
+    branchTaken[funcName] = 0;
   }
 }
 
 // _Z20countFuncBranchTakenPKcb
 void countFuncBranchTaken(const char* funcName, bool isTrue) {
-  if (branchCount.count(funcName) > 0) {
-    branchCount[funcName] = branchCount[funcName] + 1;
-  } else {
-    branchCount[funcName] = 1;
-  }
-  if (isTrue && branchTaken.count(funcName) > 0) {
+  branchCount[funcName] = branchCount[funcName] + 1;
+  if (isTrue) {
     branchTaken[funcName] = branchTaken[funcName] + 1;
-  } else if (isTrue) {
-    branchTaken[funcName] = 1;
   }
 }
 

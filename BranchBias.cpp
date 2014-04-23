@@ -37,14 +37,24 @@ struct BranchBias: public ModulePass {
     Constant* c = M.getOrInsertFunction("_Z20countFuncBranchTakenPKcb", FuncTy);
     Function* countFuncBranch = dyn_cast<Function>(c);
 
+    // Function definition for void function (const char*, bool)
+    std::vector<Type*> ConstCharPtrTy2_args;
+    ConstCharPtrTy2_args.push_back(ConstCharPtrTy);
+    FunctionType* FuncTy2 = FunctionType::get(
+    /*Result=*/Type::getVoidTy(M.getContext()),
+    /*Params=*/ConstCharPtrTy2_args,
+    /*isVarArg=*/false);
+    Constant* c2 = M.getOrInsertFunction("_Z8initFuncPKc", FuncTy2);
+    Function* initFunc = dyn_cast<Function>(c2);
+
     // Function definition for printEverything
     std::vector<Type*> VoidTy_args;
     FunctionType* VoidTy = FunctionType::get(
     /*Result=*/Type::getVoidTy(M.getContext()),
     /*Params=*/VoidTy_args,
     /*isVarArg=*/false);
-    Constant* c2 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
-    Function* printFunc = dyn_cast<Function>(c2);
+    Constant* c3 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
+    Function* printFunc = dyn_cast<Function>(c3);
 
     IRBuilder<> builder(M.getContext());
 
@@ -61,31 +71,33 @@ struct BranchBias: public ModulePass {
        /*Name=*/MI->getName());
       global_arr->setAlignment(16);
 
+      // create a pointer to the global array
+      ConstantInt* arr_int = ConstantInt::get(M.getContext(),
+          APInt(32, StringRef("0"), 10));
+      std::vector<Constant*> arr_indices;
+      arr_indices.push_back(arr_int);
+      arr_indices.push_back(arr_int);
+      Constant *arr_ptr = ConstantExpr::getGetElementPtr(global_arr,
+          arr_indices);
+
       for (Function::iterator BI = MI->begin(), BE = MI->end(); BI != BE;
           ++BI) {
         // BI is an iterator over basic blocks in the function.
 
-        // Create an IRBuilder for this basic block
+        builder.SetInsertPoint(BI->getFirstInsertionPt());
+        builder.CreateCall(initFunc, arr_ptr);
 
         // Each basic block ends with a terminator; a terminator can be a branch
         BranchInst* terminator = dyn_cast<BranchInst>(BI->getTerminator());
         // Make sure it's a conditional branch
         if (terminator != NULL && terminator->isConditional()) {
+          errs() << "here";
           // set the builder to insert right before the branch instr
           builder.SetInsertPoint(terminator);
 
           if (countFuncBranch) {
             // get the branch condition
             Value *cond = terminator->getCondition();
-
-            // create a pointer to the global array
-            ConstantInt* arr_int = ConstantInt::get(M.getContext(),
-                APInt(32, StringRef("0"), 10));
-            std::vector<Constant*> arr_indices;
-            arr_indices.push_back(arr_int);
-            arr_indices.push_back(arr_int);
-            Constant *arr_ptr = ConstantExpr::getGetElementPtr(global_arr,
-                arr_indices);
 
             // insert the call to count the branches
             builder.CreateCall2(countFuncBranch, arr_ptr, cond);
@@ -94,6 +106,7 @@ struct BranchBias: public ModulePass {
       }
     }
 
+    errs() << "printfunc";
     builder.CreateCall(printFunc);
     return false;
   }
