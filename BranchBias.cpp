@@ -18,8 +18,6 @@ namespace {
 struct BranchBias: public ModulePass {
   static char ID;
 
-  std::map<int, int> instructionCount; // maps instructions to the number of times they occur.
-
   BranchBias() :
       ModulePass(ID) {
   }
@@ -85,6 +83,7 @@ struct BranchBias: public ModulePass {
             builder.CreateCall2(countFuncBranch, arr_ptr, cond);
           }
         }
+        // Print everything at the end (WHY IS THIS NOT WORKING?)
         if (ME->getPrevNode() == MI && BE->getPrevNode() == BI) {
 
           errs() << "test1 \n";
