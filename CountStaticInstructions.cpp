@@ -45,9 +45,12 @@ namespace {
     virtual void print(llvm::raw_ostream &O, const Module *M) const {
       // We loop over elements of the map and print out the number of times they occured.
       // Because of various inheritance issues, it is a const_iterator.
+      int total = 0;
       for (std::map<int, int>::const_iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
         O << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
+        total += it->second;
       }
+      O << "TOTAL " << total << "\n";
     }
 
   };
