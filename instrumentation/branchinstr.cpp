@@ -3,24 +3,32 @@
 #include <stdio.h>
 #include <iostream>
 
-int count;
-std::map<int, int> branchCount;
+std::map<const char*, int> branchCount;
+std::map<const char*, int> branchTaken;
 
-void testFunc() {
-  int x = 10;
-  if (x > 5)
-    //printf("Greater than 5!");
-    std::cout << "Greater than 5!\n";
-  else
-    //printf("Less than or equal to 5!");
-    std::cout << "Less than or equal to 5!\n";
+void printEverything() {
+  printf("Function\tBias\tTaken\tTotal\n");
+  for (std::map<const char*, int>::const_iterator it=branchCount.begin();
+       it!=branchCount.end(); ++it){
+    double bias = branchTaken[it->first] / branchCount[it->first];
+    printf("%s\t%f\t%d\t%d\n", it->first, bias, branchTaken[it->first], branchCount[it->first]);
+  }
 }
 
-void countBranch(int funcName) {
+// _Z20countFuncBranchTakenPKcb
+void countFuncBranchTaken(const char* funcName, bool isTrue) {
+  std::cout << "inside countFuncBranchTaken!\n";
   if (branchCount.count(funcName) > 0) {
     branchCount[funcName] = branchCount[funcName] + 1;
   } else {
     branchCount[funcName] = 1;
   }
-  std::cout << funcName << " " << branchCount[funcName] << "\n";
+  if (isTrue && branchTaken.count(funcName) > 0) {
+    branchTaken[funcName] = branchTaken[funcName] + 1;
+  } else if (isTrue) {
+    branchTaken[funcName] = 1;
+  }
+  std::cout << funcName << " " << branchTaken[funcName] << "\n";
+  printEverything();
 }
+

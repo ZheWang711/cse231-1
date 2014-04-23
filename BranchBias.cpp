@@ -26,78 +26,82 @@ struct BranchBias: public ModulePass {
 
   // This is the main body of our code.
   virtual bool runOnModule(Module &M) {
-    // find countBranch
-    std::vector<Type*>FuncTy_25_args;
-    FuncTy_25_args.push_back(IntegerType::get(M.getContext(), 32));
-    FunctionType* FuncTy_25 = FunctionType::get(
-      /*Result=*/Type::getVoidTy(M.getContext()),
-      /*Params=*/FuncTy_25_args,
-      /*isVarArg=*/false);
-    Constant* c = M.getOrInsertFunction("_Z11countBranchi", FuncTy_25);
-    Function* countBranch = dyn_cast<Function>(c);
-
-    std::vector<Type*>FuncTy_40_args;
-    FunctionType* FuncTy_40 = FunctionType::get(
-     /*Result=*/Type::getVoidTy(M.getContext()),
-     /*Params=*/FuncTy_40_args,
-     /*isVarArg=*/false);
-    Constant* c2 = M.getOrInsertFunction("_Z8testFuncv", FuncTy_40);
-    Function* testFunc = dyn_cast<Function>(c2);
+    // Function definition for void function (const char*, bool)
+    PointerType* ConstCharPtrTy = PointerType::get(
+        IntegerType::get(M.getContext(), 8), 0);
+    std::vector<Type*> ConstCharPtrTy_args;
+    ConstCharPtrTy_args.push_back(ConstCharPtrTy);
+    ConstCharPtrTy_args.push_back(IntegerType::get(M.getContext(), 1));
+    FunctionType* FuncTy = FunctionType::get(
+    /*Result=*/Type::getVoidTy(M.getContext()),
+    /*Params=*/ConstCharPtrTy_args,
+    /*isVarArg=*/false);
+    Constant* c = M.getOrInsertFunction("_Z20countFuncBranchTakenPKcb", FuncTy);
+    Function* countFuncBranch = dyn_cast<Function>(c);
 
     for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI) {
       // MI is an iterator over functions in the program.
 
-//      errs() << "function: " << MI->getName() << "\n";
-//      // create a global var for this function
-//      ArrayType* ArrayTy = ArrayType::get(IntegerType::get(M.getContext(), 8), MI->getName().size());
-//      GlobalVariable* global_array = new GlobalVariable(M,
-//       ArrayTy,
-//       /*isConstant=*/true,
-//       /*Linkage=*/GlobalValue::InternalLinkage,
-//       /*Initializer=*/0, // has initializer, specified below
-//       /*Name=*/MI->getName());
-//      global_array->setAlignment(1);
-//      Constant *const_array = ConstantDataArray::getString(M.getContext(), MI->getName(), true);
-//      global_array->setInitializer(const_array);
+      // Create a const char[] for the function name
+      Constant *const_array_7 = ConstantDataArray::getString(M.getContext(), MI->getName(), true);
+      GlobalVariable* global_arr = new GlobalVariable(/*Module=*/M,
+       /*Type=*/const_array_7->getType(),
+       /*isConstant=*/true,
+       /*Linkage=*/GlobalValue::InternalLinkage,
+       /*Initializer=*/const_array_7, // has initializer, specified below
+       /*Name=*/MI->getName());
+      global_arr->setAlignment(16);
 
-      for (Function::iterator BI = MI->begin(), BE = MI->end(); BI != BE; ++BI) {
+      for (Function::iterator BI = MI->begin(), BE = MI->end(); BI != BE;
+          ++BI) {
         // BI is an iterator over basic blocks in the function.
 
         // Create an IRBuilder for this basic block
         IRBuilder<> builder(BI);
 
         // Each basic block ends with a terminator; a terminator can be a branch
-        BranchInst* BR = dyn_cast<BranchInst>(BI->getTerminator());
+        BranchInst* terminator = dyn_cast<BranchInst>(BI->getTerminator());
         // Make sure it's a conditional branch
-        if (BR == NULL || !BR->isConditional()) {
-          continue;
-        }
+        if (terminator != NULL && terminator->isConditional()) {
+          // set the builder to insert right before the branch instr
+          builder.SetInsertPoint(terminator);
 
-        // set the builder to insert right before the branch instr
-        builder.SetInsertPoint(BR);
-        errs() << BI->getName() << "\n";
-        if (testFunc) {
-          errs() << "inserting testFunc!\n";
-          builder.CreateCall(testFunc);
-        }
-        if (countBranch) {
-          errs() << "inserting countBranch\n";
-          Value* integer = ConstantInt::get(M.getContext(), APInt(32, BR->getOpcode(), 10));
-          builder.CreateCall(countBranch, integer);
-        }
+          if (countFuncBranch) {
+            errs() << "inserting countFuncBranchBool\n";
 
-        /*
-        // evaluate the condition?
-        Value *cond = BR->getCondition();
-        ICmpInst *CI = dyn_cast<ICmpInst>(cond);
-        if (!CI || !CI->isEquality())
-          continue;
+            // get the branch condition
+            Value *cond = terminator->getCondition();
 
-        Value *LHS = CI->getOperand(0);
-        errs() << "MI getname: " << MI->getName().str() << "\n";
-        errs() << "Cond " << cond->getName() << "\n";
-        errs() << "ICmpInst operand0 " << LHS->getName() << "\n";
-        */
+            // create a pointer to the global array
+            ConstantInt* arr_int = ConstantInt::get(M.getContext(),
+                APInt(32, StringRef("0"), 10));
+            std::vector<Constant*> arr_indices;
+            arr_indices.push_back(arr_int);
+            arr_indices.push_back(arr_int);
+            Constant *arr_ptr = ConstantExpr::getGetElementPtr(global_arr,
+                arr_indices);
+
+            // insert the call to count the branches
+            builder.CreateCall2(countFuncBranch, arr_ptr, cond);
+          }
+        }
+        if (ME->getPrevNode() == MI && BE->getPrevNode() == BI) {
+
+          errs() << "test1 \n";
+          builder.SetInsertPoint(BI->getTerminator());
+          // Function definition for printEverything
+          std::vector<Type*> VoidTy_args;
+          FunctionType* VoidTy = FunctionType::get(
+          /*Result=*/Type::getVoidTy(M.getContext()),
+          /*Params=*/VoidTy_args,
+          /*isVarArg=*/false);
+          Constant* c2 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
+          Function* printFunc = dyn_cast<Function>(c2);
+
+          errs() << "test3\n";
+          builder.CreateCall(printFunc);
+          errs() << "test4\n";
+        }
       }
     }
 
