@@ -5,11 +5,8 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Module.h"
-#include "llvm/Support/raw_ostream.h"
-#include <iostream>
 // Include the Instruction Iterator for Functions.
 #include "llvm/Support/InstIterator.h"
-#include <map>
 
 using namespace llvm;
 
@@ -24,6 +21,7 @@ struct BranchBias: public ModulePass {
 
   // This is the main body of our code.
   virtual bool runOnModule(Module &M) {
+
     // Function definition for void function (const char*, bool)
     PointerType* ConstCharPtrTy = PointerType::get(
         IntegerType::get(M.getContext(), 8), 0);
@@ -37,7 +35,7 @@ struct BranchBias: public ModulePass {
     Constant* c = M.getOrInsertFunction("_Z20countFuncBranchTakenPKcb", FuncTy);
     Function* countFuncBranch = dyn_cast<Function>(c);
 
-    // Function definition for void function (const char*, bool)
+    // Function definition for void function (const char*)
     std::vector<Type*> ConstCharPtrTy2_args;
     ConstCharPtrTy2_args.push_back(ConstCharPtrTy);
     FunctionType* FuncTy2 = FunctionType::get(
@@ -56,18 +54,20 @@ struct BranchBias: public ModulePass {
     Constant* c3 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
     Function* printFunc = dyn_cast<Function>(c3);
 
+    // Create the IRBuilder
     IRBuilder<> builder(M.getContext());
+    bool printed = false;
 
     for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI) {
       // MI is an iterator over functions in the program.
 
       // Create a const char[] for the function name
-      Constant *const_array_7 = ConstantDataArray::getString(M.getContext(), MI->getName(), true);
+      Constant *data_arr = ConstantDataArray::getString(M.getContext(), MI->getName(), true);
       GlobalVariable* global_arr = new GlobalVariable(/*Module=*/M,
-       /*Type=*/const_array_7->getType(),
+       /*Type=*/data_arr->getType(),
        /*isConstant=*/true,
        /*Linkage=*/GlobalValue::InternalLinkage,
-       /*Initializer=*/const_array_7, // has initializer, specified below
+       /*Initializer=*/data_arr, // has initializer, specified below
        /*Name=*/MI->getName());
       global_arr->setAlignment(16);
 
@@ -84,30 +84,35 @@ struct BranchBias: public ModulePass {
           ++BI) {
         // BI is an iterator over basic blocks in the function.
 
+        // handles the case where there are no branches
         builder.SetInsertPoint(BI->getFirstInsertionPt());
         builder.CreateCall(initFunc, arr_ptr);
 
         // Each basic block ends with a terminator; a terminator can be a branch
         BranchInst* terminator = dyn_cast<BranchInst>(BI->getTerminator());
-        // Make sure it's a conditional branch
+
         if (terminator != NULL && terminator->isConditional()) {
-          errs() << "here";
+
           // set the builder to insert right before the branch instr
           builder.SetInsertPoint(terminator);
 
-          if (countFuncBranch) {
-            // get the branch condition
-            Value *cond = terminator->getCondition();
+          // get the branch condition
+          Value *cond = terminator->getCondition();
 
-            // insert the call to count the branches
-            builder.CreateCall2(countFuncBranch, arr_ptr, cond);
-          }
+          // insert the call to count the branches
+          builder.CreateCall2(countFuncBranch, arr_ptr, cond);
+        }
+        // make the call to print everything at the end of main
+        if (MI->getName() == "main" && !printed) {
+          // This is a little hacky -- only the getPrevNode() and getNextNode() methods
+          // return the correct type. Fix this if you can.
+          builder.SetInsertPoint(MI->back().getInstList().back().getPrevNode()->getNextNode());
+          builder.CreateCall(printFunc);
+          printed = true; // only call once
         }
       }
     }
 
-    errs() << "printfunc";
-    builder.CreateCall(printFunc);
     return false;
   }
 
