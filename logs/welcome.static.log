@@ -1,0 +1,6 @@
+Printing analysis 'CountStaticInstructions Pass':
+ret 1
+alloca 1
+store 1
+call 1
+TOTAL 4
