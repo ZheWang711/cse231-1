@@ -3,13 +3,22 @@
 #include <stdio.h>
 #include <iostream>
 
-// mangled version of branchbias helper module, using to get dynamic instruction counts
+#include "llvm/IR/Instruction.h"
 
 // maps instruction opcodes to number of times they are executed
 std::map<int, int> instExCount;
 
 void printEverything() {
   printf("Instruction\tExecutions\t\n");
+  int total = 0;
+  for (std::map<int, int>::const_iterator it=instExCount.begin(); it!=instExCount.end(); ++it){
+    
+    printf("%s\t%d\n", llvm::Instruction::getOpcodeName(it->first), it->second);
+    
+    total += it->second;
+  }
+  // just sit on the total for now
+  // O << "TOTAL " << total << "\n";
   // for (std::map<const char*, int>::const_iterator it=branchCount.begin();
   //      it!=branchCount.end(); ++it){
   //   double bias = branchCount[it->first] > 0 ? branchTaken[it->first] / branchCount[it->first] : 0;
