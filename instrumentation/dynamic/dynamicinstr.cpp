@@ -18,6 +18,7 @@ void printEverything() {
 }
 
 void countInstExecuted(int instOpcode) {
+  printf("%s\n", "Calling countinstexecuted");
   if (instExCount.count(instOpcode) > 0){
     instExCount[instOpcode] = instExCount[instOpcode] + 1;
   }

@@ -1,6 +1,8 @@
 #include "llvm/Pass.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
 // Include the Instruction Iterator for Functions.
@@ -14,13 +16,11 @@ namespace {
   struct CountDynamicInstructions: public ModulePass {
     static char ID;
     
-    CountDynamicInstructions() :
-      ModulePass(ID) {
-    }
+    CountDynamicInstructions() : ModulePass(ID) {}
     
-  // This is the main body of our code.
+    // This is the main body of our code.
     virtual bool runOnModule(Module &M) {
-
+      
       for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI){
   
 	// Get me a pointerType to char*
@@ -55,11 +55,18 @@ namespace {
 	    // get the instruction opcode 
 	    int instOpcode = I->getOpcode();
       
-	    // Now use this name in inserted call to instrumentation function
+	    Value val = dyn_cast<Value>(instOpcode);
 
-	    builder.SetInsertPoint(I);
+	    builder.SetInsertPoint(&*I);
 	    builder.CreateCall(countInstFunc, instOpcode);
-      
 	  }
 	} 
       }
+    
+
+      return false;
+    }
+  };
+}
+char CountDynamicInstructions::ID = 0;
+static RegisterPass<CountDynamicInstructions> X("CountDynamicInstructions", "CountDynamicInstructions Pass", false, false);
