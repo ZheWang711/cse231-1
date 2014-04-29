@@ -43,33 +43,45 @@ namespace {
 						 /*isVarArg=*/false);
 	Constant* c3 = M.getOrInsertFunction("_Z15printEverythingv", VoidTy);
 	Function* printFunc = dyn_cast<Function>(c3);
-	
 
 	// Create the IRBuilder
 	IRBuilder<> builder(M.getContext());
 	bool printed = false;
-    
-	for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI){
-	  // MI is an iterator over functions in the program.
-	  for (inst_iterator I = inst_begin(MI), E = inst_end(MI); I != E; ++I){
 
-	    // I is an iterator over instructions in the function.
+	std::vector<int> instructionsThisBlock;
 
-	    // get the instruction opcode 
-	    int instOpcode = I->getOpcode();
-	    // get a ConstantInt with the opcode value
-	    Value *OpcodeValue = ConstantInt::get(Type::getInt32Ty(M.getContext()), instOpcode);       
+	// iterate over functions
+	for (Module::iterator MI = M.begin(), ME = M.end(); MI != ME; ++MI) {
+	  
+	  // iterate over basic blocks
+	  for (Function::iterator BI = MI->begin(), BE = MI->end(); BI != BE; ++BI){ 
 
-	    builder.SetInsertPoint(&*I);
-	    builder.CreateCall(countInstFunc, OpcodeValue);
+	    instructionsThisBlock.clear();
+	    builder.SetInsertPoint(BI->getFirstInsertionPt());
+
+	    errs() << "Basic block (name=" << BI->getName() << ") has "  << BI->size() << " instructions.\n";
+
+	    for (BasicBlock::iterator I = BI->begin(), E = BI->end(); I != E; ++I){
+	      // get the instruction opcodes, put them on the worklist 
+	      int instOpcode = I->getOpcode();
+	      errs() << *I << "visited \n";
+	      instructionsThisBlock.push_back(instOpcode);
+	    }
+	    
+	    for (std::vector<int>::iterator it = instructionsThisBlock.begin(); it != instructionsThisBlock.end(); ++it){
+	      // get a ConstantInt with the opcode value
+	      Value *OpcodeValue = ConstantInt::get(Type::getInt32Ty(M.getContext()), *it);       
+	      builder.CreateCall(countInstFunc, OpcodeValue);
+	      
+	    }
 	  }
-	  if (MI->getName() == "main") {
-	    // This is a little hacky -- only the getPrevNode() and getNextNode() methods
-	    // return the correct type. Fix this if you can.
-	    builder.SetInsertPoint(MI->back().getInstList().back().getPrevNode()->getNextNode());
-	    builder.CreateCall(printFunc);
-	    // printed = true; // only call once	  	  
-	  }
+	  // if (MI->getName() == "main") {
+	  //   // This is a little hacky -- only the getPrevNode() and getNextNode() methods
+	  //   // return the correct type. Fix this if you can.
+	  //   builder.SetInsertPoint(MI->back().getInstList().back().getPrevNode()->getNextNode());
+	  //   builder.CreateCall(printFunc);
+	  //   // printed = true; // only call once	  	  
+	  // }
 	}
 	return false;
     }
