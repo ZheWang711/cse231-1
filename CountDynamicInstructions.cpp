@@ -5,7 +5,6 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
-// Include the Instruction Iterator for Functions.
 #include "llvm/Support/InstIterator.h"
 #include <map>
 
@@ -59,12 +58,12 @@ namespace {
 	    instructionsThisBlock.clear();
 	    builder.SetInsertPoint(BI->getFirstInsertionPt());
 
-	    errs() << "Basic block (name=" << BI->getName() << ") has "  << BI->size() << " instructions.\n";
+	    // errs() << "Basic block (name=" << BI->getName() << ") has "  << BI->size() << " instructions.\n";
 
 	    for (BasicBlock::iterator I = BI->begin(), E = BI->end(); I != E; ++I){
 	      // get the instruction opcodes, put them on the worklist 
 	      int instOpcode = I->getOpcode();
-	      errs() << *I << "visited \n";
+	      // errs() << *I << "visited \n";
 	      instructionsThisBlock.push_back(instOpcode);
 	    }
 	    
@@ -72,16 +71,15 @@ namespace {
 	      // get a ConstantInt with the opcode value
 	      Value *OpcodeValue = ConstantInt::get(Type::getInt32Ty(M.getContext()), *it);       
 	      builder.CreateCall(countInstFunc, OpcodeValue);
-	      
 	    }
 	  }
-	  // if (MI->getName() == "main") {
-	  //   // This is a little hacky -- only the getPrevNode() and getNextNode() methods
-	  //   // return the correct type. Fix this if you can.
-	  //   builder.SetInsertPoint(MI->back().getInstList().back().getPrevNode()->getNextNode());
-	  //   builder.CreateCall(printFunc);
-	  //   // printed = true; // only call once	  	  
-	  // }
+	  if (MI->getName() == "main") {
+	    // This is a little hacky -- only the getPrevNode() and getNextNode() methods
+	    // return the correct type. Fix this if you can.
+	    builder.SetInsertPoint(MI->back().getInstList().back().getPrevNode()->getNextNode());
+	    builder.CreateCall(printFunc);
+	    // printed = true; // only call once	  	  
+	  }
 	}
 	return false;
     }
