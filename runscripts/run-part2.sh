@@ -33,5 +33,5 @@ llc -filetype=obj $BENCH_NAME.dynamiclinked.bc -o=$BENCH_NAME.o
 # ## generate native executable
 g++ $BENCH_NAME.o $LDFLAGS -o $BENCH_NAME.dynamicinstrumented.exe
 
-./$BENCH_NAME.instrumented.exe
+./$BENCH_NAME.dynamicinstrumented.exe
 
