@@ -7,7 +7,7 @@ LDFLAGS=
 # CPPFLAGS=`llvm-config --cppflags`
 # LDFLAGS=`llvm-config --ldflags --libs`
 
-OUR_INSTRUMENTS="$CSE231ROOT/llvm/build/lib/CSE231/instrumentation/"
+OUR_INSTRUMENTS="$INSTRUMENTATION"
 
 BENCH_NAME=`basename $1`
 
@@ -33,5 +33,5 @@ llc -filetype=obj $BENCH_NAME.branchbiaslinked.bc -o=$BENCH_NAME.o
 # ## generate native executable
 g++ $BENCH_NAME.o $LDFLAGS -o $BENCH_NAME.branchbiasinstrumented.exe
 
-./$BENCH_NAME.branchbiasinstrumented.exe
+./$BENCH_NAME.branchbiasinstrumented.exe > $OUTPUTLOGS/$BENCH_NAME.branchbias.log
 
