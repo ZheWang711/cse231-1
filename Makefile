@@ -10,6 +10,7 @@
 LEVEL = ../..
 LIBRARYNAME = CSE231
 LOADABLE_MODULE = 1
+CFLAGS=-std=c++11
 
 include $(LEVEL)/Makefile.common
 
