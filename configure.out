@@ -1,4 +1,6 @@
-running CONFIG_SHELL=/bin/bash /bin/bash ../src/configure   --no-create --no-recursion
+running CONFIG_SHELL=/bin/bash /bin/bash ./configure   --no-create --no-recursion
+checking llvm-config... no
+checking LLVM package version... unknown
 checking for clang... clang
 checking for C compiler default output file name... a.out
 checking whether the C compiler works... yes
@@ -12,7 +14,6 @@ checking for clang++... clang++
 checking whether we are using the GNU C++ compiler... yes
 checking whether clang++ accepts -g... yes
 checking how to run the C preprocessor... clang -E
-checking whether clang works... yes
 checking build system type... x86_64-unknown-linux-gnu
 checking host system type... x86_64-unknown-linux-gnu
 checking target system type... x86_64-unknown-linux-gnu
@@ -50,23 +51,27 @@ checking for sed... /bin/sed
 checking for tar... /bin/tar
 checking for pwd... /bin/pwd
 checking for Graphviz... echo Graphviz
-checking for dot... /usr/bin/dot
-checking for fdp... /usr/bin/fdp
-checking for neato... /usr/bin/neato
-checking for twopi... /usr/bin/twopi
-checking for circo... /usr/bin/circo
+checking for dot... echo dot
+checking for fdp... echo fdp
+checking for neato... echo neato
+checking for twopi... echo twopi
+checking for circo... echo circo
 checking for gv... no
 checking for gsview32... no
-checking for dotty... /usr/bin/dotty
-checking for xdot... no
-checking for xdot.py... no
+checking for dotty... echo dotty
+checking for xdot.py... echo xdot.py
 checking for a BSD-compatible install... /usr/bin/install -c
 checking for bzip2... /bin/bzip2
 checking for cat... /bin/cat
 checking for doxygen... no
 checking for groff... /usr/bin/groff
 checking for gzip... /bin/gzip
-checking for pdfroff... no
+checking for pod2html... /usr/bin/pod2html
+checking for pod2man... /usr/bin/pod2man
+checking for pdfroff... /usr/bin/pdfroff
+checking for runtest... no
+checking for the tclsh program in tclinclude directory... none
+checking for tclsh8.4... /usr/bin/tclsh8.4
 checking for zip... /usr/bin/zip
 checking for ocamlc... no
 checking for ocamlopt... no
@@ -86,7 +91,7 @@ checking dlfcn.h presence... yes
 checking for dlfcn.h... yes
 checking dynamic linker characteristics... GNU/Linux ld.so
 checking which extension is used for loadable modules... .so
-checking for the default library search path... /lib /usr/lib /lib/i386-linux-gnu /usr/lib/i386-linux-gnu /lib/i486-linux-gnu /usr/lib/i486-linux-gnu /usr/local/lib /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu 
+checking for the default library search path... /lib /usr/lib /lib/i386-linux-gnu /usr/lib/i386-linux-gnu /lib/i486-linux-gnu /usr/lib/i486-linux-gnu /usr/local/lib /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu /lib32 /usr/lib32 
 checking for objdir... .libs
 checking command to parse /usr/bin/nm -B output from  object... ok
 checking whether libtool supports -dlopen/-dlpreopen... yes
@@ -105,6 +110,12 @@ checking for argz_create_sep... yes
 checking for argz_insert... yes
 checking for argz_next... yes
 checking for argz_stringify... yes
+checking assert.h usability... yes
+checking assert.h presence... yes
+checking for assert.h... yes
+checking ctype.h usability... yes
+checking ctype.h presence... yes
+checking for ctype.h... yes
 checking errno.h usability... yes
 checking errno.h presence... yes
 checking for errno.h... yes
@@ -112,17 +123,34 @@ checking malloc.h usability... yes
 checking malloc.h presence... yes
 checking for malloc.h... yes
 checking for memory.h... (cached) yes
+checking for stdlib.h... (cached) yes
+checking stdio.h usability... yes
+checking stdio.h presence... yes
+checking for stdio.h... yes
 checking for unistd.h... (cached) yes
+checking dl.h usability... no
+checking dl.h presence... no
+checking for dl.h... no
+checking sys/dl.h usability... no
+checking sys/dl.h presence... no
+checking for sys/dl.h... no
+checking dld.h usability... no
+checking dld.h presence... no
+checking for dld.h... no
 checking mach-o/dyld.h usability... no
 checking mach-o/dyld.h presence... no
 checking for mach-o/dyld.h... no
+checking for string.h... (cached) yes
+checking for strchr... yes
+checking for strrchr... yes
+checking for memcpy... yes
+checking for memmove... yes
+checking for strcmp... yes
 checking for closedir... yes
 checking for opendir... yes
 checking for readdir... yes
 checking tool compatibility... ok
-checking optional compiler flags... -Wno-variadic-macros -Wno-missing-field-initializers -Wcovered-switch-default -Wno-uninitialized 
-checking for python... /usr/bin/python
-checking for python >= 2.5... /usr/bin/python (2.7.3)
+checking optional compiler flags... -Wno-variadic-macros -Wno-missing-field-initializers -Wcovered-switch-default
 checking for sin in -lm... yes
 checking for library containing dlopen... -ldl
 checking for library containing clock_gettime... -lrt
@@ -133,19 +161,12 @@ checking for library containing pthread_mutex_lock... none required
 checking for library containing pthread_rwlock_init... none required
 checking for library containing pthread_getspecific... none required
 checking for compress2 in -lz... yes
-checking for xml2-config... xml2-config
-checking for libxml2 includes... -I/usr/include/libxml2
-checking for xmlReadFile in -lxml2... yes
 checking for dirent.h that defines DIR... (cached) yes
 checking for library containing opendir... (cached) none required
 checking for MAP_ANONYMOUS vs. MAP_ANON... yes
 checking whether stat file-mode macros are broken... no
 checking for sys/wait.h that is POSIX.1 compatible... yes
 checking whether time.h and sys/time.h may both be included... yes
-checking how to run the C++ preprocessor... clang++ -E
-checking cxxabi.h usability... yes
-checking cxxabi.h presence... yes
-checking for cxxabi.h... yes
 checking for dlfcn.h... (cached) yes
 checking execinfo.h usability... yes
 checking execinfo.h presence... yes
@@ -154,6 +175,9 @@ checking fcntl.h usability... yes
 checking fcntl.h presence... yes
 checking for fcntl.h... yes
 checking for inttypes.h... (cached) yes
+checking limits.h usability... yes
+checking limits.h presence... yes
+checking for limits.h... yes
 checking link.h usability... yes
 checking link.h presence... yes
 checking for link.h... yes
@@ -172,6 +196,9 @@ checking for unistd.h... (cached) yes
 checking utime.h usability... yes
 checking utime.h presence... yes
 checking for utime.h... yes
+checking windows.h usability... no
+checking windows.h presence... no
+checking for windows.h... no
 checking sys/mman.h usability... yes
 checking sys/mman.h presence... yes
 checking for sys/mman.h... yes
@@ -187,6 +214,7 @@ checking for sys/time.h... yes
 checking sys/uio.h usability... yes
 checking sys/uio.h presence... yes
 checking for sys/uio.h... yes
+checking for sys/types.h... (cached) yes
 checking sys/ioctl.h usability... yes
 checking sys/ioctl.h presence... yes
 checking for sys/ioctl.h... yes
@@ -202,8 +230,6 @@ checking for valgrind/valgrind.h... no
 checking fenv.h usability... yes
 checking fenv.h presence... yes
 checking for fenv.h... yes
-checking whether FE_ALL_EXCEPT is declared... yes
-checking whether FE_INEXACT is declared... yes
 checking pthread.h usability... yes
 checking pthread.h presence... yes
 checking for pthread.h... yes
@@ -231,11 +257,6 @@ checking for powf... yes
 checking for fmodf... yes
 checking for strtof... yes
 checking for round... yes
-checking for log... yes
-checking for log2... yes
-checking for log10... yes
-checking for exp... yes
-checking for exp2... yes
 checking for getpagesize... yes
 checking for getrusage... yes
 checking for getrlimit... yes
@@ -246,14 +267,13 @@ checking for mkdtemp... yes
 checking for mkstemp... yes
 checking for mktemp... yes
 checking for posix_spawn... yes
-checking for pread... yes
 checking for realpath... yes
 checking for sbrk... yes
 checking for setrlimit... (cached) yes
+checking for strdup... yes
 checking for strerror... yes
 checking for strerror_r... yes
 checking for setenv... yes
-checking for arc4random... no
 checking for strtoll... yes
 checking for strtoq... yes
 checking for sysconf... yes
@@ -263,8 +283,6 @@ checking for longjmp... yes
 checking for sigsetjmp... no
 checking for siglongjmp... yes
 checking for writev... yes
-checking for futimes... yes
-checking for futimens... yes
 checking if printf has the %a format character... yes
 checking for srand48/lrand48/drand48 in <stdlib.h>... yes
 checking whether strerror_s is declared... no

@@ -1,4 +1,4 @@
-##===- lib/Transforms/Hello/Makefile -----------------------*- Makefile -*-===##
+##===- projects/CSE231/Makefile ----------------------------*- Makefile -*-===##
 #
 #                     The LLVM Compiler Infrastructure
 #
@@ -7,12 +7,8 @@
 #
 ##===----------------------------------------------------------------------===##
 
-LEVEL = ../..
-LIBRARYNAME = CSE231
-LOADABLE_MODULE = 1
-CFLAGS=-std=c++11
-
-DIRS = tools
+LEVEL = .
+DIRS = lib tools
 
 include $(LEVEL)/Makefile.common
 
