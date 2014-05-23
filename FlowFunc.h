@@ -8,21 +8,27 @@
 // 2. planned design evolutions
 // 3. implementation TODO structure
 
-#include "Lattice.h" 
+
+// Standard Library
+#include <iostream>
+#include <map>
+#include <functional>
+
+// LLVM
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
 #include "llvm/Support/raw_ostream.h"
-#include <iostream>
-// Include the Instruction Iterator for Functions.
-#include "llvm/Support/InstIterator.h"
-#include <map>
+
+// Our Stuff
+#include "LatticePoint.h"
+#include "Lattice.h"
 
 class FlowFunction {
   // map from opcodes to local flow functions
   LocalFunctions std::map<int, std::function<LatticePoint(llvm::Instruction, std::vector<LatticePoint>)>;
 public:
   // operation defined for 
-  LatticePoint operator(llvm::Instruction instr, std::vector<LatticePoint> info_in);
+  LatticePoint operator()(llvm::Instruction instr, std::vector<LatticePoint> info_in);
 };
 
 class BlahFlowFunction : FlowFunction{
