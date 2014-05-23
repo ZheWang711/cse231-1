@@ -10,12 +10,12 @@
 class LatticePoint {
 public:
   LatticePoint();
-  LatticePoint(llvm::Instruction& instr, LatticePoint point);
+  LatticePoint(llvm::Instruction& instr, LatticePoint& point);
   virtual ~LatticePoint();
 
 private:
   std::map<int, const LatticePoint *> instrMap;
-  virtual bool equality (LatticePoint in1, LatticePoint in2);
+  virtual bool equality (LatticePoint& in1, LatticePoint& in2) = 0;
 };
 
 #endif /* LATTICEPOINT_H_ */

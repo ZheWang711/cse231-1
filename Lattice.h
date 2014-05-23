@@ -7,11 +7,11 @@ class Lattice {
 public:
   Lattice();
   virtual ~Lattice();
-  virtual LatticePoint join(LatticePoint in1, LatticePoint in2);
+  virtual LatticePoint join(LatticePoint& in1, LatticePoint& in2);
 
 private:
-  LatticePoint top;
-  LatticePoint bottom;
+  LatticePoint& top;
+  LatticePoint& bottom;
 };
 
 #endif /* LATTICE_H_ */

@@ -1,40 +1,33 @@
-/home/marco/cse231-proj1/llvm/src/lib/CSE231/Release+Asserts/CountStaticInstructions.o \
-  /home/marco/cse231-proj1/llvm/src/lib/CSE231/Release+Asserts/CountStaticInstructions.d: \
-  CountStaticInstructions.cpp \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Pass.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Compiler.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Config/llvm-config.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/PassSupport.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/InitializePasses.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/PassRegistry.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/StringRef.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/type_traits.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/DataTypes.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/CBindingWrapping.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Casting.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm-c/Core.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Atomic.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Valgrind.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/PassAnalysisSupport.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallVector.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/AlignOf.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/MathExtras.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/SwapByteOrder.h \
+/home/marco/cse231-proj1/llvm/src/lib/CSE231/Release+Asserts/FlowFunc.o \
+  /home/marco/cse231-proj1/llvm/src/lib/CSE231/Release+Asserts/FlowFunc.d: \
+  FlowFunc.cpp /home/marco/cse231-proj1/llvm/src/lib/CSE231/FlowFunc.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Module.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/OwningPtr.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Compiler.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Config/llvm-config.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Function.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Argument.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/Twine.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/StringRef.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/type_traits.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/DataTypes.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/ErrorHandling.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/ilist_node.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Attributes.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/ArrayRef.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/None.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallVector.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/AlignOf.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/MathExtras.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/SwapByteOrder.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/FoldingSet.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/PointerLikeTypeTraits.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Value.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Use.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/PointerIntPair.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/CBindingWrapping.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/Casting.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm-c/Core.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/BasicBlock.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/ilist.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instruction.h \
@@ -59,55 +52,33 @@
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallString.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/TimeValue.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/system_error.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h
+  /home/marco/cse231-proj1/llvm/src/lib/CSE231/LatticePoint.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instructions.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h \
+  /home/marco/cse231-proj1/llvm/src/lib/CSE231/Lattice.h
 
-/home/marco/cse231-proj1/llvm/src/include/llvm/Pass.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Compiler.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Config/llvm-config.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/PassSupport.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/InitializePasses.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/PassRegistry.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/ADT/StringRef.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/type_traits.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/DataTypes.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/CBindingWrapping.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Casting.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm-c/Core.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Atomic.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Valgrind.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/PassAnalysisSupport.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallVector.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/AlignOf.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/MathExtras.h:
-
-/home/marco/cse231-proj1/llvm/src/include/llvm/Support/SwapByteOrder.h:
+/home/marco/cse231-proj1/llvm/src/lib/CSE231/FlowFunc.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Module.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/OwningPtr.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Compiler.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Config/llvm-config.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Function.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Argument.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/Twine.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/ADT/StringRef.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/type_traits.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/DataTypes.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/ErrorHandling.h:
 
@@ -119,6 +90,14 @@
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/None.h:
 
+/home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallVector.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/AlignOf.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/MathExtras.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/SwapByteOrder.h:
+
 /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/FoldingSet.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/PointerLikeTypeTraits.h:
@@ -128,6 +107,12 @@
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Use.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/PointerIntPair.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/CBindingWrapping.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/Casting.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm-c/Core.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/BasicBlock.h:
 
@@ -177,4 +162,12 @@
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/system_error.h:
 
+/home/marco/cse231-proj1/llvm/src/lib/CSE231/LatticePoint.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instructions.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h:
+
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h:
+
+/home/marco/cse231-proj1/llvm/src/lib/CSE231/Lattice.h:

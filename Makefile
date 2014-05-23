@@ -12,5 +12,7 @@ LIBRARYNAME = CSE231
 LOADABLE_MODULE = 1
 CFLAGS=-std=c++11
 
+DIRS = tools
+
 include $(LEVEL)/Makefile.common
 
