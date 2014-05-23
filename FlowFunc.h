@@ -25,10 +25,10 @@
 
 class FlowFunction {
   // map from opcodes to local flow functions
-  LocalFunctions std::map<int, std::function<LatticePoint(llvm::Instruction, std::vector<LatticePoint>)>;
+  std::map<int, std::function<LatticePoint(llvm::Instruction&, std::vector<LatticePoint>)> > LocalFunctions;
 public:
-  // operation defined for 
-  LatticePoint operator()(llvm::Instruction instr, std::vector<LatticePoint> info_in);
+  // operation defined for all flow functions
+  LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in);
 };
 
 class BlahFlowFunction : FlowFunction{

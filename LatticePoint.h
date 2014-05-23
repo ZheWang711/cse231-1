@@ -10,7 +10,7 @@
 class LatticePoint {
 public:
   LatticePoint();
-  LatticePoint(llvm::Instruction instr, LatticePoint point);
+  LatticePoint(llvm::Instruction& instr, LatticePoint point);
   virtual ~LatticePoint();
 
 private:
