@@ -1,4 +1,4 @@
-running CONFIG_SHELL=/bin/bash /bin/bash ./configure   --no-create --no-recursion
+running CONFIG_SHELL=/bin/bash /bin/bash ./configure  --enable-cxx11  --no-create --no-recursion
 checking llvm-config... no
 checking LLVM package version... unknown
 checking for clang... clang

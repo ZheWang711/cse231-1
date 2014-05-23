@@ -3,11 +3,11 @@
 #
 # Relative path to the top of the source tree.
 #
-LEVEL=../../..
+LEVEL=..
 
 #
 # List all of the subdirectories that we will compile.
 #
-DIRS=flowFuncTests
+DIRS=sample flowFuncTests
 
 include $(LEVEL)/Makefile.common

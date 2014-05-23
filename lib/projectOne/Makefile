@@ -10,6 +10,8 @@ LEVEL=../..
 #
 LIBRARYNAME=projectOne
 
+LOADABLE_MODULE = 1
+
 #
 # Include Makefile.common so we know what to do.
 #

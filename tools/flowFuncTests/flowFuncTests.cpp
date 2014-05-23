@@ -1,5 +1,5 @@
 // Our stuff
-#include "../../FlowFunc.h"
+#include "FlowFunction.h"
 
 // llvm
 // #include "llvm/IR/Module.h"
