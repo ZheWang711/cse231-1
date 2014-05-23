@@ -7,11 +7,11 @@
 #
 ##===----------------------------------------------------------------------===##
 
-LEVEL = ../../..
+LEVEL = ../../../..
 # LIBRARYNAME = CSE231Tests
 LOADABLE_MODULE = 0
 
 include $(LEVEL)/Makefile.common
 
-TOOLNAME = testthing
+TOOLNAME = flowFuncTests
 USEDLIBS = CSE231
