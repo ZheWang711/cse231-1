@@ -25,7 +25,7 @@ namespace {
         // MI is an iterator over functions in the program.
         for (inst_iterator I = inst_begin(MI), E = inst_end(MI); I != E; ++I){
           // I is an iterator over instructions in the function.
-          
+	  std::cout << I->getNumOperands();
           // We map each instruction's opcode to the number of times it occurs.
           int inst = I->getOpcode();
           if (instructionCount.count(inst) > 0){
