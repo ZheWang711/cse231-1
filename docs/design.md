@@ -1,0 +1,64 @@
+# Requirements #
+	
+Implement four analyses and optimizations that use these analyses,
+using the LLVM compiler framework. There is some ambiguity here, as it
+was implied in class at one point that we are only *required* to
+implement the analyses. Either way, the analyses are a pre-requisite
+for the transformations, so here is the list:
+
+	1. Constant Propagation	
+	2. Available Expressions
+	3. Range Analysis
+	4. Intra-Procedural Pointer Analysis
+	
+Our task is complicated by the additional requirement that each
+analysis must be improved by the pointer analysis. That is, we must
+make the results of pointer analysis available to each subsequent
+analysis. This complicates the definition of the FlowFunction class
+and necessitates the use of [LLVM features for sharing information
+between analyses](http://llvm.org/docs/WritingAnLLVMPass.html#specifying-interactions-between-passes)
+
+# Analysis Object Hierarchy #
+
+Each analysis is specified by four objects, which inherit from:
+
+	1. Lattice
+	2. LatticePoint
+	3. llvm::FunctionPass
+	4. FlowFunction
+	
+These objects are organized by superclass in the lib subdirectory. The
+role of the Lattice, LatticePoint, and FlowFunction classes is obvious
+from an understanding of Data Flow Analysis. The role of the
+llvm::FunctionPass object is to instantiate these "algorithmic"
+objects, and then pass them to a generalized Worklist algorithm (a
+seperate library, also stored in the lib/ directory). The
+llvm::FunctionPass object also co-ordinates the activities of multiple
+passes, using the LLVM features linked above.
+
+Each library contains the titular superclass and any inheriting
+classes. Thus each analysis is spread out over four libraries and
+source files, but is well-modularized.
+
+Comment: it may be correct but insufficient to register each analysis
+as a function pass, given that I assume we want to run on all the
+functions in the program. This snippet of LLVM documentation: "All
+FunctionPass execute on each function in the program independent of
+all of the other functions in the program" seems to imply that running
+a function pass with "opt" will automatically run on each function of
+the input, but I have not tested this yet.
+	   
+## Lattices ##
+
+###  ###
+
+# TODO #
+ 
+	 1. Implement a concrete Lattice and LatticePoint
+		
+	 2. Use concrete Lattice class to test FlowFunction design 
+		
+	 3. alter FlowFunction design to take into account may-point-to
+		analysis. I am unsure how to do this. Preliminary idea: a map
+		from LLVM variable types to sets of LLVM variable types passed
+		to each flow function?
