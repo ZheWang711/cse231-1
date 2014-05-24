@@ -50,7 +50,21 @@ the input, but I have not tested this yet.
 	   
 ## Lattices ##
 
-###  ###
+### Constant Prop ###
+
+This lattice seems simple enough, and so it will be my first target
+for concrete implementation. Obvious first issues:
+
+	1. In class we had this magical "Vars" set. What do we use for
+	this in LLVM based implementation?
+	
+	2. Types. We will specify that we only handle constant integers
+	for now and leave it at that?
+	
+	
+I hope that calls to std::set is enough to implement this lattice,
+once I figure out what "Vars" should be in terms of LLVM.
+
 
 # TODO #
  
