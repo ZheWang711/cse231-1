@@ -1,0 +1,90 @@
+* Constants: Representing Instruction Operands
+  There are two methods used to get instruction operands:
+  getNumOperands() to obtain how many operands should be retrieved,
+  and getOperand(int i) to get a specific operand. The getOperand call
+  returns an llvm::Value, the catchall type used to represent pretty
+  much everything in LLVM. To quote the docs: "The Value class is the
+  most important class in the LLVM Source base. It represents a typed
+  value that may be used (among other things) as an operand to an
+  instruction. There are many different types of Values, such as
+  Constants, Arguments. Even Instructions and Functions are Values."
+  http://llvm.org/docs/ProgrammersManual.html#the-value-class
+
+  "NOTE that the name of any value may be missing (an empty string),
+  so names should ONLY be used for debugging (making the source code
+  easier to read, debugging printouts), they should not be used to
+  keep track of values or map between them. For this purpose, use a
+  std::map of pointers to the Value itself instead."
+
+  I was previously tempted to use getName to track values. So it seems
+  that maybe our Var set could be pointers to values of the
+  appropriate subtype?
+
+  The specific type of is one of "enum llvm::Value::ValueTy", which
+  declares the concrete classes that implement Value. Once we have a
+  Value&, we can use dyn_cast to get the value to the appropriate
+  subclass. Looking at this enum, the only type that might represent
+  register names is ArgumentVal?
+
+  Alternate snipped for hauling out arguments of an instruction:
+  
+  Instruction *pi = ...;
+
+  for (Use &U : pi->operands()) {
+  Value *v = U.get();
+  // ...
+  }
+
+  In the MachineOperand class, we have functions to get the register
+  number of operands. This looks helpful. Perhaps we should consider
+  Vars as simply the set of registers? To do otherwise basically opens
+  us up to issues of pointer analysis, since any memory access is done
+  relative to some pointer anyway.
+
+  Using machine operands:
+
+  TargetRegisterInfo::virtReg2Index(vreg)
+  bool MOp.isReg() // true iff this operand is a register (physical or virtual)
+  unsigned MOp.getReg()  // get the register
+  bool MOp.isDef()  // true iff the operand is a def
+  bool MOp.isUse()  // true iff the operand is a use
+
+* Implementation Plan: Flow Functions
+  I'm sorry, I've done this entirely wrong up till now, because I
+  didn't know about the "InstVisitor" template provided by LLVM. OTOH
+  this template makes our lives much easier. I'll let a comment from
+  InstVisitor.h explain:
+  (http://llvm.org/doxygen/InstVisitor_8h-source.html):
+
+  "Instruction visitors are used when you want to perform different
+  actions for different kinds of instructions without having to use
+  lots of casts and a big switch statement (in your code, that is)."
+
+  This is essentially what I was hacking together on top of C++
+  lambdas to implement FlowFunction, but has the advantage of being
+  neither insane nor stupid. So the FlowFunction object can contain an
+  InstVisitor object, which handles all the nastiness of pattern
+  matching and providing somewhere simple for _local_ flow function
+  code to live without generating profound levels of boilerplate.
+
+  We may be able to take advantage of the BinaryOperator instruction
+  subclass. A InstVisitor for this superclass would be fairly simple
+  to write and should do a lot of constant prop work for us.
+  
+
+* LLVM Gotchyas
+  - std::function is *not allowed*. "You cannot use std::function
+    within LLVM code, because it is not supported by all our target
+    toolchains."
+
+* Writing Up Our Transformations and Analyses
+  The llvm::Statistic class can be used to report counters of actions
+  completed from passess, and aggregate them at the end.. We will find
+  this useful when writing the report. Implementing these sorts of
+  metrics by hand would be awful.
+
+  Sorin hinted that visualizing the programs and their transformations
+  would be an "interesting" thing to do. This task is shockingly
+  feasible, because LLVM already includes extensive graphviz backed
+  CFG visualization features. If we need some figures to jazz up the
+  report this won't be too bad.
