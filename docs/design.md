@@ -65,6 +65,21 @@ for concrete implementation. Obvious first issues:
 I hope that calls to std::set is enough to implement this lattice,
 once I figure out what "Vars" should be in terms of LLVM.
 
+I suspect that the correct analog to "Vars" in terms of LLVM is
+ValuePointers. The potential problem with this is, I don't know if
+ValuePointers remain fixed across multiple analysis passes. If our
+pass stores a map of ValuePointers to may-points-to information, but
+the second pass that would use this information maps the operands of
+instructions to different Value memory locations, then this won't
+work. 
+
+It would probably be insane if these values changed between passes --
+from reading Analyses implemented in LLVM it looks like they use
+members of the IR directly from previous passes. 
+
+I will register the Hello pass and CountStaticInstruction pass
+together to test this. 
+
 
 # TODO #
  
