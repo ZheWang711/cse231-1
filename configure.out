@@ -51,14 +51,14 @@ checking for sed... /bin/sed
 checking for tar... /bin/tar
 checking for pwd... /bin/pwd
 checking for Graphviz... echo Graphviz
-checking for dot... echo dot
-checking for fdp... echo fdp
-checking for neato... echo neato
-checking for twopi... echo twopi
-checking for circo... echo circo
+checking for dot... /usr/bin/dot
+checking for fdp... /usr/bin/fdp
+checking for neato... /usr/bin/neato
+checking for twopi... /usr/bin/twopi
+checking for circo... /usr/bin/circo
 checking for gv... no
 checking for gsview32... no
-checking for dotty... echo dotty
+checking for dotty... /usr/bin/dotty
 checking for xdot.py... echo xdot.py
 checking for a BSD-compatible install... /usr/bin/install -c
 checking for bzip2... /bin/bzip2
@@ -68,7 +68,7 @@ checking for groff... /usr/bin/groff
 checking for gzip... /bin/gzip
 checking for pod2html... /usr/bin/pod2html
 checking for pod2man... /usr/bin/pod2man
-checking for pdfroff... /usr/bin/pdfroff
+checking for pdfroff... no
 checking for runtest... no
 checking for the tclsh program in tclinclude directory... none
 checking for tclsh8.4... /usr/bin/tclsh8.4
@@ -91,7 +91,7 @@ checking dlfcn.h presence... yes
 checking for dlfcn.h... yes
 checking dynamic linker characteristics... GNU/Linux ld.so
 checking which extension is used for loadable modules... .so
-checking for the default library search path... /lib /usr/lib /lib/i386-linux-gnu /usr/lib/i386-linux-gnu /lib/i486-linux-gnu /usr/lib/i486-linux-gnu /usr/local/lib /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu /lib32 /usr/lib32 
+checking for the default library search path... /lib /usr/lib /lib/i386-linux-gnu /usr/lib/i386-linux-gnu /lib/i486-linux-gnu /usr/lib/i486-linux-gnu /usr/local/lib /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu 
 checking for objdir... .libs
 checking command to parse /usr/bin/nm -B output from  object... ok
 checking whether libtool supports -dlopen/-dlpreopen... yes
