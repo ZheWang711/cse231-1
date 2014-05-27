@@ -91,3 +91,12 @@ together to test this.
 		analysis. I am unsure how to do this. Preliminary idea: a map
 		from LLVM variable types to sets of LLVM variable types passed
 		to each flow function?
+		
+# Flow Functions:
+
+Take as input 3 things:
+	1. The current instruction.
+	
+	2. A list of incoming Lattice Points.
+	
+	3. A list of Lattice Points (from the Pointer analysis).
