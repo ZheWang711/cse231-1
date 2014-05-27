@@ -6,8 +6,7 @@
 // Include the Instruction Iterator for Functions.
 #include "llvm/Support/InstIterator.h"
 #include <map>
-
-
+#include "llvm/IR/Value.h"
 using namespace llvm;
 
 namespace {
@@ -25,10 +24,18 @@ namespace {
         // MI is an iterator over functions in the program.
         for (inst_iterator I = inst_begin(MI), E = inst_end(MI); I != E; ++I){
           // I is an iterator over instructions in the function.
-	  std::cout << I->getNumOperands();
-	  // to get variable "names" for an instruction, getNumOperands and get each operand? 
-	  //Value* llvm::User::getOperand	(	unsigned 	i	)	 const [inline]
 
+	  errs() << "Instruction: " << Instruction::getOpcodeName(I->getOpcode()) << ", " << I->getNumOperands() << " args: ";
+	  
+	  for (User::op_iterator OP = I->op_begin(), OPE = I->op_end(); OP != OPE; ++OP){
+	    // this garbage printed out is the memory address of the
+	    // Value object that is this operand to the current
+	    // instruction.
+	    OP->get()->getType()->print(errs());
+	    errs() << " " << OP->get() << ", ";
+	  }
+	  errs() << "\n";
+	  
           // We map each instruction's opcode to the number of times it occurs.
           int inst = I->getOpcode();
           if (instructionCount.count(inst) > 0){
@@ -53,7 +60,7 @@ namespace {
       for (std::map<int, int>::const_iterator it=instructionCount.begin(); it!=instructionCount.end(); ++it){
         O << Instruction::getOpcodeName(it->first) << " " << it->second << "\n";
         total += it->second;
-      }
+     } 
       O << "TOTAL " << total << "\n";
     }
 

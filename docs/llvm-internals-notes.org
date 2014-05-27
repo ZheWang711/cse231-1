@@ -76,6 +76,9 @@
   - std::function is *not allowed*. "You cannot use std::function
     within LLVM code, because it is not supported by all our target
     toolchains."
+  - while all operands values do not have names, there is apparently
+    an instnamer pass that gives them names. we could require this to
+    run before basically everything we do to make our lives easier.
 
 * Writing Up Our Transformations and Analyses
   The llvm::Statistic class can be used to report counters of actions
