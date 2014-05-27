@@ -7,7 +7,7 @@
 #include "llvm/Support/InstIterator.h"
 #include <map>
 
-class CPLatticePoint:LatticePoint {
+class CPLatticePoint: public LatticePoint {
 public:
   CPLatticePoint();
   CPLatticePoint(bool isBottom, std::map<Value *, Constant *> representation);

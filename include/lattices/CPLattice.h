@@ -4,13 +4,13 @@
 #include "Lattice.h"
 #include "CPLatticePoint.h"
 
-class CPLattice:Lattice {
+class CPLattice: public Lattice {
 public:
   CPLattice();
-  CPLatticePoint join(CPLatticePoint& in1, CPLatticePoint& in2);
-  CPLatticePoint equals(CPLatticePoint& in1, CPLatticePoint& in2);
-  CPLatticePoint& top;
-  CPLatticePoint& bottom;
+  LatticePoint join(LatticePoint& in1, LatticePoint& in2);
+  bool equals(LatticePoint& in1, LatticePoint& in2);
+  LatticePoint& top = new CPLatticePoint(false, new std::map<Value *, Constant *>);
+  LatticePoint& bottom = new CPLatticePoint(true, new std::map<Value *, Constant *>);
 };
 
 #endif /* CPLATTICE_H_ */
