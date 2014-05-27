@@ -1,6 +1,12 @@
 #include "CPLattice.h"
 
-LatticePoint join(LatticePoint& in1, LatticePoint& in2){
+
+CPLattice::CPLattice(){
+  this.top = new CPLatticePoint(false, new std::map<Value *, Constant *>);
+  this.bottom = new CPLatticePoint(true, new std::map<Value *, Constant *>);
+}
+
+LatticePoint CPLattice::join(LatticePoint& in1, LatticePoint& in2){
   if (in1.isBottom){
     return in2;
   }
@@ -24,7 +30,7 @@ LatticePoint join(LatticePoint& in1, LatticePoint& in2){
   return new CPLatticePoint(false, result);
 }
 
-bool equals(LatticePoint& in1, LatticePoint& in2){
+bool CPLattice::equals(LatticePoint& in1, LatticePoint& in2){
   if (in1.isBottom || in2.isBottom){
     return in1.isBottom == in2.isBottom;
   }
