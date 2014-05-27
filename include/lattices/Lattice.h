@@ -8,8 +8,7 @@ public:
   Lattice();
   virtual ~Lattice();
   virtual LatticePoint join(LatticePoint& in1, LatticePoint& in2);
-
-private:
+  virtual LatticePoint equals(LatticePoint& in1, LatticePoint& in2);
   LatticePoint& top;
   LatticePoint& bottom;
 };
