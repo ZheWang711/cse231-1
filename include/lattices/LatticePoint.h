@@ -8,24 +8,31 @@
 #include <map>
 #include "llvm/Support/Casting.h"
 
+using namespace llvm;
+
 class LatticePoint {
+  
 public:
-
-
+  
+  enum LatticePointKind {
+    LPK_CPLatticePoint
+  };
+  
 
   virtual ~LatticePoint();
   bool isBottom;
   bool isTop;
-
-  enum LatticePointKind {
-    LPK_CPLatticePoint
-  };
+  
 
   LatticePointKind getKind() const { return Kind; }
- LatticePoint(LatticePointKind K, bool isTopIn, bool isBottomIn) : Kind(K), isTop(isTopIn), isBottom(isBottomIn){}
+  
+  LatticePoint(LatticePointKind K) : Kind(K) {}
+  
+  virtual bool join(LatticePoint& in);
+  virtual bool equals(LatticePoint& in);
+
  private:
   const LatticePointKind Kind;
-
 
 };
 

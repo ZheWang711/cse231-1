@@ -5,16 +5,21 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
+
 #include <map>
 
+#include "LatticePoint"
 
 using namespace llvm;
 
-class CPLatticePoint: public LatticePoint {
-public:
- CPLatticePoint() : LatticePoint(LPK_CPLatticePoint) {}  
-  CPLatticePoint(bool isBottom, std::map<Value *, Constant *> representation);
-  std::map<Value *, Constant *> representation;
+class CPLatticePoint : public LatticePoint {
+
+ public:
+
+  CPLatticePoint(bool isBottom, bool isTop, std::map<Value*, Constant*> representation);
+  CPLatticePoint(bool isBottom, bool isTop);
+
+  std::map<Value*, Constant*> representation;
   
   static bool classof(const LatticePoint *L) {
     return L->getKind() == LPK_CPLatticePoint;
