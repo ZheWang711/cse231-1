@@ -21,7 +21,7 @@
 
 // Our Stuff
 #include "lattices/LatticePoint.h"
-#include "lattices/Lattice.h"
+
 
 class FlowFunction {
   // map from opcodes to local flow functions

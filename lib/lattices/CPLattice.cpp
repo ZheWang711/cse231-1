@@ -1,4 +1,5 @@
-#include "lattices/CPLattice.h"
+#include "lattices/CPLatticePoint.h"
+// #include "lattices/LatticePoint.h"
 
 CPLattice::CPLattice(){
   this->top = CPLatticePoint(false, std::map<Value *, Constant *>());

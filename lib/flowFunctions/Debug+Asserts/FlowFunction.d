@@ -56,9 +56,7 @@
   /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/LatticePoint.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instructions.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h \
-  /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/Lattice.h \
-  /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/CPLatticePoint.h
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h
 
 /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/FlowFunction.h:
 
@@ -171,7 +169,3 @@
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h:
-
-/home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/Lattice.h:
-
-/home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/CPLatticePoint.h:

@@ -8,7 +8,7 @@
 
 #include <map>
 
-#include "LatticePoint"
+#include "LatticePoint.h"
 
 using namespace llvm;
 
@@ -18,6 +18,7 @@ class CPLatticePoint : public LatticePoint {
 
   CPLatticePoint(bool isBottom, bool isTop, std::map<Value*, Constant*> representation);
   CPLatticePoint(bool isBottom, bool isTop);
+  CPLatticePoint();
 
   std::map<Value*, Constant*> representation;
   
