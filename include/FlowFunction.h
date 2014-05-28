@@ -18,17 +18,16 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/InstVisitor.h"
 
 // Our Stuff
 #include "lattices/LatticePoint.h"
 
 
 class FlowFunction {
-  // map from opcodes to local flow functions
-  std::map<int, std::function<LatticePoint(llvm::Instruction&, std::vector<LatticePoint>)> > LocalFunctions;
 public:
   // operation defined for all flow functions
-  LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in);
+  LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in, std::vector<LatticePoint> aux_info);
 };
 
 class BlahFlowFunction : FlowFunction{
