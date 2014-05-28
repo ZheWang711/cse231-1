@@ -25,8 +25,8 @@ class CPLatticePoint : public LatticePoint {
     static bool classof(const LatticePoint *L) {
       return L->getKind() == LPK_CPLatticePoint;
     }
-  LatticePoint join(LatticePoint& in);
-  bool equals(LatticePoint& in);
+  LatticePoint* join(LatticePoint* in);
+  bool equals(LatticePoint* in);
 };
 
 #endif /* CPLATTICEPOINT_H_ */

@@ -28,8 +28,8 @@ public:
   
   LatticePoint(LatticePointKind K) : Kind(K) {}
   
-  virtual LatticePoint join(LatticePoint& in);
-  virtual bool equals(LatticePoint& in);
+  virtual LatticePoint* join(LatticePoint* in);
+  virtual bool equals(LatticePoint* in);
 
  private:
   const LatticePointKind Kind;

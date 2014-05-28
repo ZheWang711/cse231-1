@@ -2,9 +2,9 @@
 // #include "lattices/LatticePoint.h"
 
 // Define join method.
-LatticePoint CPLatticePoint::join(LatticePoint& in){
+LatticePoint* CPLatticePoint::join(LatticePoint* in){
   
-  if (in.isBottom){
+  if (in->isBottom){
     return *this;
   }
   if (this->isBottom) {
@@ -32,7 +32,7 @@ LatticePoint CPLatticePoint::join(LatticePoint& in){
 }
 
 
-bool CPLatticePoint::equals(LatticePoint& in){
+bool CPLatticePoint::equals(LatticePoint* in){
   if (in.isBottom || this->isBottom){
     return in.isBottom == this->isBottom;
   }
