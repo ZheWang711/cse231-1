@@ -5,13 +5,13 @@
 LatticePoint* CPLatticePoint::join(LatticePoint* in){
   
   if (in->isBottom){
-    return *this;
+    return this;
   }
   if (this->isBottom) {
     return in;
   }
   
-  CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint *>(in);
+  CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint>(in);
   
   std::map<Value *, Constant *> representation1 = this->representation;
   std::map<Value *, Constant *> representation2 = in_casted->representation;
@@ -28,16 +28,16 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
       }
     }
   }
-  CPLatticePoint result_map = CPLatticePoint(false, false, result_map);
-  return &result_map;
+  CPLatticePoint* result = new CPLatticePoint(false, false, result_map);
+  return result;
 }
 
 
 bool CPLatticePoint::equals(LatticePoint* in){
-  if (in.isBottom || this->isBottom){
-    return in.isBottom == this->isBottom;
+  if (in->isBottom || this->isBottom){
+    return in->isBottom == this->isBottom;
   }
-  CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint *>(in);
+  CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint>(in);
   std::map<Value *, Constant *> representation1 = this->representation;
   std::map<Value *, Constant *> representation2 = in_casted->representation;
   
@@ -50,7 +50,7 @@ bool CPLatticePoint::equals(LatticePoint* in){
     else{
       Constant* c2 = representation2[elm];
       if (c1 != c2){
-        return false
+        return false;
       }
     }
   }
