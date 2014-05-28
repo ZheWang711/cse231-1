@@ -16,7 +16,7 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
   std::map<Value *, Constant *> representation1 = this->representation;
   std::map<Value *, Constant *> representation2 = in_casted->representation;
   
-  std::map<Value *, Constant *> result;
+  std::map<Value *, Constant *> result_map;
   
   for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
@@ -24,11 +24,12 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
     if (representation2.count(elm) > 0){
       Constant* c2 = representation2[elm];
       if (c1 == c2){
-        result[elm] = c1;
+        result_map[elm] = c1;
       }
     }
   }
-  return new CPLatticePoint(false, false, result);
+  CPLatticePoint result_map = CPLatticePoint(false, false, result_map);
+  return &result_map;
 }
 
 
