@@ -1,6 +1,13 @@
 #include "lattices/CPLatticePoint.h"
 // #include "lattices/LatticePoint.h"
 
+// CPLatticePoint::CPLatticePoint(){
+//   LatticePoint( LPK_CPLatticePoint);
+//   this.isBottom = false;
+//   this.isTop = false;
+//   this.representation = std::map<Value*, Constant*>()
+// }
+
 // Define join method.
 LatticePoint* CPLatticePoint::join(LatticePoint* in){
   
@@ -31,6 +38,8 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
   CPLatticePoint* result = new CPLatticePoint(false, false, result_map);
   return result;
 }
+
+
 
 
 bool CPLatticePoint::equals(LatticePoint* in){

@@ -14,13 +14,19 @@ using namespace llvm;
 
 class CPLatticePoint : public LatticePoint {
 
-  public:
+public:
+  
+  // ~CPLatticePoint() {}
 
-    CPLatticePoint(bool isBottom, bool isTop, std::map<Value*, Constant*> representation);
-    CPLatticePoint(bool isBottom, bool isTop);
-    CPLatticePoint();
+  std::map<Value*, Constant*> representation;
 
-    std::map<Value*, Constant*> representation;
+  CPLatticePoint(bool bottomIN, bool topIN, std::map<Value*, Constant*> representationIN) : LatticePoint(LPK_CPLatticePoint, bottomIN, topIN), representation(representationIN) {}
+
+  // CPLatticePoint(bool bottomIN, bool topIN);
+  
+  CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, Constant*>()) {}
+
+
 
     static bool classof(const LatticePoint *L) {
       return L->getKind() == LPK_CPLatticePoint;

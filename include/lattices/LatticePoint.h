@@ -11,7 +11,6 @@
 using namespace llvm;
 
 class LatticePoint {
-  
 public:
   
   enum LatticePointKind {
@@ -19,21 +18,21 @@ public:
   };
   
 
-  virtual ~LatticePoint();
+  // virtual ~LatticePoint();
   bool isBottom;
   bool isTop;
   
 
   LatticePointKind getKind() const { return Kind; }
   
-  LatticePoint(LatticePointKind K) : Kind(K) {}
+  LatticePoint(LatticePointKind K) : isBottom(false), isTop(false), Kind(K) {}
   
-  virtual LatticePoint* join(LatticePoint* in);
-  virtual bool equals(LatticePoint* in);
-
- private:
+  LatticePoint(LatticePointKind K, bool bottomIN, bool topIN) : isBottom(bottomIN), isTop(topIN), Kind(K) {}
+  
+  LatticePoint* join(LatticePoint* in);
+  bool equals(LatticePoint* in);
+private:
   const LatticePointKind Kind;
-
 };
 
 #endif /* LATTICEPOINT_H_ */
