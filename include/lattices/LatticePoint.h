@@ -28,7 +28,7 @@ public:
   
   LatticePoint(LatticePointKind K) : Kind(K) {}
   
-  virtual bool join(LatticePoint& in);
+  virtual LatticePoint join(LatticePoint& in);
   virtual bool equals(LatticePoint& in);
 
  private:
