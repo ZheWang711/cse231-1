@@ -53,10 +53,17 @@
   /home/marco/cse231-proj1/llvm/src/include/llvm/ADT/SmallString.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/TimeValue.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/Support/system_error.h \
-  /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/LatticePoint.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/InstVisitor.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instructions.h \
   /home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h \
-  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/IntrinsicInst.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Constants.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Intrinsics.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Intrinsics.gen \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/CallSite.h \
+  /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/LatticePoint.h \
+  /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h \
+  /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/CPLatticePoint.h
 
 /home/marco/cse231-proj1/llvm/src/projects/CSE231/include/FlowFunction.h:
 
@@ -162,10 +169,24 @@
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/system_error.h:
 
-/home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/LatticePoint.h:
+/home/marco/cse231-proj1/llvm/src/include/llvm/InstVisitor.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/Instructions.h:
 
 /home/marco/cse231-proj1/llvm/src/include/llvm/IR/InstrTypes.h:
 
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/IntrinsicInst.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/Constants.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/Intrinsics.h:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/IR/Intrinsics.gen:
+
+/home/marco/cse231-proj1/llvm/src/include/llvm/Support/CallSite.h:
+
+/home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/LatticePoint.h:
+
 /home/marco/cse231-proj1/llvm/src/include/llvm/Support/InstIterator.h:
+
+/home/marco/cse231-proj1/llvm/src/projects/CSE231/include/lattices/CPLatticePoint.h:
