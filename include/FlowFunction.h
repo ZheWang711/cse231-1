@@ -22,16 +22,26 @@
 
 // Our Stuff
 #include "lattices/LatticePoint.h"
+#include "lattices/CPLatticePoint.h"
 
 
 class FlowFunction {
 public:
   // operation defined for all flow functions
-  LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in, std::vector<LatticePoint> aux_info);
+  virtual LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in) = 0;
 };
 
-class BlahFlowFunction : FlowFunction{
+// it WOULD APPEAR that we can inherit from both the INTERFACE
+// flowfunction, and the IMPLEMENTATION AID InstVisitor with a
+// template. at least, this builds with no errors, and C++ does in
+// fact allow multiple inheritance...
+
+class BlahFlowFunction : public FlowFunction, public InstVisitor<BlahFlowFunction>{
 public:
-  BlahFlowFunction();
+  unsigned Count;
+  BlahFlowFunction() : Count(0) {}
+
+  void visitAllocaInst(AllocaInst &AI) { ++Count; }
+  LatticePoint operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in);
 };
   
