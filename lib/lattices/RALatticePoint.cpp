@@ -42,7 +42,7 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
       ConstantInt* lowerBound = NULL;
       ConstantInt* upperBound = NULL;
       if (!isLeftInfinite){
-        if (((c1.second).first)->getValue() < ((c2.second).first)->getValue()){
+        if ((((c1.second).first)->getValue()).slt(((c2.second).first)->getValue())){
           lowerBound = ((c1.second).first);
         }
         else{
@@ -50,7 +50,7 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
         }
       }
       if (!isRightInfinite){
-        if (((c1.second).second)->getValue() > ((c2.second).second)->getValue()){
+        if ((((c1.second).second)->getValue()).sgt(((c2.second).second)->getValue())){
           upperBound = ((c1.second).second);
         }
         else{
@@ -66,7 +66,7 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
     }
     
     if (representation1.count(*it) == 0 && representation2.count(*it) > 0){
-      result_map[*it] = representation2[*it]
+      result_map[*it] = representation2[*it];
     }
     
   }

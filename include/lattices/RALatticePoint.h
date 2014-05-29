@@ -5,9 +5,9 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
+#include "llvm/IR/Constants.h"
 #include <utility>
 #include <map>
-#include <tuple>
 #include <set>
 #include "LatticePoint.h"
 
