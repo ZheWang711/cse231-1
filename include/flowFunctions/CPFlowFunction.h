@@ -6,6 +6,8 @@
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/CPLatticePoint.h"
 
+using namespace llvm;
+
 class CPFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
 public:
   std::vector<CPLatticePoint *> info_in_casted;

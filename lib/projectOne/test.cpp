@@ -31,10 +31,28 @@ namespace {
       
       errs() << " About to create CPLatticePoint \n";
       
-      CPLatticePoint clp = CPLatticePoint(false, false, std::map<Value*, Constant*>());
+      CPLatticePoint clp = CPLatticePoint(false, true, std::map<Value*, Constant*>());
       
       errs() << " Created CPLatticePoint with address " << &clp << "\n";
-      
+
+	errs() << " isBottom " << clp.isBottom;
+
+	errs() << " isTop " << clp.isTop;
+
+	LLVMContext &someContext = F.getContext();
+
+	ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
+
+      	errs() << " \n Constant value is " << someConstant->getValue();
+
+       	CPFlowFunction cpf = CPFlowFunction();
+
+     	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
+     		cpf.visit(*I);
+
+      	}
+
+      	errs() << " \n count = " << cpf.Count;
       errs() << " -----Ending Function Pass------ \n";
       
       return false;
