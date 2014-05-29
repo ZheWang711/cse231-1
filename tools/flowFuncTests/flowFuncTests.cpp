@@ -9,6 +9,9 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
 
+#include "llvm/Support/CBindingWrapping.h"
+#include "llvm/Support/Compiler.h"
+
 // standard library
 #include <iostream>
 #include <functional>

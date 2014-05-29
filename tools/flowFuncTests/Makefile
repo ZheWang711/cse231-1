@@ -15,7 +15,7 @@ TOOLNAME=FlowFuncTest
 # We use LIBS because sample is a dynamic library.
 #
 # USEDLIBS = f.a
-
+LLVMLIBS =    LLVMContext.a
 #
 # Include Makefile.common so we know what to do.
 #
