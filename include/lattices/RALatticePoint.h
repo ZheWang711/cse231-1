@@ -35,15 +35,15 @@ public:
             (true, false, some value, 8).
    
    */
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representation;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
   
 
   
-  RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
+  RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
   
   // CPLatticePoint(bool bottomIN, bool topIN);
   
-  RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> >()) {}
+  RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >()) {}
   
   
   

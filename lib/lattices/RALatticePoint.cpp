@@ -15,46 +15,49 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
   
   
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representation1 = this->representation;
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representation2 = in_casted->representation;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation1 = this->representation;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation2 = in_casted->representation;
   
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > result_map;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >result_map;
   
   std::set<Value *> key_set;
-  for (std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
     key_set.insert(elm);
   }
-  for (std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> >::iterator it=representation2.begin(); it!=representation2.end(); ++it){
+  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation2.begin(); it!=representation2.end(); ++it){
     Value* elm = it->first;
     key_set.insert(elm);
   }
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
+    
     if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
-      std::tuple<bool, bool, ConstantInt *, ConstantInt *> c1 = representation1[*it];
-      std::tuple<bool, bool, ConstantInt *, ConstantInt *> c2 = representation2[*it];
-      bool isLeftInfinite = std::get<0>(c1) || std::get<0>(c2);
-      bool isRightInfinite = std::get<1>(c1) || std::get<1>(c2);
+      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c1 = representation1[*it];
+      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c2 = representation2[*it];
+      
+      
+      bool isLeftInfinite = (c1.first).first || (c2.first).first;
+      bool isRightInfinite = (c1.first).second || (c2.first).second;
       ConstantInt* lowerBound = NULL;
       ConstantInt* upperBound = NULL;
       if (!isLeftInfinite){
-        if (std::get<2>(c1)->getValue() < std::get<2>(c2)->getValue()){
-          lowerBound = std::get<2>(c1)->getValue();
+        if (((c1.second).first)->getValue() < ((c2.second).first)->getValue()){
+          lowerBound = ((c1.second).first);
         }
         else{
-          lowerBound = std::get<2>(c2)->getValue();
+          lowerBound = ((c2.second).first);
         }
       }
       if (!isRightInfinite){
-        if (std::get<3>(c1)->getValue() > std::get<3>(c2)->getValue()){
-          upperBound = std::get<3>(c1)->getValue();
+        if (((c1.second).second)->getValue() > ((c2.second).second)->getValue()){
+          upperBound = ((c1.second).second);
         }
         else{
-          upperBound = std::get<3>(c2)->getValue();
+          upperBound = ((c2.second).second);
         }
       }
-      result_map[*it] = std::make_tuple(isLeftInfinite, isRightInfinite, lowerBound, upperBound);
+      result_map[*it] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lowerBound, upperBound));
       
     }
     
@@ -84,30 +87,30 @@ bool RALatticePoint::equals(LatticePoint* in){
   
   
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representation1 = this->representation;
-  std::map<Value*, std::tuple<bool, bool, ConstantInt *, ConstantInt *> > representation2 = in_casted->representation;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation1 = this->representation;
+  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation2 = in_casted->representation;
   
-  for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
-    std::tuple<bool, bool, ConstantInt *, ConstantInt *> c1 = it->second;
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c1 = it->second;
     if (representation2.count(elm) <= 0){
       return false;
     }
     else{
-      std::tuple<bool, bool, ConstantInt *, ConstantInt *> c2 = representation2[elm];
-      bool isLeftInfinite = std::get<0>(c1) || std::get<0>(c2);
-      bool isRightInfinite = std::get<1>(c1) || std::get<1>(c2);
+      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c2 = representation2[elm];
+      bool isLeftInfinite = (c1.first).first || (c2.first).first;
+      bool isRightInfinite = (c1.first).second || (c2.first).second;
       
-      if (isLeftInfinite && std::get<0>(c1) != std::get<0>(c2)){
+      if (isLeftInfinite && (c1.first).first != (c2.first).first){
         return false;
       }
-      if (isRightInfinite && std::get<1>(c1) != std::get<1>(c2)){
+      if (isRightInfinite && (c1.first).second != (c2.first).second){
         return false;
       }
-      if (!isLeftInfinite && std::get<2>(c1)->getValue() != std::get<2>(c2)->getValue()){
+      if (!isLeftInfinite && (c1.second).first->getValue() != (c2.second).first->getValue()){
         return false;
       }
-      if (!isRightInfinite && std::get<3>(c1)->getValue() != std::get<3>(c2)->getValue()){
+      if (!isRightInfinite && (c1.second).second->getValue() != (c2.second).second->getValue()){
         return false;
       }
     }
