@@ -14,7 +14,8 @@ class LatticePoint {
 public:
   
   enum LatticePointKind {
-    LPK_CPLatticePoint
+    LPK_CPLatticePoint,
+    LPK_RALatticePoint
   };
   
 
