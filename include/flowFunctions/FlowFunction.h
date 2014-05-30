@@ -28,7 +28,7 @@
 class FlowFunction {
 public:
   // operation defined for all flow functions
-  virtual LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in) = 0;
+  LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
 
 

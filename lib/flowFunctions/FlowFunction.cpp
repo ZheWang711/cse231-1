@@ -6,8 +6,6 @@
 #include <functional>
 #include <iostream>
 
-// LatticePoint FlowFunction::operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in){
-//   auto kitten =  instr.getOpcodeName();
-//   std::cout << kitten;
-
-// }
+ LatticePoint FlowFunction::operator()(llvm::Instruction& instr, std::vector<LatticePoint> info_in){
+   return CPLatticePoint();
+}
