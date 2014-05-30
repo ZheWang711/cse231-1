@@ -16,6 +16,6 @@ public:
   RAFlowFunction() : Count(0) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-  /* void visitAllocaInst(AllocaInst &AI) { ++Count; } */
+  void visitStoreInst(StoreInst   &I);
   LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
