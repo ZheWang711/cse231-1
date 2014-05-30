@@ -6,21 +6,21 @@
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/RALatticePoint.h"
 #include "llvm/IR/Value.h"
-
+#include <string>
 
 using namespace llvm;
 
 class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
   std::vector<RALatticePoint *> info_in_casted;
+  unsigned Count;
   RALatticePoint ret_value;
   Value* value;
   Value* pointer;
-  unsigned Count;
   RAFlowFunction() : Count(0), ret_value(RALatticePoint()), value(NULL), pointer(NULL) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);
   LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
-
+  std::string getRepresentation();
 };
