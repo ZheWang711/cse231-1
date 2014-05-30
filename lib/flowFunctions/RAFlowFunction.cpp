@@ -21,6 +21,6 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) { ++Count; }
 
 
 void visitStoreInst(StoreInst   &I){
-  Value* value = I.getValueOperand();
-  Value* pointer = I.getPointerOperand();
+  value = I.getValueOperand();
+  pointer = I.getPointerOperand();
 }
