@@ -8,7 +8,7 @@
 
 using namespace llvm;
 
-class RAFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
+class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
   std::vector<RALatticePoint *> info_in_casted;
   RALatticePoint ret_value;

@@ -29,7 +29,7 @@ struct RATest : public FunctionPass {
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Function Pass------ \n";
     
-    errs() << " About to create CPLatticePoint \n";
+    errs() << " About to create RALatticePoint \n";
     
     RALatticePoint rlp = RALatticePoint();
     
@@ -45,14 +45,14 @@ struct RATest : public FunctionPass {
     
     errs() << " \n Constant value is " << someConstant->getValue();
     
-    CPFlowFunction raf = RAFlowFunction();
+    RAFlowFunction raf = RAFlowFunction();
     
     
     for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
-      cpf.visit(*I);
+      raf.visit(*I);
     }
     
-    errs() << " \n count = " << cpf.Count;
+    errs() << " \n count = " << raf.Count;
     errs() << " -----Ending Function Pass------ \n";
     
     return false;
@@ -62,4 +62,4 @@ struct RATest : public FunctionPass {
 //}
 
 char RATest::ID = 0;
-static RegisterPass<RATest> ("RATest", "RATest Pass", false, false);
+static RegisterPass<RATest> X("RATest", "RATest Pass", false, false);
