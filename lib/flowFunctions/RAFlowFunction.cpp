@@ -40,24 +40,24 @@ std::string RAFlowFunction::getRepresentation(){
     }
     if (isLeftInfinite && !isRightInfinite){
       rep += " --> (-infinite, ";
-      rep += (range.second.first.getValue()).toString(10, true);
+      rep += (range.second.first->getValue()).toString(10, true);
       rep += " )";
     }
     if (!isLeftInfinite && isRightInfinite){
       rep += " --> ( "
-      rep += (range.second.second.getValue()).toString(10, true);
+      rep += (range.second.second->getValue()).toString(10, true);
       rep += ", infinite)";
     }
     if (isLeftInfinite && !isRightInfinite){
       rep += " --> (-infinite, ";
-      rep += (range.second.first.getValue()).toString(10, true);
+      rep += (range.second.first->getValue()).toString(10, true);
       rep += " )";
     }
     else{
       rep += " --> ( "
-      rep += (range.second.first.getValue()).toString(10, true);
+      rep += (range.second.first->getValue()).toString(10, true);
       rep += " , "
-      rep += (range.second.second.getValue()).toString(10, true);
+      rep += (range.second.second->getValue()).toString(10, true);
       rep += " )";
     }
     return rep;
