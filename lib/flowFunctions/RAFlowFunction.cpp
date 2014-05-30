@@ -9,7 +9,7 @@ LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<La
 
 // Allocate a memory location for a variable. Here we take the convention that this memory spot could have any value.
 void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
-  AllocaInst* current = &*AI;
+  AllocaInst* current = AI;
   std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > val;
   val = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(NULL, NULL));
   ret_value.representation[current] = val;
