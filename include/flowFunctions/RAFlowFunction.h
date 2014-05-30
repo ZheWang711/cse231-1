@@ -12,10 +12,13 @@ class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
   std::vector<RALatticePoint *> info_in_casted;
   RALatticePoint ret_value;
+  Value* value;
+  Value* pointer;
   unsigned Count;
   RAFlowFunction() : Count(0) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);
   LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+
 };
