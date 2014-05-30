@@ -20,7 +20,7 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) { ++Count; }
 
 
-void visitStoreInst(StoreInst   &I){
+void RAFlowFunction::visitStoreInst(StoreInst   &I){
   value = I.getValueOperand();
   pointer = I.getPointerOperand();
 }

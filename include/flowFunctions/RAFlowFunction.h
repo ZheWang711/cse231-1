@@ -5,6 +5,8 @@
 
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/RALatticePoint.h"
+#include "llvm/IR/Value.h"
+
 
 using namespace llvm;
 
@@ -15,7 +17,7 @@ public:
   Value* value;
   Value* pointer;
   unsigned Count;
-  RAFlowFunction() : Count(0) {}
+  RAFlowFunction() : Count(0), ret_value(RALatticePoint()), value(NULL), pointer(NULL) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);
