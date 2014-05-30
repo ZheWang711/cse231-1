@@ -8,6 +8,6 @@ LEVEL=..
 #
 # List all of the subdirectories that we will compile.
 #
-DIRS=sample projectOne flowFunctions lattices
+DIRS=lattices flowFunctions projectOne
 
 include $(LEVEL)/Makefile.common
