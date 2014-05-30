@@ -7,6 +7,7 @@
 #include "llvm/Support/InstIterator.h"
 #include "lattices/CPLatticePoint.h"
 #include "lattices/RALatticePoint.h"
+//#include "flowFunctions/FlowFunction.h"
 #include "flowFunctions/CPFlowFunction.h"
 #include <map>
 #include <list>
@@ -17,7 +18,31 @@
 
 using namespace llvm;
 
-namespace {
+//namespace {
+/*
+class CPFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
+public:
+  std::vector<CPLatticePoint *> info_in_casted;
+  CPLatticePoint ret_value;
+  unsigned Count;
+  CPFlowFunction() : Count(0) {}
+//  void visitAllocaInst(AllocaInst &AI);
+//  void visitBinaryOperator(BinaryOperator &BO);
+//  void visitAllocaInst(AllocaInst &AI) { ++Count; }
+//  LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+
+LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
+  // dyncast on that vector;
+  // this.visit(instr);
+  return ret_value;
+}
+
+void visitAllocaInst(AllocaInst &AI) { ++Count; }
+
+void visitBinaryOperator(BinaryOperator &BO) { ++Count; }
+};
+*/
+
   
   struct test : public FunctionPass {
     static char ID;
@@ -47,9 +72,11 @@ namespace {
 
        	CPFlowFunction cpf = CPFlowFunction();
 
+//	    CountAllocaVisitor CAV;
+    
+
      	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
      		cpf.visit(*I);
-
       	}
 
       	errs() << " \n count = " << cpf.Count;
@@ -59,7 +86,7 @@ namespace {
     }
     
   };
-}
+//}
 
 char test::ID = 0;
 static RegisterPass<test> X("test", "test Pass", false, false);
