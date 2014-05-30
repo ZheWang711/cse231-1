@@ -80,6 +80,7 @@ void visitBinaryOperator(BinaryOperator &BO) { ++Count; }
       	}
 
       	errs() << " \n count = " << cpf.Count;
+	errs() << " \n wheeeeee " ;
       errs() << " -----Ending Function Pass------ \n";
       
       return false;
