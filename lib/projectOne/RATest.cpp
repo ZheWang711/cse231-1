@@ -50,6 +50,8 @@ struct RATest : public FunctionPass {
     
     for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
       raf.visit(*I);
+      errs() << " Value is : " << raf.value << " \n";
+      errs() << " Pointer is : " << raf.pointer << " \n ";
     }
     
     errs() << " \n count = " << raf.Count;
