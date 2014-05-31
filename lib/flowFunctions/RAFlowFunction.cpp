@@ -28,7 +28,7 @@ void RAFlowFunction::visitStoreInst(StoreInst   &I){
   }
   else{
     ConstantInt* filler = NULL;
-    val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
     ret_value.representation[pointer] = val;
   }
 }
