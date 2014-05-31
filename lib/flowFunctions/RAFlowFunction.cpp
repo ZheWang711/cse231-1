@@ -66,6 +66,6 @@ std::string RAFlowFunction::getRepresentation(){
       rep += (range.second.second->getValue()).toString(10, true);
       rep += " )";
     }
-    return rep;
   }
+  return rep;
 }
