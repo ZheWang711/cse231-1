@@ -34,6 +34,7 @@ void RAFlowFunction::visitStoreInst(StoreInst   &I){
 }
 
 std::string RAFlowFunction::getRepresentation(){
+  std::string rep;
   std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation = ret_value.representation;
   for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation.begin(); it!=representation.end(); ++it){
     Value* elm = it->first;
