@@ -33,7 +33,7 @@ public:
   LatticePoint* join(LatticePoint* in);
   bool equals(LatticePoint* in);
 private:
-  const LatticePointKind Kind;
+  LatticePointKind Kind;
 };
 
 #endif /* LATTICEPOINT_H_ */

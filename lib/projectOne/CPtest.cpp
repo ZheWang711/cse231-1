@@ -49,11 +49,17 @@ using namespace llvm;
       	errs() << " \n Constant value is " << someConstant->getValue();
 
        	CPFlowFunction cpf = CPFlowFunction();
+	std::vector<LatticePoint*> lps;
 
      	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
 	  // cpf.visit(*I);
-	  cpf(&(*I), sampleArgs);
+	  lps.push_back(cpf(&(*I), sampleArgs));
       	}
+
+        for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
+			errs() << "isbottom?" << (*it)->isBottom << "\n";
+			errs() << "istop?" << (*it)->isTop << "\n";
+		}
 
       	errs() << " \n count = " << cpf.Count;
 	errs() << " \n wheeeeee " ;
