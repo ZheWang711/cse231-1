@@ -11,11 +11,12 @@ using namespace llvm;
 class CPFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
 public:
   std::vector<CPLatticePoint *> info_in_casted;
-  CPLatticePoint ret_value;
+  CPLatticePoint* ret_value;
   unsigned Count;
   CPFlowFunction() : Count(0) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   /* void visitAllocaInst(AllocaInst &AI) { ++Count; } */
-  LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  LatticePoint* operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
+
