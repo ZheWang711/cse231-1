@@ -26,6 +26,11 @@ void RAFlowFunction::visitStoreInst(StoreInst   &I){
   if (isa<ConstantInt>(value)){
     ret_value.representation[pointer] = std::make_pair(std::make_pair(false, false), std::make_pair(cast<ConstantInt>(value), cast<ConstantInt>(value)));
   }
+  else{
+    ConstantInt* filler = NULL;
+    val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
+    ret_value.representation[pointer] = val;
+  }
 }
 
 std::string RAFlowFunction::getRepresentation(){
