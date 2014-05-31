@@ -40,7 +40,7 @@ struct RATest : public FunctionPass {
     
     for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
       raf.visit(*I);
-      errs << (raf.getRepresentation()).data() << "\n";
+      errs() << (raf.getRepresentation()) << "\n";
     }
     
     errs() << " \n count = " << raf.Count;
