@@ -6,7 +6,7 @@
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/RALatticePoint.h"
 #include "llvm/IR/Value.h"
-#include "helper.h"
+#include "helper/helper.h"
 #include <string>
 
 using namespace llvm;
@@ -25,4 +25,5 @@ public:
   void visitStoreInst(StoreInst   &I);
   LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
   std::string getRepresentation();
+  ConstantInt* foldBinaryOperator(unsigned Opcode,ConstantInt *C1, ConstantInt *C2);
 };

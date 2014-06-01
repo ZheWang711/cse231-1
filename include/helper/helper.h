@@ -1,8 +1,21 @@
-#include "helper/helper.h"
-/*
+#ifndef HELPER_H_
+#define HELPER_H_
+
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/Support/InstIterator.h"
+#include "llvm/Support/Casting.h"
+#include "llvm/IR/Constants.h"
 using namespace llvm;
 
-ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, ConstantInt *C2){
+class helper {
+public:
+    
+  /* 
+   folds the binary operator for the special case of both arguments being ConstantInts.
+   */
+  static ConstantInt* foldBinaryOperator(unsigned Opcode ,ConstantInt *C1, ConstantInt *C2){
   LLVMContext &context = C1->getContext();
   const APInt &c1_value = C1->getValue();
   const APInt &c2_value = C2->getValue();
@@ -50,5 +63,7 @@ ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, Constan
   }
   return result;
 }
-*/
+};
+
+#endif /* HELPER_H_ */
 
