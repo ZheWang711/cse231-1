@@ -5,7 +5,7 @@
 
 LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
-  // this.visit(instr);
+  this->visit(instr);
   return ret_value;
 }
 
