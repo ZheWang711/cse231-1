@@ -36,3 +36,4 @@ ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, Constan
   return result;
 }
 
+
