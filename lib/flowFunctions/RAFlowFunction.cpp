@@ -99,7 +99,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     bool isLeftInfinite = true;
     bool isRightInfinite = true;
   }
-  ret_value.representation[pointer] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
+  ret_value.representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){
