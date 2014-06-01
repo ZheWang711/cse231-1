@@ -52,7 +52,7 @@ public:
   }
   LatticePoint* join(LatticePoint* in);
   bool equals(LatticePoint* in);
-
+  std::string LPprint();
   
 };
 

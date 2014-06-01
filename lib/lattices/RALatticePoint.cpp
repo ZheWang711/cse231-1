@@ -117,3 +117,44 @@ bool RALatticePoint::equals(LatticePoint* in){
   }
   return true;
 }
+
+std::string RALatticePoint::LPprint() {
+	std::stringstream ss;
+  ss << "\nRP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
+	ss << "{ ";
+	for(std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it = this->representation.begin(); it != representation.end(); ++it) {
+		Value* val = it->first;
+		std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > range = it->second;
+    bool isLeftInfinite = (range.first).first;
+    bool isRightInfinite = (range.first).second;
+    ss << val << ": ";
+    if (isLeftInfinite && isRightInfinite){
+      ss << "(-infinite, infinite)";
+    }
+    else if (isLeftInfinite && !isRightInfinite){
+      ss << "(-infinite, ";
+      ss << (range.second.first->getValue()).toString(10, true);
+      ss << " )";
+    }
+    else if (!isLeftInfinite && isRightInfinite){
+      ss << "( ";
+      ss << (range.second.second->getValue()).toString(10, true);
+      ss << ", infinite)";
+    }
+    else if (isLeftInfinite && !isRightInfinite){
+      ss << " --> (-infinite, ";
+      ss << (range.second.first->getValue()).toString(10, true);
+      ss << " )";
+    }
+    else{
+      ss << "( ";
+      ss << (range.second.first->getValue()).toString(10, true);
+      ss << " , ";
+      ss << (range.second.second->getValue()).toString(10, true);
+      ss << " )";
+    }
+		ss << ", ";
+  }
+  ss << " } \n";
+  return ss.str();
+}

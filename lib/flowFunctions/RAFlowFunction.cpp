@@ -107,44 +107,6 @@ void RAFlowFunction::visitStoreInst(StoreInst   &I){
   Count++;
 }
 
-std::string RAFlowFunction::getRepresentation(){
-  std::string rep;
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation = ret_value.representation;
-  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation.begin(); it!=representation.end(); ++it){
-    Value* elm = it->first;
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > range = it->second;
-    bool isLeftInfinite = (range.first).first;
-    bool isRightInfinite = (range.first).second;
-    std::string rep = (elm->getName()).str();
-    if (isLeftInfinite && isRightInfinite){
-      rep += " --> (-infinite, infinite)";
-    }
-    if (isLeftInfinite && !isRightInfinite){
-      rep += " --> (-infinite, ";
-      rep += (range.second.first->getValue()).toString(10, true);
-      rep += " )";
-    }
-    if (!isLeftInfinite && isRightInfinite){
-      rep += " --> ( ";
-      rep += (range.second.second->getValue()).toString(10, true);
-      rep += ", infinite)";
-    }
-    if (isLeftInfinite && !isRightInfinite){
-      rep += " --> (-infinite, ";
-      rep += (range.second.first->getValue()).toString(10, true);
-      rep += " )";
-    }
-    else{
-      rep += " --> ( ";
-      rep += (range.second.first->getValue()).toString(10, true);
-      rep += " , ";
-      rep += (range.second.second->getValue()).toString(10, true);
-      rep += " )";
-    }
-  }
-  return rep;
-}
-
 
 
 

@@ -21,6 +21,5 @@ public:
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);
   LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
-  std::string getRepresentation();
   ConstantInt* foldBinaryOperator(unsigned Opcode,ConstantInt *C1, ConstantInt *C2);
 };
