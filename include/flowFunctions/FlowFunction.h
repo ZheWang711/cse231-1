@@ -1,3 +1,6 @@
+#ifndef FLOWFUNCTION_H_
+#define FLOWFUNCTION_H_
+
 // Header for the flow function classes.
 
 // Very preliminary for now -- I have tried to define only the bare
@@ -31,5 +34,5 @@ public:
 };
 
 
+#endif /* FLOWFUNCTION_H_ */
 
-  
