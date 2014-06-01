@@ -4,27 +4,24 @@
 // fact allow multiple inheritance...
 
 #include "flowFunctions/FlowFunction.h"
-#include "lattices/RALatticePoint.h"
-#include "llvm/IR/Value.h"
-#include "helper/helper.h"
-#include <string>
+#include "lattices/CSELatticePoint.h"
 
 using namespace llvm;
 
-class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
+class CSEFlowFunction : public FlowFunction, public InstVisitor<CSEFlowFunction>{
 public:
   // local variables for passing arguments
-  std::vector<RALatticePoint *> info_in_casted;
-  RALatticePoint ret_value;
+  std::vector<CSELatticePoint *> info_in_casted;
+  CSELatticePoint* ret_value;
 
   // Constructor
-  RAFlowFunction() : ret_value(RALatticePoint()) {}
+  CSEFlowFunction();
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-  void visitStoreInst(StoreInst   &I);
 
   // Flow Function Interface
-  LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
+

@@ -10,13 +10,18 @@ using namespace llvm;
 
 class CPFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
 public:
+  // local variables for passing arguments
   std::vector<CPLatticePoint *> info_in_casted;
   CPLatticePoint* ret_value;
-  unsigned Count;
-  CPFlowFunction() : Count(0) {}
+
+  // Constructor
+  CPFlowFunction();
+
+  // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-  /* void visitAllocaInst(AllocaInst &AI) { ++Count; } */
-  LatticePoint* operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+
+  // Flow Function Interface
+  std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
 
