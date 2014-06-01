@@ -45,7 +45,7 @@ struct RATest : public FunctionPass {
       
     }
     
-    errs() << " \n count = " << raf.Count;
+    // errs() << " \n count = " << raf.Count;
     errs() << " -----Ending Function Pass------ \n";
     
     return false;

@@ -79,7 +79,7 @@ void visitBinaryOperator(BinaryOperator &BO) { ++Count; }
      		cpf.visit(*I);
       	}
 
-      	errs() << " \n count = " << cpf.Count;
+      	// errs() << " \n count = " << cpf.Count;
 	errs() << " \n wheeeeee " ;
       errs() << " -----Ending Function Pass------ \n";
       

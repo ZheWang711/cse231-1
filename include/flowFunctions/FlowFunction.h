@@ -12,7 +12,6 @@
 // Standard Library
 #include <iostream>
 #include <map>
-#include <functional>
 
 // LLVM
 #include "llvm/IR/Module.h"

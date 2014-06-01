@@ -1,6 +1,6 @@
 #include "flowFunctions/CPFlowFunction.h"
 
-LatticePoint* CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
+std::vector<LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // first, ensure that info_in_casted is empty
   info_in_casted = std::vector<CPLatticePoint *>();
   
@@ -15,14 +15,19 @@ LatticePoint* CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<L
   visit(instr);
   errs() << "returned from visiting\n";
   LatticePoint* lp = dyn_cast<LatticePoint>(ret_value);
-  return lp;
+  
+  std::vector<LatticePoint*> info_out;
+  info_out.push_back(lp);
+  return info_out;
 }
 
 void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
   errs() << "Calling alloca visitor";
-  ++Count; 
+  // ++Count; 
   // just stick bottom in the ret_value every time we hit an alloca (testing)
    ret_value = new CPLatticePoint(false, true, std::map<Value*, Constant*>());
 }
 
-void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) { ++Count; }
+void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
+  errs() << "CPflow visiting a binary operator";
+}

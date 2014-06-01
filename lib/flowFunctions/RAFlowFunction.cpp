@@ -3,7 +3,7 @@
 
 
 
-LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
+std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
@@ -11,7 +11,9 @@ LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<La
     info_in_casted.push_back(temp);
   }
   this->visit(instr);
-  return ret_value;
+  std::vector<LatticePoint*> info_out;
+  info_out.push_back(&ret_value);
+  return info_out;
 }
 
 
@@ -104,12 +106,13 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     isLeftInfinite = true;
     isRightInfinite = true;
   }
-  Count++;
+  // Count++;
   ret_value.representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){
-  Count++;
+  // Count++;
+  errs() << "RA flow visiting a store instruction";
 }
 
 

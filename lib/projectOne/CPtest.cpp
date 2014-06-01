@@ -55,18 +55,18 @@ using namespace llvm;
       	errs() << " \n Constant value is " << someConstant->getValue();
 
        	CPFlowFunction cpf = CPFlowFunction();
-	std::vector<LatticePoint*> lps;
+	std::vector<std::vector< LatticePoint* > > lps;
 
      	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
 	  // cpf.visit(*I);
 	  lps.push_back(cpf(&(*I), sampleArgs));
       	}
 
-        for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
-			errs() << (*it)->LPprint() << "\n";
-		}
+        // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
+	// 		errs() << (*it)->LPprint() << "\n";
+	// 	}
 
-      	errs() << " \n count = " << cpf.Count;
+      	// errs() << " \n count = " << cpf.Count;
 	errs() << " \n wheeeeee " ;
 	errs() << " -----Ending Function Pass------ \n";
       
