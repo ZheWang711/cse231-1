@@ -24,7 +24,7 @@ bool compare_APInts(APInt &left, APInt &right){
 }
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
-  BinaryOperator* current = &*BO;
+  BinaryOperator* current = &BO;
   std::pair<Use*, Use *> operands = helper::getOperands(BO);
   Use* S1 = operands.first;
   Use* S2 = operands.second;
@@ -37,7 +37,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   
   if (isa<ConstantInt>(S1) && isa<ConstantInt>(S2)){
     ConstantInt* C1 = cast<ConstantInt>(S1);
-    ConstantInt* C2 = cast<ConstantInt>(S2)
+    ConstantInt* C2 = cast<ConstantInt>(S2);
     lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
     ub = lb;
   }
@@ -52,7 +52,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       lb = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.first);
     }
     if (S2_val.first.second){
-      isRightInfinite = true
+      isRightInfinite = true;
     }
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
@@ -69,7 +69,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       lb = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, C2);
     }
     if (S1_val.first.second){
-      isRightInfinite = true
+      isRightInfinite = true;
     }
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, C2);
@@ -88,11 +88,11 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       std::list<APInt &> possible_vals;
       possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.first))->getValue());
       possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.second))->getValue());
-      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.first))->getValue())
+      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.first))->getValue());
       possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.second))->getValue());
       possible_vals.sort(compare_APInts);
       lb = possible_vals.front();
-      ub = possible_vals.back()
+      ub = possible_vals.back();
     }
   }
   else{
