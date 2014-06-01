@@ -7,44 +7,31 @@ ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, Constan
   ConstantInt* result = ConstantInt::get(context, APInt::getNullValue(32));
   switch (Opcode) {
     case Instruction::Xor:
-      const APInt &result_value  = c1_value.Xor(c2_value);
-      result = ConstantInt::get(context, result_value);
+      result = ConstantInt::get(context, c1_value.Xor(c2_value));
     case Instruction::Add:
-      const APInt &result_value1  = c1_value + c2_value;
-      result = ConstantInt::get(context, result_value1);
+      result = ConstantInt::get(context, c1_value + c2_value);
     case Instruction::Sub:
-      const APInt &result_value2  = c1_value - c2_value;
-      result = ConstantInt::get(context, result_value2);
+      result = ConstantInt::get(context, c1_value - c2_value);
     case Instruction::Mul:
-      const APInt &result_value3  = c1_value * c2_value;
-      result = ConstantInt::get(context, result_value3);
+      result = ConstantInt::get(context, c1_value * c2_value);
     case Instruction::UDiv:
-      const APInt &result_value4  = c1_value.udiv(c2_value);
-      result = ConstantInt::get(context, result_value4);
+      result = ConstantInt::get(context, c1_value.udiv(c2_value));
     case Instruction::SDiv:
-      const APInt &result_value5  = c1_value.sdiv(c2_value);
-      result = ConstantInt::get(context, result_value5);
+      result = ConstantInt::get(context, c1_value.sdiv(c2_value));
     case Instruction::URem:
-      const APInt &result_value6  = c1_value.urem(c2_value);
-      result = ConstantInt::get(context, result_value6);
+      result = ConstantInt::get(context, c1_value.urem(c2_value));
     case Instruction::SRem:
-      const APInt &result_value7  = c1_value.srem(c2_value);
-      result = ConstantInt::get(context, result_value7);
+      result = ConstantInt::get(context, c1_value.srem(c2_value));
     case Instruction::Or:
-      const APInt &result_value8  = c1_value.Or(c2_value);
-      result = ConstantInt::get(context, result_value8);
+      result = ConstantInt::get(context, c1_value.Or(c2_value));
     case Instruction::And:
-      const APInt &result_value9  = c1_value.And(c2_value);
-      result = ConstantInt::get(context, result_value9);
+      result = ConstantInt::get(context, c1_value.And(c2_value));
     case Instruction::LShr:
-      const APInt &result_value10  = c1_value.lshr(c2_value);
-      result = ConstantInt::get(context, result_value10);
+      result = ConstantInt::get(context, c1_value.lshr(c2_value));
     case Instruction::AShr:
-      const APInt &result_value11  = c1_value.ashr(c2_value);
-      result = ConstantInt::get(context, result_value11);
+      result = ConstantInt::get(context, c1_value.ashr(c2_value));
     case Instruction::Shl:
-      const APInt &result_value12  = c1_value.shl(c2_value);
-      result = ConstantInt::get(context, result_value12);
+      result = ConstantInt::get(context, c1_value.shl(c2_value));
   }
   return result;
 }
