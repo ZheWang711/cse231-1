@@ -41,10 +41,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
     ub = lb;
   }
-  else if (isa<ConstantInt>(S1) && ret_value.representation.count(S2) > 0){
+  else if (isa<ConstantInt>(S1) && ret_value.representation.count(S2->get()) > 0){
     // Here S2 is in our map and S1 is a constant.
     ConstantInt* C1 = cast<ConstantInt>(S1);
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2->get()];
     if (S2_val.first.first) {
       isLeftInfinite = true;
     }
@@ -58,10 +58,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
     }
   }
-  else if (isa<ConstantInt>(S2) && ret_value.representation.count(S1) > 0){
+  else if (isa<ConstantInt>(S2) && ret_value.representation.count(S1->get()) > 0){
     // Here S1 is in our map and S2 is a constant.
     ConstantInt* C2 = cast<ConstantInt>(S2);
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1->get()];
     if (S1_val.first.first) {
       isLeftInfinite = true;
     }
@@ -75,10 +75,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       ub = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, C2);
     }
   }
-  else if (ret_value.representation.count(S1) > 0 &&ret_value.representation.count(S2) > 0){
+  else if (ret_value.representation.count(S1->get()) > 0 &&ret_value.representation.count(S2->get()) > 0){
     // Both S1 and S2 are in our map and non-constant.
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1];
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1->get()];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2->get()];
     
     if (S1_val.first.first || S2_val.first.first || S1_val.first.second || S2_val.first.second) {
       isLeftInfinite = true;
