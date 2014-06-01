@@ -18,10 +18,10 @@ ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, Constan
     case Instruction::Mul:
       const APInt &result_value3  = c1_value * c2_value;
       result = ConstantInt::get(context, result_value3);
-    case Instruction::Udiv:
+    case Instruction::UDiv:
       const APInt &result_value4  = c1_value.udiv(c2_value);
       result = ConstantInt::get(context, result_value4);
-    case Instruction::Sdiv:
+    case Instruction::SDiv:
       const APInt &result_value5  = c1_value.sdiv(c2_value);
       result = ConstantInt::get(context, result_value5);
     case Instruction::URem:
