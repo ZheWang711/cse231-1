@@ -1,4 +1,5 @@
 #include "flowFunctions/RAFlowFunction.h"
+#include "helper.h"
 
 LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
