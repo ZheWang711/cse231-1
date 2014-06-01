@@ -103,16 +103,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){
-  value = I.getValueOperand();
-  pointer = I.getPointerOperand();
-  if (isa<ConstantInt>(value)){
-    ret_value.representation[pointer] = std::make_pair(std::make_pair(false, false), std::make_pair(cast<ConstantInt>(value), cast<ConstantInt>(value)));
-  }
-  else{
-    ConstantInt* filler = NULL;
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
-    ret_value.representation[pointer] = val;
-  }
+  Count++;
 }
 
 std::string RAFlowFunction::getRepresentation(){
