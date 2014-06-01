@@ -26,5 +26,5 @@ public:
   void visitStoreInst(StoreInst   &I);
 
   // Flow Function Interface
-  LatticePoint operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 };
