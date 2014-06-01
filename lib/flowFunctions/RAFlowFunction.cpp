@@ -19,8 +19,8 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
   ret_value.representation[current] = val;
 }
 
-bool compare_APInts(APInt* left, APInt* right){
-  return left->sle(*right);
+bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
+  return (left->getValue())->sle(right->getValue());
 }
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
@@ -85,12 +85,12 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       isRightInfinite = true;
     }
     else{
-      std::list<APInt *> possible_vals;
-      possible_vals.push_back(&(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.first))->getValue());
-      possible_vals.push_back(&(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.second))->getValue());
-      possible_vals.push_back(&(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.first))->getValue());
-      possible_vals.push_back(&(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.second))->getValue());
-      possible_vals.sort(compare_APInts);
+      std::list<ConstantInt *> possible_vals;
+      possible_vals.push_back(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.first));
+      possible_vals.push_back(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.second));
+      possible_vals.push_back(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.first));
+      possible_vals.push_back(helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.second));
+      possible_vals.sort(compare_ConstantInts);
       lb = possible_vals.front();
       ub = possible_vals.back();
     }
