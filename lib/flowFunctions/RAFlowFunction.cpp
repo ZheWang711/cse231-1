@@ -19,20 +19,20 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
 
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
-  User S1;
-  USer S2;
-  int = 0;
-  for (User::op_iterator OP = BO->op_begin(), OPE = I->op_end(); OP != OPE; ++OP){
-    if(i = 0){
-      S1 = *OP;
+  Use* S1;
+  Use* S2;
+  int i = 0;
+  for (User::op_iterator OP = BO.op_begin(), OPE = BO.op_end(); OP != OPE; ++OP){
+    if(i == 0){
+      S1 = &*OP;
     }
     else{
-      S2 = *OP;
+      S2 = &*OP;
     }
     i++;
   }
-  if (ConstantInt* C1 = dyn_cast<ConstantInt>(&S1)) {
-    if (ConstantInt* C2 = dyn_cast<ConstantInt>(&S2)) {
+  if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1)) {
+    if (ConstantInt* C2 = dyn_cast<ConstantInt>(S2)) {
       curr = helper::foldBinaryOperator(BO.getOpcode(),C1, C2);
     }
   }
