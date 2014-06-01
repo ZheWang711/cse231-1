@@ -1,6 +1,6 @@
 #include "helper.h"
 
-ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, ConstantInt *C2){
+static ConstantInt* helper::foldBinaryOperator(unsigned Opcode,ConstantInt *C1, ConstantInt *C2){
   LLVMContext &context = C1->getContext();
   const APInt &c1_value = C1->getValue();
   const APInt &c2_value = C2->getValue();
