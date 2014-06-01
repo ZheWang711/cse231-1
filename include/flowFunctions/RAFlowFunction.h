@@ -17,7 +17,8 @@ public:
   RALatticePoint ret_value;
   Value* value;
   Value* pointer;
-  RAFlowFunction() : Count(0), ret_value(RALatticePoint()), value(NULL), pointer(NULL) {}
+  ConstantInt* curr;
+  RAFlowFunction() : Count(0), ret_value(RALatticePoint()), value(NULL), pointer(NULL), curr(NULL) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);
