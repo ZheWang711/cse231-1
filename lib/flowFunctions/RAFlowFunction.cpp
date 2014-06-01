@@ -1,4 +1,6 @@
 #include "flowFunctions/RAFlowFunction.h"
+#include <list>
+
 
 
 LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
@@ -17,26 +19,83 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
   ret_value.representation[current] = val;
 }
 
+bool compare_APInts(APInt &left, APInt &right){
+  return left.sle(right);
+}
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
-  helper h = helper();
-  Use* S1;
-  Use* S2;
-  int i = 0;
-  for (User::op_iterator OP = BO.op_begin(), OPE = BO.op_end(); OP != OPE; ++OP){
-    if(i == 0){
-      S1 = &*OP;
+  BinaryOperator* current = &*BO;
+  std::pair<Use*, Use *> operands = helper::getOperands(BO);
+  Use* S1 = operands.first;
+  Use* S2 = operands.second;
+  std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > val;
+  
+  bool isLeftInfinite = false;
+  bool isRightInfinite = false;
+  ConstantInt* lb = NULL;
+  ConstantInt* ub = NULL;
+  
+  if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1) && ConstantInt* C2 = dyn_cast<ConstantInt>(S2)){
+    ConstantInt* lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
+    ConstantInt* ub = lb;
+  }
+  else if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1) && ret_value.representation.count(S2) > 0){
+    // Here S2 is in our map and S1 is a constant.
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2];
+    if (S2_val.first.first) {
+      isLeftInfinite = true;
     }
     else{
-      S2 = &*OP;
+      lb = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.first);
     }
-    i++;
-  }
-  if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1)) {
-    if (ConstantInt* C2 = dyn_cast<ConstantInt>(S2)) {
-      curr = h.foldBinaryOperator(BO.getOpcode(),C1, C2);
+    if (S2_val.first.second){
+      isRightInfinite = true
+    }
+    else{
+      ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
     }
   }
+  else if (ConstantInt* C2 = dyn_cast<ConstantInt>(S2) && ret_value.representation.count(S1) > 0){
+    // Here S1 is in our map and S2 is a constant.
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1];
+    if (S1_val.first.first) {
+      isLeftInfinite = true;
+    }
+    else{
+      lb = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, C2);
+    }
+    if (S1_val.first.second){
+      isRightInfinite = true
+    }
+    else{
+      ub = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, C2);
+    }
+  }
+  else if (ret_value.representation.count(S1) > 0 &&ret_value.representation.count(S2) > 0){
+    // Both S1 and S2 are in our map and non-constant.
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2];
+    
+    if (S1_val.first.first || S2_val.first.first || S1_val.first.second || S2_val.first.second) {
+      isLeftInfinite = true;
+      isRightInfinite = true;
+    }
+    else{
+      std::list<APInt &> possible_vals;
+      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.first))->getValue());
+      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.first, S2_val.second.second))->getValue());
+      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.first))->getValue())
+      possible_vals.push_back((helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, S2_val.second.second))->getValue());
+      possible_vals.sort(compare_APInts);
+      lb = possible_vals.front();
+      ub = possible_vals.back()
+    }
+  }
+  else{
+    bool isLeftInfinite = true;
+    bool isRightInfinite = true;
+  }
+  ret_value.representation[pointer] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){

@@ -16,10 +16,7 @@ public:
   std::vector<RALatticePoint *> info_in_casted;
   unsigned Count;
   RALatticePoint ret_value;
-  Value* value;
-  Value* pointer;
-  ConstantInt* curr;
-  RAFlowFunction() : Count(0), ret_value(RALatticePoint()), value(NULL), pointer(NULL), curr(NULL) {}
+  RAFlowFunction() : Count(0), ret_value(RALatticePoint()) {}
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
   void visitStoreInst(StoreInst   &I);

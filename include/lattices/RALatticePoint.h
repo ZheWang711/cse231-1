@@ -52,6 +52,8 @@ public:
   }
   LatticePoint* join(LatticePoint* in);
   bool equals(LatticePoint* in);
+
+  
 };
 
 #endif /* RALATTICEPOINT_H_ */
