@@ -7,7 +7,7 @@ LatticePoint RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<La
   // dyncast on that vector;
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
-    RALatticePoint* temp = dyn_cast<RALatticePoint>(*it)
+    RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
     info_in_casted.push_back(temp);
   }
   this->visit(instr);
