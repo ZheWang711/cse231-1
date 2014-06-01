@@ -19,6 +19,7 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
 
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
+  helper h = helper();
   Use* S1;
   Use* S2;
   int i = 0;
@@ -33,7 +34,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1)) {
     if (ConstantInt* C2 = dyn_cast<ConstantInt>(S2)) {
-      curr = helper::foldBinaryOperator(BO.getOpcode(),C1, C2);
+      curr = h.foldBinaryOperator(BO.getOpcode(),C1, C2);
     }
   }
 }

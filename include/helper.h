@@ -15,7 +15,10 @@ public:
   /* 
    folds the binary operator for the special case of both arguments being ConstantInts.
    */
-  static ConstantInt* foldBinaryOperator(unsigned Opcode ,ConstantInt *C1, ConstantInt *C2);
+  
+  int dummy;
+  helper() : dummy(0) {}
+  ConstantInt* foldBinaryOperator(unsigned Opcode ,ConstantInt *C1, ConstantInt *C2);
 };
 
 #endif /* HELPER_H_ */
