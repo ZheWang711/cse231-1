@@ -35,12 +35,15 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   ConstantInt* lb = NULL;
   ConstantInt* ub = NULL;
   
-  if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1) && ConstantInt* C2 = dyn_cast<ConstantInt>(S2)){
-    ConstantInt* lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
-    ConstantInt* ub = lb;
+  if (isa<ConstantInt>(S1) && isa<ConstantInt>(S2)){
+    ConstantInt* C1 = cast<ConstantInt>(S1);
+    ConstantInt* C2 = cast<ConstantInt>(S2)
+    lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
+    ub = lb;
   }
-  else if (ConstantInt* C1 = dyn_cast<ConstantInt>(S1) && ret_value.representation.count(S2) > 0){
+  else if (isa<ConstantInt>(S1) && ret_value.representation.count(S2) > 0){
     // Here S2 is in our map and S1 is a constant.
+    ConstantInt* C1 = cast<ConstantInt>(S1);
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2];
     if (S2_val.first.first) {
       isLeftInfinite = true;
@@ -55,8 +58,9 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
     }
   }
-  else if (ConstantInt* C2 = dyn_cast<ConstantInt>(S2) && ret_value.representation.count(S1) > 0){
+  else if (isa<ConstantInt>(S2) && ret_value.representation.count(S1) > 0){
     // Here S1 is in our map and S2 is a constant.
+    ConstantInt* C2 = cast<ConstantInt>(S2);
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1];
     if (S1_val.first.first) {
       isLeftInfinite = true;
