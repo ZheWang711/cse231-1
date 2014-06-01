@@ -20,7 +20,7 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
 }
 
 bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
-  return (left->getValue())->sle(right->getValue());
+  return (left->getValue()).sle(right->getValue());
 }
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
