@@ -17,7 +17,8 @@ public:
   
   enum LatticePointKind {
     LPK_CPLatticePoint,
-    LPK_RALatticePoint
+    LPK_RALatticePoint,
+    LPK_CSELatticePoint
   };
   
 
@@ -25,7 +26,6 @@ public:
   bool isBottom;
   bool isTop;
   
-
   LatticePointKind getKind() const { return Kind; }
   
   LatticePoint(LatticePointKind K) : isBottom(false), isTop(false), Kind(K) {}
