@@ -7,6 +7,8 @@
 #include "llvm/Support/InstIterator.h"
 
 #include <map>
+#include <string>
+#include <sstream>
 
 #include "LatticePoint.h"
 
@@ -26,13 +28,12 @@ public:
   
   CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, Constant*>()) {}
 
-
-
     static bool classof(const LatticePoint *L) {
       return L->getKind() == LPK_CPLatticePoint;
     }
   LatticePoint* join(LatticePoint* in);
   bool equals(LatticePoint* in);
+  std::string LPprint();
 };
 
 #endif /* CPLATTICEPOINT_H_ */

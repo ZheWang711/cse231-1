@@ -6,6 +6,8 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
 #include <map>
+#include <string>
+#include <sstream>
 #include "llvm/Support/Casting.h"
 
 using namespace llvm;
@@ -30,8 +32,10 @@ public:
   
   LatticePoint(LatticePointKind K, bool bottomIN, bool topIN) : isBottom(bottomIN), isTop(topIN), Kind(K) {}
   
-  LatticePoint* join(LatticePoint* in);
-  bool equals(LatticePoint* in);
+  virtual LatticePoint* join(LatticePoint* in);
+  virtual bool equals(LatticePoint* in);
+  virtual std::string LPprint();
+
 private:
   LatticePointKind Kind;
 };

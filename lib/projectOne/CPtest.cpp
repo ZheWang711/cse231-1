@@ -33,7 +33,14 @@ using namespace llvm;
 
       errs() << " About to create CPLatticePoint \n";
       
-      CPLatticePoint clp = CPLatticePoint(false, true, std::map<Value*, Constant*>());
+	  LLVMContext &someContext = F.getContext();
+
+	  std::map<Value*, Constant*> lpmap;
+      ConstantInt* ci = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 10, /*bool*/true));
+
+	  lpmap.insert(std::pair<Value*,Constant*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
+
+      CPLatticePoint clp = CPLatticePoint(false, true, lpmap);
       std::vector<LatticePoint* > sampleArgs;
       sampleArgs.push_back(dyn_cast<LatticePoint>(&clp));
       errs() << " Created CPLatticePoint with address " << &clp << "\n";
@@ -42,7 +49,6 @@ using namespace llvm;
 
 	errs() << " isTop " << clp.isTop;
 
-	LLVMContext &someContext = F.getContext();
 
 	ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
 
@@ -57,8 +63,7 @@ using namespace llvm;
       	}
 
         for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
-			errs() << "isbottom?" << (*it)->isBottom << "\n";
-			errs() << "istop?" << (*it)->isTop << "\n";
+			errs() << (*it)->LPprint() << "\n";
 		}
 
       	errs() << " \n count = " << cpf.Count;

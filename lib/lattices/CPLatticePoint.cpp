@@ -65,3 +65,16 @@ bool CPLatticePoint::equals(LatticePoint* in){
   }
   return true;
 }
+
+std::string CPLatticePoint::LPprint() {
+	std::stringstream ss;
+    ss << "\nCP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
+	ss << "{ ";
+	for(std::map<Value*, Constant*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
+		Value* val = it->first;
+		Constant* con = it->second;
+		ss << val << ": " << *(con->getUniqueInteger().getRawData()) << ", ";
+    }
+    ss << " }\n";
+    return ss.str();
+}
