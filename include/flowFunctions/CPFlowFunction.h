@@ -15,7 +15,7 @@ public:
   CPLatticePoint* ret_value;
 
   // Constructor
-  CPFlowFunction();
+  CPFlowFunction() {};
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);

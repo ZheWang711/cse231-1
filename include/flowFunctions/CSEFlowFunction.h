@@ -15,7 +15,7 @@ public:
   CSELatticePoint* ret_value;
 
   // Constructor
-  CSEFlowFunction();
+  CSEFlowFunction() {};
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
