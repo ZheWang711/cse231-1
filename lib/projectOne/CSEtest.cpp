@@ -54,7 +54,7 @@ struct CSEtest : public FunctionPass {
 
     errs() << " \n Constant value is " << someConstant->getValue() << "\n";
 
-    CSEFlowFunction CSEf = CSEFlowFunction();
+    FlowFunction CSEf =  CSEFlowFunction();
 
     
     Instruction* firstI = F.front().getFirstNonPHI();

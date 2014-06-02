@@ -18,7 +18,7 @@ public:
   std::vector<LatticePoint *> info_out;
 
   // Constructor
-  RAFlowFunction(){}
+  RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
@@ -27,4 +27,8 @@ public:
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+
+  static bool classof(const FlowFunction *F) {
+    return F->getKind() == FFK_RAFlowFunction;
+  }
 };

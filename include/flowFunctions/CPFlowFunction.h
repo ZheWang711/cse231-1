@@ -15,7 +15,8 @@ public:
   CPLatticePoint* ret_value;
 
   // Constructor
-  CPFlowFunction() {};
+  CPFlowFunction() : FlowFunction(FFK_CPFlowFunction) {}
+
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
@@ -23,5 +24,10 @@ public:
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+
+  static bool classof(const FlowFunction *F) {
+    return F->getKind() == FFK_CPFlowFunction;
+  }
+
 };
 
