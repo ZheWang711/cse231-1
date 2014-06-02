@@ -120,7 +120,11 @@ bool RALatticePoint::equals(LatticePoint* in){
 
 std::string RALatticePoint::LPprint() {
 	std::stringstream ss;
-  ss << "\nRP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
+  ss << "--> RP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
+  if (this->isBottom || this->isTop){
+    return ss.str();
+  }
+  
 	ss << "{ ";
 	for(std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;

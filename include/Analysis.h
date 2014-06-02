@@ -23,7 +23,7 @@
 
 class Analysis {
 public:
-  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction &flowF){
+  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction flowF){
     
     // First we analyze at the BasicBlock level. Then we will push our results down to the instruction level.
     std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > pair_map = Analysis::predecessorSuccessorMapConstructor(F);
@@ -32,6 +32,8 @@ public:
     
     std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> edge_map;
     std::list<BasicBlock *> worklist;
+    
+    errs() << "\n Building worklist now \n";
     
     // We first initialize all edges to be bottom and add all basic block nodes to our worklist.
     for (Function::iterator BB = F.begin(), e = F.end(); BB != e; ++BB){
@@ -45,13 +47,21 @@ public:
       }
     }
     
+    errs() << "\n Done building worklist. Worklist has " << worklist.size() << " elements\n";
+    
+    errs() << "\n Iterating until convergence now. \n";
+
+    
     // Now we apply flow functions until we hit a fixed point.
     while (!worklist.empty()){
+      errs() << "\n In worklist iteration... \n";
       BasicBlock *BB = worklist.front();
       worklist.remove(BB); // Remove all instances of BB in the worklist (handles multiples)
       std::list<BasicBlock *> predecessors = predecessor_map[BB];
       std::list<BasicBlock *> successors = successor_map[BB];
+      errs() << "\n About to apply BBFF \n";
       bool flag = applyBasicBlockFlowFunctions(BB, edge_map, flowF, start, predecessors, successors);
+      errs() << "\n Done with BBFF \n";
       if (flag) {
         // We modified the outgoing edges, add all the successors to the worklist.
         std::list<BasicBlock *> successors = successor_map[BB];
@@ -60,6 +70,9 @@ public:
         }
       }
     }
+    
+    errs() << "\n Converged. Executing final push now. \n";
+
     
     // We are at a fixed point. Time to push through all the corresponding lattice points.
     std::map<Instruction *, LatticePoint *> result;
@@ -87,6 +100,9 @@ public:
         inputs = flowF(I, inputs);
       }
     }
+    errs() << "\n Done. result has " << result.size() << " elements.\n";
+
+    
     return result;
   }
   
@@ -112,7 +128,7 @@ public:
   
   
   // Returns TRUE if the exiting edges are modified.
-  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction &flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
+  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
     
     // We use vectors for passing lists of lattice points into flow functions.
     std::vector<LatticePoint *> inputs;
@@ -128,14 +144,15 @@ public:
         inputs.push_back(edge_map[edge]);
       }
     }
-    
+    errs() << "\n In BBFF \n";
     for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
       /*
        Hopefully we figure out how to coordinate the output of flow functions with the structure of the CFG.
        */
-      
+      errs() << "Working on instruction " << *I << "\n";
       inputs = flowF(I, inputs);
-      
+      errs() << "Done with instruction " << *I << "\n";
+
       /*
        LatticePoint* output = flowF(*I, inputs); // Apply our FlowFunction to each instruction in order. The output becomes the new inputs for the next instruction.
        
