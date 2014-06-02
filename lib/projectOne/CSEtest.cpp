@@ -73,9 +73,9 @@ struct CSEtest : public FunctionPass {
     Instruction* prev_instruction;
 
     // let's test the instruction identity calls to LLVM
-    for (inst_iterator IP = inst_begin(F), inst_iterator I = ++inst_begin(F); I != inst_end(F) ; ++I, ++IP){
-      errs() << "is this pair the same" << *IP->isIdenticalToWhenDefined(*I) << "\n";
-    }
+    // for (inst_iterator IP = inst_begin(F), inst_iterator I = ++inst_begin(F); I != inst_end(F) ; ++I, ++IP){
+    //   errs() << "is this pair the same" << *IP->isIdenticalToWhenDefined(*I) << "\n";
+    // }
 
 
     // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
