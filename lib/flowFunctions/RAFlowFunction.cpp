@@ -5,16 +5,16 @@
 
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
-  errs() << "In operator \n";
+  //errs() << "In operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    errs() << "Handed lattice point " << temp->LPprint();
+    //errs() << "Handed lattice point " << temp->LPprint();
     info_in_casted.push_back(temp);
   }
-  errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
+  //errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
   this->visit(instr);
-  errs() << "Done with visit \n";
+  //errs() << "Done with visit \n";
   return info_out;
 }
 
@@ -28,7 +28,7 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
   val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
   ret_value.representation[current] = val;
    */
-  errs() << "RA flow visiting an alloca instruction \n";
+  //errs() << "RA flow visiting an alloca instruction \n";
 }
 
 bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
@@ -56,7 +56,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   ConstantInt* ub = NULL;
   
   if (isa<ConstantInt>(S1) && isa<ConstantInt>(S2)){
-    errs() << "In both constants case \n";
+    //errs() << "In both constants case \n";
     ConstantInt* C1 = cast<ConstantInt>(S1);
     ConstantInt* C2 = cast<ConstantInt>(S2);
     lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
@@ -66,7 +66,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   else if (isa<ConstantInt>(S1) && ret_value->representation.count(S2->get()) > 0){
     // Here S2 is in our map and S1 is a constant.
-    errs() << "In one constant case, one in our map case. \n";
+    //errs() << "In one constant case, one in our map case. \n";
     ConstantInt* C1 = cast<ConstantInt>(S1);
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value->representation[S2->get()];
     if (S2_val.first.first) {
@@ -86,7 +86,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   else if (isa<ConstantInt>(S2) && ret_value->representation.count(S1->get()) > 0){
     // Here S1 is in our map and S2 is a constant.
-    errs() << "In one constant case, one in our map case. \n";
+    //errs() << "In one constant case, one in our map case. \n";
     ConstantInt* C2 = cast<ConstantInt>(S2);
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value->representation[S1->get()];
     if (S1_val.first.first) {
@@ -105,7 +105,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     ret_value->isTop = false;
   }
   else if (ret_value->representation.count(S1->get()) > 0 && ret_value->representation.count(S2->get()) > 0){
-    errs() << "In both in our map case. \n";
+    //errs() << "In both in our map case. \n";
     // Both S1 and S2 are in our map and non-constant.
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value->representation[S1->get()];
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value->representation[S2->get()];
@@ -128,20 +128,18 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     ret_value->isTop = false;
   }
   else{
-    errs() << "In neither in our map case. \n";
+    //errs() << "In neither in our map case. \n";
     isLeftInfinite = true;
     isRightInfinite = true;
   }
-  // Count++;
   ret_value->representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
-  errs() << "Lattice point to be returned is " << ret_value->LPprint();
-  info_out.clear();
+  //errs() << "Lattice point to be returned is " << ret_value->LPprint();
   info_out.push_back(ret_value);
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){
   // Count++;
-  errs() << "RA flow visiting a store instruction \n";
+  //errs() << "RA flow visiting a store instruction \n";
 }
 
 
