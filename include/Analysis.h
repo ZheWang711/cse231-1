@@ -19,6 +19,9 @@
 // Our Stuff
 #include "lattices/LatticePoint.h"
 #include "flowFunctions/FlowFunction.h"
+#include "flowFunctions/CPFlowFunction.h"
+#include "flowFunctions/RAFlowFunction.h"
+#include "flowFunctions/CSEFlowFunction.h"
 
 
 class Analysis {
