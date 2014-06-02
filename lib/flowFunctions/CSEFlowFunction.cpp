@@ -14,15 +14,15 @@ std::vector<LatticePoint *> CSEFlowFunction::operator()(llvm::Instruction* instr
   }
   visit(instr);
   errs() << "returned from visiting\n";
-  LatticePoint* lp = dyn_cast<LatticePoint>(ret_value);
+  // LatticePoint* lp = dyn_cast<LatticePoint>(ret_value);
   
   std::vector<LatticePoint*> info_out;
-  info_out.push_back(lp);
+  info_out.push_back(ret_value);
   return info_out;
 }
 
 void CSEFlowFunction::visitAllocaInst(AllocaInst &AI) {
-  errs() << "CSEflow visiting an alloca";
+  errs() << "CSEflow visiting an alloca \n";
   // ++Count; 
   // just stick bottom in the ret_value every time we hit an alloca (testing)
    ret_value = new CSELatticePoint(false, true, std::map<Value*, Instruction*>());
