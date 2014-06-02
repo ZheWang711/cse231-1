@@ -189,11 +189,11 @@ public:
     }
     else if(isa<CPFlowFunction>(flowF)){
       CPFlowFunction* f = cast<CPFlowFunction>(flowF);
-      outputs = f(I, inputs);
+      outputs = (*f)(I, inputs);
     }
     else if(isa<CSEFlowFunction>(flowF)){
       CSEFlowFunction* f = cast<CSEFlowFunction>(flowF);
-      outputs = f(I, inputs);
+      outputs = (*f)(I, inputs);
     }
     return outputs;
   }
