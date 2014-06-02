@@ -35,3 +35,5 @@ public:
     return F->getKind() == FFK_RAFlowFunction;
   }
 };
+
+#endif /* RAFLOWFUNCTION_H_ */
