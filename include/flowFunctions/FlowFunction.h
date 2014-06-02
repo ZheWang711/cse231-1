@@ -40,7 +40,7 @@ public:
   FlowFunction(FlowFunctionKind K) : Kind(K) {}
 
   // operation defined for all flow functions
-  std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  virtual std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 
 private:
   FlowFunctionKind Kind;
