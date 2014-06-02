@@ -32,7 +32,7 @@ struct RATest : public FunctionPass {
     
     std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
     RALatticePoint bottom = RALatticePoint(true, false, representation);
-    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, &bottom, raf);
+    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, &bottom, &raf);
     
     for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
       Instruction* I = it->first;

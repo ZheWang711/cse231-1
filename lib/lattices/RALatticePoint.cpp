@@ -120,8 +120,9 @@ bool RALatticePoint::equals(LatticePoint* in){
 
 std::string RALatticePoint::LPprint() {
 	std::stringstream ss;
-  ss << "--> RP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
+  ss << "--> RP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << " | ";
   if (this->isBottom || this->isTop){
+    ss << "\n";
     return ss.str();
   }
   

@@ -1,3 +1,6 @@
+#ifndef RAFLOWFUNCTION_H_
+#define RAFLOWFUNCTION_H_
+
 // it WOULD APPEAR that we can inherit from both the INTERFACE
 // flowfunction, and the IMPLEMENTATION AID InstVisitor with a
 // template. at least, this builds with no errors, and C++ does in
@@ -32,3 +35,5 @@ public:
     return F->getKind() == FFK_RAFlowFunction;
   }
 };
+
+#endif /* RAFLOWFUNCTION_H_ */

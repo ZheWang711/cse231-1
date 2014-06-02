@@ -1,3 +1,6 @@
+#ifndef CPFLOWFUNCTION_H_
+#define CPFLOWFUNCTION_H_
+
 // it WOULD APPEAR that we can inherit from both the INTERFACE
 // flowfunction, and the IMPLEMENTATION AID InstVisitor with a
 // template. at least, this builds with no errors, and C++ does in
@@ -31,3 +34,4 @@ public:
 
 };
 
+#endif /* CPFLOWFUNCTION_H_ */
