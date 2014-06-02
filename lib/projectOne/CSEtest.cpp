@@ -54,15 +54,28 @@ struct CSEtest : public FunctionPass {
 
     errs() << " \n Constant value is " << someConstant->getValue() << "\n";
 
-    FlowFunction CSEf =  CSEFlowFunction();
+    CSEFlowFunction CSEFlow_native = CSEFlowFunction();
 
-    
+    FlowFunction* CSEFlow_casted = dyn_cast<FlowFunction>(&CSEFlow_native);
+
     Instruction* firstI = F.front().getFirstNonPHI();
     
-    errs() << "First Instruction: " << Instruction::getOpcodeName(firstI->getOpcode()) << ", " << firstI->getNumOperands() << " arg(s)\n";
+    
 
-    std::vector<LatticePoint* > firstEval = CSEf(firstI, sampleArgs);
-    std::vector<LatticePoint* > secondEval = CSEf(firstI, firstEval);
+    errs() << "First Instruction: " << Instruction::getOpcodeName(firstI->getOpcode()) << ", " << firstI->getNumOperands() << " arg(s)\n";
+    
+    std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
+    // std::vector<LatticePoint* > secondEval = (*CSEFlow_native)(firstI, sampleArgs);
+
+
+    // this is how we have to call the relevent flow functions when we
+    // only have a FlowFunction*, not an object of the base type
+    if (CSEFlowFunction *CSEFF = dyn_cast<CSEFlowFunction>(CSEFlow_casted)) {
+      std::vector<LatticePoint* > secondEval = (*CSEFF)(firstI, sampleArgs);
+    }
+
+
+    // std::vector<LatticePoint* > secondEval = CSEf(firstI, firstEval);
 		     
     
     // std::vector<std::vector< LatticePoint* > > lps;
