@@ -25,7 +25,10 @@
 // Our Stuff
 #include "lattices/LatticePoint.h"
 #include "lattices/CPLatticePoint.h"
+// #include <memory>
 
+
+// typedef std::vector<shared_ptr<LatticePoint> > lpVector;
 
 class FlowFunction {
 public:
