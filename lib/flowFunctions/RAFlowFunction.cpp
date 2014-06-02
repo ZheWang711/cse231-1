@@ -37,7 +37,11 @@ bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   // Get in Lattice Point.
-  RALatticePoint ret_value = *(info_in_casted.back());
+  RALatticePoint* ret_value = new RALatticePoint;
+  ret_value->representation = (info_in_casted.back())->representation;
+  ret_value->isBottom = (info_in_casted.back())->isBottom;
+  ret_value->isTop =(info_in_casted.back())->isTop;
+  
   info_in_casted.pop_back();
   
   BinaryOperator* current = &BO;
@@ -57,8 +61,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     ConstantInt* C2 = cast<ConstantInt>(S2);
     lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
     ub = lb;
-    ret_value.isBottom = false;
-    ret_value.isTop = false;
+    ret_value->isBottom = false;
+    ret_value->isTop = false;
   }
   else if (isa<ConstantInt>(S1) && ret_value.representation.count(S2->get()) > 0){
     // Here S2 is in our map and S1 is a constant.
@@ -77,8 +81,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
     }
-    ret_value.isBottom = false;
-    ret_value.isTop = false;
+    ret_value->isBottom = false;
+    ret_value->isTop = false;
   }
   else if (isa<ConstantInt>(S2) && ret_value.representation.count(S1->get()) > 0){
     // Here S1 is in our map and S2 is a constant.
@@ -97,8 +101,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, C2);
     }
-    ret_value.isBottom = false;
-    ret_value.isTop = false;
+    ret_value->isBottom = false;
+    ret_value->isTop = false;
   }
   else if (ret_value.representation.count(S1->get()) > 0 && ret_value.representation.count(S2->get()) > 0){
     errs() << "In both in our map case. \n";
@@ -120,8 +124,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       lb = possible_vals.front();
       ub = possible_vals.back();
     }
-    ret_value.isBottom = false;
-    ret_value.isTop = false;
+    ret_value->isBottom = false;
+    ret_value->isTop = false;
   }
   else{
     errs() << "In neither in our map case. \n";
@@ -129,10 +133,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     isRightInfinite = true;
   }
   // Count++;
-  ret_value.representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
-  errs() << "Lattice point to be returned is " << ret_value.LPprint();
+  ret_value->representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
+  errs() << "Lattice point to be returned is " << ret_value->LPprint();
   info_out.clear();
-  info_out.push_back(&ret_value);
+  info_out.push_back(ret_value);
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){

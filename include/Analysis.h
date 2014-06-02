@@ -22,7 +22,7 @@
 #include "flowFunctions/CPFlowFunction.h"
 #include "flowFunctions/RAFlowFunction.h"
 #include "flowFunctions/CSEFlowFunction.h"
-
+#include <memory>
 
 class Analysis {
 public:
