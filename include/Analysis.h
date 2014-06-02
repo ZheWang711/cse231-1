@@ -97,7 +97,7 @@ public:
           inputs = Analysis::extendedJoin(inputs);
         }
         result[I] = inputs.front();
-        inputs = flowF(I, inputs);
+        inputs = applyFlowFunction(flowF, I, inputs);
       }
     }
     errs() << "\n Done. result has " << result.size() << " elements.\n";
@@ -150,7 +150,7 @@ public:
        Hopefully we figure out how to coordinate the output of flow functions with the structure of the CFG.
        */
       errs() << "Working on instruction " << *I << "\n";
-      inputs = flowF(I, inputs);
+      inputs = applyFlowFunction(flowF, I, inputs);
       errs() << "Done with instruction " << *I << "\n";
 
       /*
@@ -176,6 +176,23 @@ public:
       i++;
     }
     return result;
+  }
+  
+  static std::vector<LatticePoint*> applyFlowFunction(FlowFunction flowF, Instruction* I, std::vector<LatticePoint*> inputs){
+    std::vector<LatticePoint*> outputs;
+    if (isa<RAFlowFunction>(&flowF)) {
+      RAFlowFunction f = *(cast<RAFlowFunction>(&flowF));
+      outputs = f(I, inputs);
+    }
+    else if(isa<CPFlowFunction>(&flowF)){
+      CPFlowFunction f = *(cast<CPFlowFunction>(&flowF));
+      outputs = f(I, inputs);
+    }
+    else if(isa<CSEFlowFunction>(&flowF)){
+      CSEFlowFunction f = *(cast<CSEFlowFunction>(&flowF));
+      outputs = f(I, inputs);
+    }
+    return outputs;
   }
   
   
