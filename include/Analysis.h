@@ -26,7 +26,7 @@
 
 class Analysis {
 public:
-  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction flowF){
+  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction* flowF){
     
     // First we analyze at the BasicBlock level. Then we will push our results down to the instruction level.
     std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > pair_map = Analysis::predecessorSuccessorMapConstructor(F);
@@ -131,7 +131,7 @@ public:
   
   
   // Returns TRUE if the exiting edges are modified.
-  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
+  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction* flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
     
     // We use vectors for passing lists of lattice points into flow functions.
     std::vector<LatticePoint *> inputs;
@@ -181,18 +181,18 @@ public:
     return result;
   }
   
-  static std::vector<LatticePoint*> applyFlowFunction(FlowFunction flowF, Instruction* I, std::vector<LatticePoint*> inputs){
+  static std::vector<LatticePoint*> applyFlowFunction(FlowFunction* flowF, Instruction* I, std::vector<LatticePoint*> inputs){
     std::vector<LatticePoint*> outputs;
-    if (isa<RAFlowFunction>(&flowF)) {
-      RAFlowFunction f = *(cast<RAFlowFunction>(&flowF));
+    if (isa<RAFlowFunction>(flowF)) {
+      RAFlowFunction* f = cast<RAFlowFunction>(flowF);
+      outputs = (*f)(I, inputs);
+    }
+    else if(isa<CPFlowFunction>(flowF)){
+      CPFlowFunction* f = cast<CPFlowFunction>(flowF);
       outputs = f(I, inputs);
     }
-    else if(isa<CPFlowFunction>(&flowF)){
-      CPFlowFunction f = *(cast<CPFlowFunction>(&flowF));
-      outputs = f(I, inputs);
-    }
-    else if(isa<CSEFlowFunction>(&flowF)){
-      CSEFlowFunction f = *(cast<CSEFlowFunction>(&flowF));
+    else if(isa<CSEFlowFunction>(flowF)){
+      CSEFlowFunction* f = cast<CSEFlowFunction>(flowF);
       outputs = f(I, inputs);
     }
     return outputs;
