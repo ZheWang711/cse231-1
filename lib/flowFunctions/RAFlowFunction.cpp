@@ -129,7 +129,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   // Count++;
   ret_value.representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
-  errs() << "Lattice point to be returned is [" << ret_value.LPprint() << "]\n";
+  errs() << "Lattice point to be returned is " << ret_value.LPprint();
   info_out.clear();
   info_out.push_back(&ret_value);
 }
