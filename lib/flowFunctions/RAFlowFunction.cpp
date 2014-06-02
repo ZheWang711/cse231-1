@@ -11,7 +11,7 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
     info_in_casted.push_back(temp);
   }
-  errs() << "About to call visit \n";
+  errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
   this->visit(instr);
   errs() << "Done with visit \n";
   return info_out;
