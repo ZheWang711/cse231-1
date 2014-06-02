@@ -17,11 +17,14 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
 
 // Allocate a memory location for a variable. Here we take the convention that this memory spot could have any value.
 void RAFlowFunction::visitAllocaInst(AllocaInst &AI) {
+  /*
   AllocaInst* current = &AI;
   std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > val;
   ConstantInt* filler = NULL;
   val = std::make_pair(std::make_pair(true, true), std::make_pair(filler, filler));
   ret_value.representation[current] = val;
+   */
+  errs() << "RA flow visiting an alloca instruction \n";
 }
 
 bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
@@ -125,7 +128,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){
   // Count++;
-  errs() << "RA flow visiting a store instruction";
+  errs() << "RA flow visiting a store instruction \n";
 }
 
 
