@@ -11,8 +11,6 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
     info_in_casted.push_back(temp);
   }
   this->visit(instr);
-  std::vector<LatticePoint*> info_out;
-  info_out.push_back(&ret_value);
   return info_out;
 }
 
@@ -31,6 +29,10 @@ bool compare_ConstantInts(ConstantInt* left, ConstantInt* right){
 }
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
+  // Get in Lattice Point.
+  RALatticePoint ret_value = *(info_in_casted.back());
+  info_in_casted.pop_back();
+  
   BinaryOperator* current = &BO;
   std::pair<Use*, Use *> operands = helper::getOperands(BO);
   Use* S1 = operands.first;
@@ -47,6 +49,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     ConstantInt* C2 = cast<ConstantInt>(S2);
     lb = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);;
     ub = lb;
+    ret_value.isBottom = false;
+    ret_value.isTop = false;
   }
   else if (isa<ConstantInt>(S1) && ret_value.representation.count(S2->get()) > 0){
     // Here S2 is in our map and S1 is a constant.
@@ -64,6 +68,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), C1, S2_val.second.second);
     }
+    ret_value.isBottom = false;
+    ret_value.isTop = false;
   }
   else if (isa<ConstantInt>(S2) && ret_value.representation.count(S1->get()) > 0){
     // Here S1 is in our map and S2 is a constant.
@@ -81,8 +87,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     else{
       ub = helper::foldBinaryOperator(BO.getOpcode(), S1_val.second.second, C2);
     }
+    ret_value.isBottom = false;
+    ret_value.isTop = false;
   }
-  else if (ret_value.representation.count(S1->get()) > 0 &&ret_value.representation.count(S2->get()) > 0){
+  else if (ret_value.representation.count(S1->get()) > 0 && ret_value.representation.count(S2->get()) > 0){
     // Both S1 and S2 are in our map and non-constant.
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1->get()];
     std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2->get()];
@@ -101,6 +109,8 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
       lb = possible_vals.front();
       ub = possible_vals.back();
     }
+    ret_value.isBottom = false;
+    ret_value.isTop = false;
   }
   else{
     isLeftInfinite = true;
@@ -108,6 +118,9 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   // Count++;
   ret_value.representation[current] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lb, ub));
+  
+  info_out.clear();
+  info_out.push_back(&ret_value);
 }
 
 void RAFlowFunction::visitStoreInst(StoreInst   &I){

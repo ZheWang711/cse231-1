@@ -33,6 +33,8 @@ public:
     std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> edge_map;
     std::list<BasicBlock *> worklist;
     
+    errs() << "\n Building worklist now \n";
+    
     // We first initialize all edges to be bottom and add all basic block nodes to our worklist.
     for (Function::iterator BB = F.begin(), e = F.end(); BB != e; ++BB){
       worklist.push_back(BB);
@@ -44,6 +46,11 @@ public:
         edge_map[edge] = &bottom;
       }
     }
+    
+    errs() << "\n Done building worklist. Worklist has " << worklist.size() << " elements\n";
+    
+    errs() << "\n Iterating until convergence now. \n";
+
     
     // Now we apply flow functions until we hit a fixed point.
     while (!worklist.empty()){
@@ -60,6 +67,9 @@ public:
         }
       }
     }
+    
+    errs() << "\n Converged. Executing final push now. \n";
+
     
     // We are at a fixed point. Time to push through all the corresponding lattice points.
     std::map<Instruction *, LatticePoint *> result;
@@ -87,6 +97,9 @@ public:
         inputs = flowF(I, inputs);
       }
     }
+    errs() << "\n Done. result has " << result.size() << " elements.\n";
+
+    
     return result;
   }
   

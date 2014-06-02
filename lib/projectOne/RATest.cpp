@@ -36,8 +36,15 @@ struct RATest : public FunctionPass {
     
     for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
       Instruction* I = it->first;
-      RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
-      errs() << "Instruction " << I << " maps to lattice point " << rlp->LPprint();
+      if (isa<RALatticePoint>(it->second)) {
+        RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
+        errs() << "Instruction " << I << " maps to lattice point " << rlp->LPprint();
+      }
+      else{
+        errs() << "Instruction " << I << " missing RAlattice point. Is it a LatticePoint? " << isa<LatticePoint>(it->second) << "\n";
+      }
+      
+      
     }
     
     errs() << " -----Ending Function Pass------ \n";

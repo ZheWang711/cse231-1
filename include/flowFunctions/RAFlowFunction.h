@@ -15,10 +15,10 @@ class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
   // local variables for passing arguments
   std::vector<RALatticePoint *> info_in_casted;
-  RALatticePoint ret_value;
+  std::vector<LatticePoint *> info_out;
 
   // Constructor
-  RAFlowFunction() : ret_value(RALatticePoint()) {}
+  RAFlowFunction(){}
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
