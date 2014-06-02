@@ -5,12 +5,15 @@
 
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
+  errs() << "In operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
     info_in_casted.push_back(temp);
   }
+  errs() << "About to call visit \n";
   this->visit(instr);
+  errs() << "Done with visit \n";
   return info_out;
 }
 
