@@ -5,10 +5,9 @@
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
 #include "llvm/Support/InstIterator.h"
-#include "lattices/CPLatticePoint.h"
 #include "lattices/RALatticePoint.h"
-//#include "flowFunctions/FlowFunction.h"
 #include "flowFunctions/RAFlowFunction.h"
+#include "Analysis.h"
 #include <map>
 #include <list>
 #include <utility>
@@ -29,23 +28,18 @@ struct RATest : public FunctionPass {
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Function Pass------ \n";
     
-    RALatticePoint rlp = RALatticePoint();
-    
-    LLVMContext &someContext = F.getContext();
-    
-    ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
-    
     RAFlowFunction raf = RAFlowFunction();
     
+    std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
+    RALatticePoint bottom = RALatticePoint(true, false, representation);
+    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, &bottom, raf);
     
-    for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
-      errs() << *I << "\n";
-      raf(&*I, std::vector<LatticePoint *>());
-      errs() << raf.ret_value.LPprint();
-      
+    for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
+      Instruction* I = it->first;
+      RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
+      errs() << "Instruction " << I << " maps to lattice point " << rlp->LPprint();
     }
     
-    // errs() << " \n count = " << raf.Count;
     errs() << " -----Ending Function Pass------ \n";
     
     return false;

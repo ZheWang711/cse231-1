@@ -1,9 +1,9 @@
 #include "Analysis.h"
-
+/*
 using namespace llvm;
 
 namespace {
-  std::map<Instruction *, LatticePoint> analyze(Function &F, Lattice L, LatticePoint start, FlowFunction flowF){
+  std::map<Instruction *, LatticePoint *> Analysis::analyze(Function &F, LatticePoint *start, FlowFunction &flowF){
     
     // First we analyze at the BasicBlock level. Then we will push our results down to the instruction level.
     std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > pair_map = predecessorSuccessorMapConstructor(F);
@@ -24,6 +24,7 @@ namespace {
       }
     }
     
+    // Now we apply flow functions until we hit a fixed point.
     while (!worklist.empty()){
       BasicBlock *BB = worklist.front();
       worklist.remove(BB); // Remove all instances of BB in the worklist (handles multiples)
@@ -31,14 +32,46 @@ namespace {
       bool flag = applyBasicBlockFlowFunctions(edge_map, L, flowF, start, predecessors);
       if (flag) {
         // We modified the outgoing edges, add all the successors to the worklist.
+        std::list<BasicBlock *> successors = successor_map[BB];
+        for (std::list<BasicBlock *>::iterator Succ=successors.begin(); Succ!=successors.end(); ++Succ){
+          worklist.push_back(Succ);
+        }
       }
     }
+    
+    // We are at a fixed point. Time to push through all the corresponding lattice points.
+    std::map<Instruction *, LatticePoint *> result;
+    for (Function::iterator BB = F->begin(), e = F->end(); BB != e; ++BB){
+      std::list<BasicBlock *> predecessors = predecessor_map[BB];
+      std::vector<LatticePoint *> inputs;
+      if (predecessors.empty()){
+        // We are dealing with the first basic block
+        inputs.push_back(start);
+      }
+      else{
+        // We are not dealing with the first basic block
+        for (std::list<BasicBlock *>::iterator Pred=predecessors.begin(); Pred!=predecessors.end(); ++Pred) {
+          std::pair<BasicBlock *, BasicBlock *> edge;
+          edge = std::make_pair(*Pred, BB);
+          inputs.push_back((*edge_map)[edge]);
+        }
+      }
+      
+      for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
+        if (inputs.size() > 1){
+          inputs = Analysis::extendedJoin(inputs);
+        }
+        map[*I] = inputs.front();
+        inputs = flowF(*I, inputs);
+      }
+    }
+    return result;
   }
   
   
   
   // Tested (works). Returns a pair of maps that gives the structure of the basic blocks.
-  std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > predecessorSuccessorMapConstructor(Function &F){
+  std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > Analysis::predecessorSuccessorMapConstructor(Function &F){
     std::map<BasicBlock *, std::list<BasicBlock *> > predecessors;
     std::map<BasicBlock *, std::list<BasicBlock *> > successors;
     for (Function::iterator BB = F.begin(), e = F.end(); BB != e; ++BB){
@@ -54,9 +87,13 @@ namespace {
     return result;
   }
   
+  
+  
   // Returns TRUE if the exiting edges are modified.
-  bool applyBasicBlockFlowFunctions(std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint> &edge_map, Lattice L, FlowFunction flowF, LatticePoint start, std::list<BasicBlock *> predecessors){
-    std::list<LatticePoint> inputs;
+  bool Analysis::applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction &flowF, LatticePoint *start, std::list<BasicBlock *> predecessors){
+    
+    // We use vectors for passing lists of lattice points into flow functions.
+    std::vector<LatticePoint *> inputs;
     if (predecessors.empty()){
       // We are dealing with the first basic block
       inputs.push_back(start);
@@ -69,23 +106,34 @@ namespace {
         inputs.push_back((*edge_map)[edge]);
       }
     }
-    int i = 0;
-    int s = BB->size();
+    
     for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
-      inputs = flowF(I, inputs); // Apply our FlowFunction to each instruction in order. The outputs become the new inputs for the next instruction.
+      //Hopefully we figure out how to coordinate the output of flow functions with the structure of the CFG.
+ 
+      inputs = flowF(*I, inputs);
+
     }
     
+    if (successors.size() != inputs.size()) {
+      // Here the outgoing edges have identical LatticePoints.
+      inputs = std::vector<LatticePoint *>(successors.size(), inputs.front());
+    }
+    int i = 0;
     bool result = false;
-    LatticePoint exit_lp = inputs.front();
     for (std::list<BasicBlock *>::iterator Succ=successors.begin(); Succ!=successors.end(); ++Succ){
       std::pair<BasicBlock *, BasicBlock *> edge;
       edge = std::make_pair(BB, Succ);
-      result = result || (L.equality(exit_lp, (*edge_map)[edge]));
-      (*edge_map)[edge] = exit_lp;
+      LatticePoint* current_lp = inputs[i];
+      result = result || current_lp->equals((*edge_map)[edge]);
+      (*edge_map)[edge] = current_lp;
+      i++;
     }
-    
     return result;
   }
   
+  std::vector<LatticePoint*> Analysis::extendedJoin(std::vector<LatticePoint *> lps){
+    return NULL;
+  }
     
 }
+*/
