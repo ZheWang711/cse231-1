@@ -104,11 +104,11 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     ret_value->isBottom = false;
     ret_value->isTop = false;
   }
-  else if (ret_value.representation->count(S1->get()) > 0 && ret_value->representation.count(S2->get()) > 0){
+  else if (ret_value->representation.count(S1->get()) > 0 && ret_value->representation.count(S2->get()) > 0){
     errs() << "In both in our map case. \n";
     // Both S1 and S2 are in our map and non-constant.
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value.representation[S1->get()];
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value.representation[S2->get()];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S1_val = ret_value->representation[S1->get()];
+    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > S2_val = ret_value->representation[S2->get()];
     
     if (S1_val.first.first || S2_val.first.first || S1_val.first.second || S2_val.first.second) {
       isLeftInfinite = true;
