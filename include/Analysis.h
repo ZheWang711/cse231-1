@@ -23,7 +23,7 @@
 
 class Analysis {
 public:
-  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction &flowF){
+  static std::map<Instruction *, LatticePoint *> analyze(Function &F, LatticePoint *start, FlowFunction flowF){
     
     // First we analyze at the BasicBlock level. Then we will push our results down to the instruction level.
     std::pair<std::map<BasicBlock *, std::list<BasicBlock *> >,std::map<BasicBlock *, std::list<BasicBlock *> > > pair_map = Analysis::predecessorSuccessorMapConstructor(F);
@@ -125,7 +125,7 @@ public:
   
   
   // Returns TRUE if the exiting edges are modified.
-  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction &flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
+  static bool applyBasicBlockFlowFunctions(BasicBlock *BB, std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> &edge_map, FlowFunction flowF, LatticePoint *start, std::list<BasicBlock *> predecessors, std::list<BasicBlock *> successors){
     
     // We use vectors for passing lists of lattice points into flow functions.
     std::vector<LatticePoint *> inputs;

@@ -28,7 +28,7 @@ struct RATest : public FunctionPass {
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Function Pass------ \n";
     
-    RAFlowFunction raf = new RAFlowFunction();
+    RAFlowFunction raf = RAFlowFunction();
     
     std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
     RALatticePoint bottom = RALatticePoint(true, false, representation);
