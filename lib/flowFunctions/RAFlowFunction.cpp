@@ -98,8 +98,8 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use* false_branch = branches.second;
       
       errs() << "Examining instruction " << BI.getName() << " looks kinda like " << BI << "\n";
-      errs() << "True branch " << true_branch->get()->getName() << "\n";
-      errs() << "False branch " << false_branch->get()->getName() << "\n";
+      errs() << "True branch " << true_branch->get()->getName() << " looks kinda like " << * (true_branch->get()) << "\n";
+      errs() << "False branch " << false_branch->get()->getName() << " looks kinda like " << * (false_branch->get()) << "\n";
 
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
