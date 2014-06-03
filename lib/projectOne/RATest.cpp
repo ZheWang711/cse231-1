@@ -34,11 +34,17 @@ struct RATest : public FunctionPass {
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
+    errs() << "We are dealing with the following function \n";
+    F.print();
+    errs() << "Our analysis returned the following \n";
+    
     for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
       Instruction* I = it->first;
       if (isa<RALatticePoint>(it->second)) {
         RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
-        errs() << "Instruction " << I << " --> ";
+        errs() << "Instruction ";
+        I->print(errs());
+        errs() << " --> ";
         rlp->printToErrs();
       }
       else{
