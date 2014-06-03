@@ -138,11 +138,11 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       }
       
       // First we compute the restrictions that cmp makes upon the regions.
-      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp.getUnsignedPredicate(), *rhs_range);
-      ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
-      cmp.swapOperands()
-      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp.getUnsignedPredicate(),*lhs_range);;
-      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
+      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getUnsignedPredicate(), *rhs_range);
+      ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
+      cmp->swapOperands();
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getUnsignedPredicate(),*lhs_range);;
+      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
       
       // Next we intersect the ranges with the resulting restrictions.
       ConstantRange* true_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
@@ -150,11 +150,11 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       ConstantRange* true_branch_rhs_range = new ConstantRange(rhs_range->getBitWidth(), true);
       ConstantRange* false_branch_rhs_range = new ConstantRange(rhs_range->getBitWidth(), true);
       
-      *true_branch_lhs_range = lhs_range->intersect(true_branch_lhs_restriction);
-      *false_branch_lhs_range = lhs_range->intersect(false_branch_lhs_restriction);
+      *true_branch_lhs_range = lhs_range->intersectWith(true_branch_lhs_restriction);
+      *false_branch_lhs_range = lhs_range->intersectWith(false_branch_lhs_restriction);
       
-      *true_branch_rhs_range = rhs_range->intersect(true_branch_rhs_restriction);
-      *false_branch_rhs_range = rhs_range->intersect(false_branch_rhs_restriction);
+      *true_branch_rhs_range = rhs_range->intersectWith(true_branch_rhs_restriction);
+      *false_branch_rhs_range = rhs_range->intersectWith(false_branch_rhs_restriction);
       
       RALatticePoint* true_branchRLP = new RALatticePoint(*inRLP);
       RALatticePoint* false_branchRLP = new RALatticePoint(*inRLP);
@@ -171,7 +171,8 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
       false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
       
-      info_out.push_back(true_branchRLP, false_branchRLP);
+      info_out.push_back(true_branchRLP);
+      info_out.push_back(false_branchRLP);
     }
     else{
       // does not affect our lattice.
