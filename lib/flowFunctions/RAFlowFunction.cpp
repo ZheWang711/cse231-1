@@ -95,7 +95,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       // may affect elements of our lattice.
       ICmpInst* cmp = cast<ICmpInst>(cond);
       for (User::op_iterator OP = cmp->op_begin(), OPE = cmp->op_end(); OP != OPE; ++OP){
-        errs() << "Arg " << *OP << " corresponds with " << OP << "\n";
+        errs() << "Arg " << *OP << " has user " << OP->getUser() << " and value " << Op->get()  << "\n";
       }
     }
     else{
