@@ -82,9 +82,10 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   info_out.push_back(result);
 }
 
-void visitBranchInst(BranchInst &BI){
+void RAFlowFunction::visitBranchInst(BranchInst &BI){
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
+  
   if (BI.isUnconditional()) {
     info_out.push_back(inRLP);
   }
@@ -104,7 +105,7 @@ void visitBranchInst(BranchInst &BI){
   }
 }
 
-void visitInstruction(Instruction &I){
+void RAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
   RALatticePoint* result = new RALatticePoint(false, top, std::map<Value*, ConstantRange*>());
   info_out.push_back(result);
