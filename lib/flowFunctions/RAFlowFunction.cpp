@@ -5,18 +5,18 @@
 
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
-  //errs() << "In operator \n";
+  errs() << "In operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    //errs() << "Handed lattice point ";
-    //temp->printToErrs();
+    errs() << "Handed lattice point ";
+    temp->printToErrs();
     info_in_casted.push_back(temp);
   }
   info_out.clear();
-  //errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
+  errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
   this->visit(instr);
-  //errs() << "Done with visit \n";
+  errs() << "Done with visit \n";
   return info_out;
 }
 
@@ -96,20 +96,20 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> branches = helper::getBranches(BI);
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
-      
+      /*
       errs() << "Examining instruction " << BI.getName() << " looks kinda like " << BI << "\n";
       errs() << "True branch " << true_branch->get()->getName() << " looks kinda like " << * (true_branch->get()) << "\n";
       errs() << "False branch " << false_branch->get()->getName() << " looks kinda like " << * (false_branch->get()) << "\n";
-
+       */
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* left_hand_side = operands.first;
       Use* right_hand_side = operands.second;
       
-      
+      /*
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
       errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
-      
+      */
       ConstantRange* lhs_range;
       ConstantRange* rhs_range;
       
