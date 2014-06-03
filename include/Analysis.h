@@ -201,7 +201,7 @@ public:
       lps.pop_back();
       LatticePoint *l2 = lps.back();
       lps.pop_back();
-      LatticePoint* result = l1->join(l2)
+      LatticePoint* result = l1->join(l2);
       lps.push_back(result);
     }
     return lps;
