@@ -38,20 +38,12 @@ struct RATest : public FunctionPass {
     F.print(errs());
     errs() << "Our analysis returned the following \n";
     
-    for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
-      Instruction* I = it->first;
-      if (isa<RALatticePoint>(it->second)) {
-        RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
-        errs() << "Instruction ";
-        I->print(errs());
-        errs() << " --> ";
-        rlp->printToErrs();
-      }
-      else{
-        errs() << "Instruction " << I << " missing RAlattice point. Is it a LatticePoint? " << isa<LatticePoint>(it->second) << "\n";
-      }
-      
-      
+    // F is a pointer to a Function instance
+    for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
+      RALatticePoint *rlp = dyn_cast<RALatticePoint>(&*I);
+      I->print(errs());
+      errs() << " --> ";
+      rlp->printToErrs();
     }
     
     errs() << " -----Ending Function Pass------ \n";
