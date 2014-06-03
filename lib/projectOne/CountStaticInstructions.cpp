@@ -31,7 +31,7 @@ namespace {
 	    // this garbage printed out is the memory address of the
 	    // Value object that is this operand to the current
 	    // instruction.
-	    OP->get()->getType()->print(errs());
+	    // OP->get()->getType()->print(errs());
 	    errs() << " " << OP->get() << ", ";
 	  }
 	  errs() << "\n";

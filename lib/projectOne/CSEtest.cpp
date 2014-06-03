@@ -58,21 +58,15 @@ struct CSEtest : public FunctionPass {
 
     FlowFunction* CSEFlow_casted = dyn_cast<FlowFunction>(&CSEFlow_native);
 
-    Instruction* firstI = F.front().getFirstNonPHI();
-    
-    
-
-    errs() << "First Instruction: " << Instruction::getOpcodeName(firstI->getOpcode()) << ", " << firstI->getNumOperands() << " arg(s)\n";
-    
-    std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
+    // std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
     // std::vector<LatticePoint* > secondEval = (*CSEFlow_native)(firstI, sampleArgs);
 
 
     // this is how we have to call the relevent flow functions when we
     // only have a FlowFunction*, not an object of the base type
-    if (CSEFlowFunction *CSEFF = dyn_cast<CSEFlowFunction>(CSEFlow_casted)) {
-      std::vector<LatticePoint* > secondEval = (*CSEFF)(firstI, sampleArgs);
-    }
+    // if (CSEFlowFunction *CSEFF = dyn_cast<CSEFlowFunction>(CSEFlow_casted)) {
+    //   std::vector<LatticePoint* > secondEval = (*CSEFF)(firstI, sampleArgs);
+    // }
 
 
     // std::vector<LatticePoint* > secondEval = CSEf(firstI, firstEval);
@@ -83,20 +77,34 @@ struct CSEtest : public FunctionPass {
     //   lps.push_back(CSEf(&(*I), sampleArgs));
     // }
 
-    Instruction* prev_instruction;
-
-    // let's test the instruction identity calls to LLVM
-    // for (inst_iterator IP = inst_begin(F), inst_iterator I = ++inst_begin(F); I != inst_end(F) ; ++I, ++IP){
-    //   errs() << "is this pair the same" << *IP->isIdenticalToWhenDefined(*I) << "\n";
-    // }
-
-
     // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
     // 		errs() << (*it)->LPprint() << "\n";
     // 	}
 
-    // errs() << " \n count = " << CSEf.Count;
-    errs() << " \n wheeeeee " ;
+    // note: this snippet works to get the first non phi instruction if we need it from F
+    // Instruction* firstI = F.front().getFirstNonPHI();
+
+
+    // --------------------------------------------------
+    // Test for instruction equivalence in LLVM, using first two
+    // instructions of function.
+    // --------------------------------------------------
+
+    // 1. get first two instructions of first basicblock
+    inst_iterator I = inst_begin(F);
+    Instruction* firstI = &(*I);
+    I++;    
+    Instruction* secondI = &(*I);
+    
+    errs() << "First Instruction: " << firstI << " " << Instruction::getOpcodeName(firstI->getOpcode()) << ", " << firstI->getNumOperands() << " arg(s)\n";
+
+    errs() << "Second Instruction: " << secondI << " " << Instruction::getOpcodeName(secondI->getOpcode()) << ", " << secondI->getNumOperands() << " arg(s)\n";
+    
+
+    // 2. attempt to see if they are equal
+
+    errs() << "Instructions are " << firstI->isIdenticalToWhenDefined(secondI)  << " equal\n";
+    
     errs() << " -----Ending Function Pass------ \n";
       
     return false;
