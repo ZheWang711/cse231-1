@@ -35,7 +35,7 @@ struct RATest : public FunctionPass {
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
     errs() << "We are dealing with the following function \n";
-    F.print();
+    F.print(errs());
     errs() << "Our analysis returned the following \n";
     
     for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
