@@ -105,16 +105,73 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* left_hand_side = operands.first;
       Use* right_hand_side = operands.second;
+      
+      
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
-      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
-      if (inRLP->representation.count(left_hand_side->get()) > 0 || inRLP->representation.count(right_hand_side->get()) > 0) {
-        // May affect elements of our lattice.
-        errs() << "In the if case!\n";
+      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
+      
+      ConstantRange* lhs_range;
+      ConstantRange* rhs_range;
+      
+
+      
+      if (inRLP->representation.count(left_hand_side->get()) > 0) {
+        lhs_range = inRLP->representation[left_hand_side->get()];
+      }
+      else if (isa<ConstantInt>(left_hand_side->get())) {
+        ConstantInt* C2 = cast<ConstantInt>(left_hand_side->get());
+        lhs_range = new ConstantRange(C2->getValue());
       }
       else{
-        
+        lhs_range = new ConstantRange(32, true);
       }
       
+      if (inRLP->representation.count(right_hand_side->get()) > 0) {
+        rhs_range = inRLP->representation[right_hand_side->get()];
+      }
+      else if (isa<ConstantInt>(right_hand_side->get())) {
+        ConstantInt* C2 = cast<ConstantInt>(right_hand_side->get());
+        rhs_range = new ConstantRange(C2->getValue());
+      }
+      else{
+        rhs_range = new ConstantRange(32, true);
+      }
+      
+      // First we compute the restrictions that cmp makes upon the regions.
+      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp.getUnsignedPredicate(), *rhs_range);
+      ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
+      cmp.swapOperands()
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp.getUnsignedPredicate(),*lhs_range);;
+      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
+      
+      // Next we intersect the ranges with the resulting restrictions.
+      ConstantRange* true_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
+      ConstantRange* false_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
+      ConstantRange* true_branch_rhs_range = new ConstantRange(rhs_range->getBitWidth(), true);
+      ConstantRange* false_branch_rhs_range = new ConstantRange(rhs_range->getBitWidth(), true);
+      
+      *true_branch_lhs_range = lhs_range->intersect(true_branch_lhs_restriction);
+      *false_branch_lhs_range = lhs_range->intersect(false_branch_lhs_restriction);
+      
+      *true_branch_rhs_range = rhs_range->intersect(true_branch_rhs_restriction);
+      *false_branch_rhs_range = rhs_range->intersect(false_branch_rhs_restriction);
+      
+      RALatticePoint* true_branchRLP = new RALatticePoint(*inRLP);
+      RALatticePoint* false_branchRLP = new RALatticePoint(*inRLP);
+      
+      true_branchRLP->isBottom = false;
+      true_branchRLP->isTop = false;
+
+      false_branchRLP->isBottom = false;
+      false_branchRLP->isTop = false;
+
+      true_branchRLP->representation[left_hand_side->get()] = true_branch_lhs_range;
+      true_branchRLP->representation[right_hand_side->get()] = true_branch_rhs_range;
+
+      false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
+      false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
+      
+      info_out.push_back(true_branchRLP, false_branchRLP);
     }
     else{
       // does not affect our lattice.

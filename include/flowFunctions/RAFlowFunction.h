@@ -16,7 +16,7 @@ using namespace llvm;
 
 class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
-  // local variables for passing arguments
+  // local variables for passing argumentsm
   std::vector<RALatticePoint *> info_in_casted;
   std::vector<LatticePoint *> info_out;
 
