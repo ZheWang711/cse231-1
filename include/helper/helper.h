@@ -43,7 +43,7 @@ public:
       }
       i++;
     }
-    return std::make_pair(S1, S2);
+    return std::make_pair(S2, S1);
   }
   /*
   static std::pair<Use*, Use *> getOperands(ICmpInst &cmp){
