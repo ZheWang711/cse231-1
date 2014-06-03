@@ -98,15 +98,15 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use* false_branch = operands.second;
       
       errs() << "Examining instruction " << BI.getName();
-      errs() << "True branch " << true_branch->get().getName() << "\n";
-      errs() << "False branch " << false_branch->get().getName() << "\n";
+      errs() << "True branch " << true_branch->get()->getName() << "\n";
+      errs() << "False branch " << false_branch->get()->getName() << "\n";
 
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* left_hand_side = operands.first;
       Use* right_hand_side = operands.second;
-      errs() << "Left hand side " << left_hand_side->get().getName() << "\n";
-      errs() << "Right hand side " << right_hand_side->get().getName() << "\n";
+      errs() << "Left hand side " << left_hand_side->get()->getName() << "\n";
+      errs() << "Right hand side " << right_hand_side->get()->getName() << "\n";
       if (inRLP->representation.count(left_hand_side->get()) > 0 || inRLP->representation.count(right_hand_side->get()) > 0) {
         // May affect elements of our lattice.
         errs() << "In the if case!\n";

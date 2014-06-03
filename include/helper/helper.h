@@ -13,7 +13,8 @@ using namespace llvm;
 
 class helper {
 public:
-  static std::pair<Use*, Use *> getOperands(BinaryOperator &BO){
+  // Returns first two operands of an instruction. NOT SAFE FOR INSTRUCTIONS WITH ONLY ONE OPERAND.
+  static std::pair<Use*, Use *> getOperands(Instruction &BO){
     Use* S1;
     Use* S2;
     int i = 0;
@@ -28,6 +29,23 @@ public:
     }
     return std::make_pair(S1, S2);
   }
+  /*
+  static std::pair<Use*, Use *> getOperands(ICmpInst &cmp){
+    Use* S1;
+    Use* S2;
+    int i = 0;
+    for (User::op_iterator OP = cmp.op_begin(), OPE = cmp.op_end(); OP != OPE; ++OP){
+      if(i == 0){
+        S1 = &*OP;
+      }
+      else{
+        S2 = &*OP;
+      }
+      i++;
+    }
+    return std::make_pair(S1, S2);
+  }
+   */
   
   /*
    folds the binary operator for the special case of both arguments being ConstantInts.
