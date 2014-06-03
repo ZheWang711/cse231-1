@@ -134,7 +134,7 @@ void RALatticePoint::printToErrs() {
 	errs() << "{ ";
 	for(std::map<Value*, ConstantRange*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
-    val->printAsOperand(errs());
+    val->print(errs());
     errs() << " --> ";
 		ConstantRange* range = it->second;
     range->print(errs());
