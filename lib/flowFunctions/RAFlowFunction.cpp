@@ -93,10 +93,28 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
     Value* cond = BI.getCondition();
     if (isa<ICmpInst>(cond)) {
       // may affect elements of our lattice.
+      std::pair<Use*, Use *> branches = helper::getOperands(BI);
+      Use* true_branch = operands.first;
+      Use* false_branch = operands.second;
+      
+      errs() << "Examining instruction " << BI.getName();
+      errs() << "True branch " << true_branch->get().getName() << "\n";
+      errs() << "False branch " << false_branch->get().getName() << "\n";
+
       ICmpInst* cmp = cast<ICmpInst>(cond);
-      for (User::op_iterator OP = cmp->op_begin(), OPE = cmp->op_end(); OP != OPE; ++OP){
-        errs() << "Arg " << *OP << " has user " << OP->getUser() << " and value " << OP->get()  << "\n";
+      std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
+      Use* left_hand_side = operands.first;
+      Use* right_hand_side = operands.second;
+      errs() << "Left hand side " << left_hand_side->get().getName() << "\n";
+      errs() << "Right hand side " << right_hand_side->get().getName() << "\n";
+      if (inRLP->representation.count(left_hand_side->get()) > 0 || inRLP->representation.count(right_hand_side->get()) > 0) {
+        // May affect elements of our lattice.
+        errs() << "In the if case!\n";
       }
+      else{
+        
+      }
+      
     }
     else{
       // does not affect our lattice.
