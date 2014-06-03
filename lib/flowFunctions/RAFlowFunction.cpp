@@ -97,7 +97,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
       
-      errs() << "Examining instruction " << BI.getName() << " looks kinda like " << *BI << "\n";
+      errs() << "Examining instruction " << BI.getName() << " looks kinda like " << BI << "\n";
       errs() << "True branch " << true_branch->get()->getName() << "\n";
       errs() << "False branch " << false_branch->get()->getName() << "\n";
 
