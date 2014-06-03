@@ -106,7 +106,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use* left_hand_side = operands.first;
       Use* right_hand_side = operands.second;
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
-      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
+      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
       if (inRLP->representation.count(left_hand_side->get()) > 0 || inRLP->representation.count(right_hand_side->get()) > 0) {
         // May affect elements of our lattice.
         errs() << "In the if case!\n";
@@ -123,6 +123,39 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
   }
 }
 
+
+void RAFlowFunction::visitCastInst(CastInst &I){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+  info_out.push_back(inRLP);
+}
+
+
+void RAFlowFunction::visitCmpInst(CmpInst &I){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+  info_out.push_back(inRLP);
+}
+
+
+void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+  info_out.push_back(inRLP);
+}
+
+
+// Be safe with memory!
+void RAFlowFunction::visitUnaryInstruction(UnaryInstruction &I){
+  info_out.clear();
+  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
+  info_out.push_back(result);
+}
+
+// Be safe with memory!
 void RAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
   RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
