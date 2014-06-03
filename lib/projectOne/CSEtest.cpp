@@ -36,8 +36,7 @@ struct CSEtest : public FunctionPass {
     LLVMContext &someContext = F.getContext();
 
     std::map<Value*, Instruction*> lpmap;
-    ConstantInt* ci = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 10, /*bool*/true));
-
+    // sample map for CSElattice point with actual content in it
     // lpmap.insert(std::pair<Value*, Instruction*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
 
     // CSELatticePoint cselp = CSELatticePoint(false, true, lpmap);
@@ -48,7 +47,6 @@ struct CSEtest : public FunctionPass {
     errs() << " Created CSELatticePoint with address " << &cselp << "\n";
     errs() << " isBottom " << cselp.isBottom;
     errs() << " isTop " << cselp.isTop;
-
 
     ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
 
@@ -71,16 +69,6 @@ struct CSEtest : public FunctionPass {
 
     // std::vector<LatticePoint* > secondEval = CSEf(firstI, firstEval);
 		     
-    
-    // std::vector<std::vector< LatticePoint* > > lps;
-    // for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
-    //   lps.push_back(CSEf(&(*I), sampleArgs));
-    // }
-
-    // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
-    // 		errs() << (*it)->LPprint() << "\n";
-    // 	}
-
     // note: this snippet works to get the first non phi instruction if we need it from F
     // Instruction* firstI = F.front().getFirstNonPHI();
 
