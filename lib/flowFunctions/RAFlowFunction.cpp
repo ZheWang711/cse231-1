@@ -105,8 +105,8 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* left_hand_side = operands.first;
       Use* right_hand_side = operands.second;
-      errs() << "Left hand side " << left_hand_side->get()->getName() << "\n";
-      errs() << "Right hand side " << right_hand_side->get()->getName() << "\n";
+      errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
+      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
       if (inRLP->representation.count(left_hand_side->get()) > 0 || inRLP->representation.count(right_hand_side->get()) > 0) {
         // May affect elements of our lattice.
         errs() << "In the if case!\n";
