@@ -25,6 +25,8 @@ public:
 
   // Visited Instructions
   void visitBinaryOperator(BinaryOperator &BO);
+  void visitBranchInst(BranchInst&I);
+  void visitInstruction(Instruction &I);
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);

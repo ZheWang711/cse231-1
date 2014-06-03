@@ -82,6 +82,34 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   info_out.push_back(result);
 }
 
+void visitBranchInst(BranchInst &BI){
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+  if (BI.isUnconditional()) {
+    info_out.push_back(inRLP);
+  }
+  else{
+    Value* cond = BI.getCondition();
+    if (isa<ICmpInst>(cond)) {
+      // may affect elements of our lattice.
+      ICmpInst* cmp = cast<ICmpInst>(cond);
+      for (User::op_iterator OP = BI.op_begin(), OPE = BO.op_end(); OP != OPE; ++OP){
+        errs() << *OP;
+      }
+    }
+    else{
+      // does not affect our lattice.
+      info_out.push_back(inRLP);
+    }
+  }
+}
+
+void visitInstruction(Instruction &I){
+  info_out.clear();
+  RALatticePoint* result = new RALatticePoint(false, top, std::map<Value*, ConstantRange*>());
+  info_out.push_back(result);
+}
+
 
 
 
