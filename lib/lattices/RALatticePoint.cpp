@@ -32,10 +32,11 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
     if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
+      ConstantRange* r = new ConstantRange(32,true);
       ConstantRange* c1 = representation1[*it];
       ConstantRange* c2 = representation2[*it];
-      ConstantRange r = c1->unionWith(*c2);
-      result_map[*it] = &r;
+      *r = c1->unionWith(*c2);
+      result_map[*it] = r;
     }
     else if (representation1.count(*it) > 0 && representation2.count(*it) == 0){
       result_map[*it] = representation1[*it];

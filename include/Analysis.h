@@ -57,14 +57,14 @@ public:
     
     // Now we apply flow functions until we hit a fixed point.
     while (!worklist.empty()){
-      errs() << "In worklist iteration... \n";
+      //errs() << "In worklist iteration... \n";
       BasicBlock *BB = worklist.front();
       worklist.remove(BB); // Remove all instances of BB in the worklist (handles multiples)
       std::list<BasicBlock *> predecessors = predecessor_map[BB];
       std::list<BasicBlock *> successors = successor_map[BB];
-      errs() << "About to apply BBFF \n";
+      //errs() << "About to apply BBFF \n";
       bool flag = applyBasicBlockFlowFunctions(BB, edge_map, flowF, start, predecessors, successors);
-      errs() << "\n Done with BBFF \n";
+      //errs() << "\n Done with BBFF \n";
       if (flag) {
         // We modified the outgoing edges, add all the successors to the worklist.
         std::list<BasicBlock *> successors = successor_map[BB];
