@@ -93,7 +93,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
     Value* cond = BI.getCondition();
     if (isa<ICmpInst>(cond)) {
       // may affect elements of our lattice.
-      std::pair<Use*, Use *> branches = helper::getOperands(BI);
+      std::pair<Use*, Use *> branches = helper::getBranches(BI);
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
       
