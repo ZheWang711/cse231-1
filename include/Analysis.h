@@ -36,7 +36,7 @@ public:
     std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> edge_map;
     std::list<BasicBlock *> worklist;
     
-    errs() << "\n Building worklist now \n";
+    //errs() << "\n Building worklist now \n";
     
     // We first initialize all edges to be bottom and add all basic block nodes to our worklist.
     for (Function::iterator BB = F.begin(), e = F.end(); BB != e; ++BB){
@@ -50,9 +50,9 @@ public:
       }
     }
     
-    errs() << "\n Done building worklist. Worklist has " << worklist.size() << " elements\n";
+    //errs() << "\n Done building worklist. Worklist has " << worklist.size() << " elements\n";
     
-    errs() << "\n Iterating until convergence now. \n";
+    //errs() << "\n Iterating until convergence now. \n";
 
     
     // Now we apply flow functions until we hit a fixed point.
@@ -74,7 +74,7 @@ public:
       }
     }
     
-    errs() << "\n Converged. Executing final push now. \n";
+    //errs() << "\n Converged. Executing final push now. \n";
 
     
     // We are at a fixed point. Time to push through all the corresponding lattice points.
@@ -105,7 +105,7 @@ public:
         inputs = applyFlowFunction(flowF, I, inputs);
       }
     }
-    errs() << "\n Done. result has " << result.size() << " elements.\n";
+    //errs() << "\n Done. result has " << result.size() << " elements.\n";
 
     
     return result;
@@ -149,7 +149,7 @@ public:
         inputs.push_back(edge_map[edge]);
       }
     }
-    errs() << "In BBFF \n";
+    //errs() << "In BBFF \n";
     for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
       inputs = applyFlowFunction(flowF, I, inputs);
     }
