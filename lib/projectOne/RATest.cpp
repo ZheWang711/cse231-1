@@ -40,7 +40,8 @@ struct RATest : public FunctionPass {
     
     // F is a pointer to a Function instance
     for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
-      RALatticePoint *rlp = dyn_cast<RALatticePoint>(&*I);
+      LatticePoint* lp = result[&*I];
+      RALatticePoint *rlp = dyn_cast<RALatticePoint>(lp);
       I->print(errs());
       errs() << " --> ";
       rlp->printToErrs();
