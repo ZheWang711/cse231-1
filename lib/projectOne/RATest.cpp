@@ -30,15 +30,16 @@ struct RATest : public FunctionPass {
     
     RAFlowFunction raf = RAFlowFunction();
     
-    std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
-    RALatticePoint bottom = RALatticePoint(true, false, representation);
-    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, &bottom, &raf);
+    std::map<Value*, ConstantRange*> representation;
+    RALatticePoint* bottom = new RALatticePoint(true, false, representation);
+    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
     for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
       Instruction* I = it->first;
       if (isa<RALatticePoint>(it->second)) {
         RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
-        errs() << "Instruction " << I << " maps to lattice point " << rlp->LPprint();
+        errs() << "Instruction " << I << " --> ";
+        rlp->printToErrs();
       }
       else{
         errs() << "Instruction " << I << " missing RAlattice point. Is it a LatticePoint? " << isa<LatticePoint>(it->second) << "\n";

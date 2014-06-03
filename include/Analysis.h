@@ -85,18 +85,20 @@ public:
       if (predecessors.empty()){
         // We are dealing with the first basic block
         inputs.push_back(start);
+        //errs() << "First basic block \n";
       }
       else{
         // We are not dealing with the first basic block
         for (std::list<BasicBlock *>::iterator Pred=predecessors.begin(); Pred!=predecessors.end(); ++Pred) {
-          std::pair<BasicBlock *, BasicBlock *> edge;
-          edge = std::make_pair(*Pred, BB);
+          std::pair<BasicBlock *, BasicBlock *> edge = std::make_pair(*Pred, BB);
           inputs.push_back(edge_map[edge]);
         }
       }
       
       for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
+        //errs() << "Handling instruction " << I << "\n";
         if (inputs.size() > 1){
+          //errs() << "Joining now \n";
           inputs = Analysis::extendedJoin(inputs);
         }
         result[I] = inputs.front();
@@ -149,19 +151,7 @@ public:
     }
     //errs() << "\n In BBFF \n";
     for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
-      /*
-       Hopefully we figure out how to coordinate the output of flow functions with the structure of the CFG.
-       */
-      //errs() << "Working on instruction " << *I << "\n";
       inputs = applyFlowFunction(flowF, I, inputs);
-      //errs() << "Done with instruction " << *I << "\n";
-
-      /*
-       LatticePoint* output = flowF(*I, inputs); // Apply our FlowFunction to each instruction in order. The output becomes the new inputs for the next instruction.
-       
-       inputs = std::vector<LatticePoint *>();
-       inputs.push_back(output);
-       */
     }
     
     if (successors.size() != inputs.size()) {

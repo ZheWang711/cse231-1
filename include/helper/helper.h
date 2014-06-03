@@ -36,7 +36,7 @@ public:
     LLVMContext &context = C1->getContext();
     const APInt &c1_value = C1->getValue();
     const APInt &c2_value = C2->getValue();
-    ConstantInt* result = ConstantInt::get(context, APInt::getNullValue(32));
+    ConstantInt* result = ConstantInt::get(context, APInt::getNullValue(C1->getBitWidth()));
     switch (Opcode) {
       case Instruction::Xor:
         result = ConstantInt::get(context, c1_value.Xor(c2_value));
@@ -76,6 +76,46 @@ public:
         break;
       case Instruction::Shl:
         result = ConstantInt::get(context, c1_value.shl(c2_value));
+        break;
+    }
+    return result;
+  }
+  
+  /*
+   folds the binary operator for the special case of both arguments being ConstantRanges.
+   */
+  static ConstantRange* foldBinaryOperator(unsigned Opcode ,ConstantRange *C1, ConstantRange *C2){
+    ConstantRange* result = new ConstantRange(C1->getBitWidth(), true);
+    switch (Opcode) {
+      case Instruction::SDiv:
+      case Instruction::URem:
+      case Instruction::SRem:
+      case Instruction::AShr:
+      case Instruction::Xor:
+        break;
+      case Instruction::Add:
+        *result = C1->add(*C2);
+        break;
+      case Instruction::Sub:
+        *result = C1->sub(*C2);
+        break;
+      case Instruction::Mul:
+        *result = C1->multiply(*C2);
+        break;
+      case Instruction::UDiv:
+        *result = C1->udiv(*C2);
+        break;
+      case Instruction::Or:
+        *result = C1->binaryOr(*C2);
+        break;
+      case Instruction::And:
+        *result = C1->binaryAnd(*C2);
+        break;
+      case Instruction::LShr:
+        *result = C1->lshr(*C2);
+        break;
+      case Instruction::Shl:
+        *result = C1->shl(*C2);
         break;
     }
     return result;

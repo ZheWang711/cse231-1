@@ -5,75 +5,94 @@
 */
 
 LatticePoint* RALatticePoint::join(LatticePoint* in){
-  if (in->isTop || this->isBottom){
-    return in;
-  }
-  if (this->isTop || in->isBottom) {
-    return this;
-  }
   
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
+  if (in->isTop || this->isBottom){
+    RALatticePoint* result = new RALatticePoint(*in_casted);
+    return result;
+  }
+  if (this->isTop || in->isBottom) {
+    RALatticePoint* result = new RALatticePoint(*this);
+    return result;
+  }
+  std::map<Value*, ConstantRange*> representation1 = this->representation;
+  std::map<Value*, ConstantRange*> representation2 = in_casted->representation;
   
-  
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation1 = this->representation;
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation2 = in_casted->representation;
-  
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >result_map;
+  std::map<Value*, ConstantRange*> result_map;
   
   std::set<Value *> key_set;
-  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value*, ConstantRange*>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
     key_set.insert(elm);
   }
-  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation2.begin(); it!=representation2.end(); ++it){
+  for (std::map<Value*, ConstantRange*>::iterator it=representation2.begin(); it!=representation2.end(); ++it){
     Value* elm = it->first;
     key_set.insert(elm);
   }
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
-    
     if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
-      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c1 = representation1[*it];
-      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c2 = representation2[*it];
-      
-      
-      bool isLeftInfinite = (c1.first).first || (c2.first).first;
-      bool isRightInfinite = (c1.first).second || (c2.first).second;
-      ConstantInt* lowerBound = NULL;
-      ConstantInt* upperBound = NULL;
-      if (!isLeftInfinite){
-        if ((((c1.second).first)->getValue()).slt(((c2.second).first)->getValue())){
-          lowerBound = ((c1.second).first);
-        }
-        else{
-          lowerBound = ((c2.second).first);
-        }
-      }
-      if (!isRightInfinite){
-        if ((((c1.second).second)->getValue()).sgt(((c2.second).second)->getValue())){
-          upperBound = ((c1.second).second);
-        }
-        else{
-          upperBound = ((c2.second).second);
-        }
-      }
-      result_map[*it] = std::make_pair(std::make_pair(isLeftInfinite, isRightInfinite), std::make_pair(lowerBound, upperBound));
-      
+      ConstantRange* c1 = representation1[*it];
+      ConstantRange* c2 = representation2[*it];
+      ConstantRange r = c1->unionWith(*c2);
+      result_map[*it] = &r;
     }
-    
-    if (representation1.count(*it) > 0 && representation2.count(*it) == 0){
+    else if (representation1.count(*it) > 0 && representation2.count(*it) == 0){
       result_map[*it] = representation1[*it];
     }
-    
-    if (representation1.count(*it) == 0 && representation2.count(*it) > 0){
+    else if (representation1.count(*it) == 0 && representation2.count(*it) > 0){
       result_map[*it] = representation2[*it];
     }
-    
   }
   
   RALatticePoint* result = new RALatticePoint(false, false, result_map);
   return result;
 }
+
+/*
+  Meet == Intersection!
+ */
+
+RALatticePoint* RALatticePoint::meet(LatticePoint* in){
+  
+  RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
+  if (in->isTop || this->isBottom){
+    RALatticePoint* result = new RALatticePoint(*this);
+    return result;
+  }
+  if (this->isTop || in->isBottom) {
+    RALatticePoint* result = new RALatticePoint(*in_casted);
+    return result;
+  }
+  
+  std::map<Value*, ConstantRange*> representation1 = this->representation;
+  std::map<Value*, ConstantRange*> representation2 = in_casted->representation;
+  
+  std::map<Value*, ConstantRange*> result_map;
+  
+  std::set<Value *> key_set;
+  for (std::map<Value*, ConstantRange*>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+    Value* elm = it->first;
+    key_set.insert(elm);
+  }
+  for (std::map<Value*, ConstantRange*>::iterator it=representation2.begin(); it!=representation2.end(); ++it){
+    Value* elm = it->first;
+    key_set.insert(elm);
+  }
+  
+  for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
+    if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
+      ConstantRange* c1 = representation1[*it];
+      ConstantRange* c2 = representation2[*it];
+      ConstantRange r = c1->intersectWith(*c2);
+      result_map[*it] = &r;
+    }
+  }
+  
+  RALatticePoint* result = new RALatticePoint(false, false, result_map);
+  return result;
+}
+
 
 
 bool RALatticePoint::equals(LatticePoint* in){
@@ -84,33 +103,19 @@ bool RALatticePoint::equals(LatticePoint* in){
     return in->isTop == this->isTop;
   }
   
-  
-  
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation1 = this->representation;
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation2 = in_casted->representation;
+  std::map<Value*, ConstantRange*> representation1 = this->representation;
+  std::map<Value*, ConstantRange*> representation2 = in_casted->representation;
   
-  for (std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value*, ConstantRange*>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
-    std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c1 = it->second;
+    ConstantRange* c1 = it->second;
     if (representation2.count(elm) <= 0){
       return false;
     }
     else{
-      std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > c2 = representation2[elm];
-      bool isLeftInfinite = (c1.first).first || (c2.first).first;
-      bool isRightInfinite = (c1.first).second || (c2.first).second;
-      
-      if (isLeftInfinite && (c1.first).first != (c2.first).first){
-        return false;
-      }
-      if (isRightInfinite && (c1.first).second != (c2.first).second){
-        return false;
-      }
-      if (!isLeftInfinite && (c1.second).first->getValue() != (c2.second).first->getValue()){
-        return false;
-      }
-      if (!isRightInfinite && (c1.second).second->getValue() != (c2.second).second->getValue()){
+      ConstantRange* c2 = representation2[elm];
+      if (*c1 != *c2) {
         return false;
       }
     }
@@ -118,48 +123,20 @@ bool RALatticePoint::equals(LatticePoint* in){
   return true;
 }
 
-std::string RALatticePoint::LPprint() {
-	std::stringstream ss;
-  ss << "--> RP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << " | ";
+void RALatticePoint::printToErrs() {
+  errs() << "RALatticePoint: isBottom: " << this->isBottom << ", isTop: " << this->isTop << " | ";
   if (this->isBottom || this->isTop){
-    ss << "\n";
-    return ss.str();
+    errs() << "\n";
+    return;
   }
-  
-	ss << "{ ";
-	for(std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >::iterator it = this->representation.begin(); it != representation.end(); ++it) {
+	errs() << "{ ";
+	for(std::map<Value*, ConstantRange*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
-		std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > range = it->second;
-    bool isLeftInfinite = (range.first).first;
-    bool isRightInfinite = (range.first).second;
-    ss << val << ": ";
-    if (isLeftInfinite && isRightInfinite){
-      ss << "(-infinite, infinite)";
-    }
-    else if (isLeftInfinite && !isRightInfinite){
-      ss << "(-infinite, ";
-      ss << (range.second.first->getValue()).toString(10, true);
-      ss << " )";
-    }
-    else if (!isLeftInfinite && isRightInfinite){
-      ss << "( ";
-      ss << (range.second.second->getValue()).toString(10, true);
-      ss << ", infinite)";
-    }
-    else if (isLeftInfinite && !isRightInfinite){
-      ss << " --> (-infinite, ";
-      ss << (range.second.first->getValue()).toString(10, true);
-      ss << " )";
-    }
-    else{
-      ss << "( ";
-      ss << (range.second.first->getValue()).toString(10, true);
-      ss << " , ";
-      ss << (range.second.second->getValue()).toString(10, true);
-      ss << " )";
-    }
-		ss << ", ";
+    errs() << val << " --> ";
+		ConstantRange* range = it->second;
+    range->print(errs());
+		errs() << ", ";
   }
-  ss << " } \n";
-  return ss.str();
+  errs() << " } \n";
+  return;
 }

@@ -10,6 +10,9 @@
 #include <map>
 #include <set>
 #include "LatticePoint.h"
+#include "llvm/Support/ConstantRange.h"
+#include "llvm/Support/raw_ostream.h"
+
 
 /*
 
@@ -19,7 +22,6 @@
  
  Meet is intersection over ranges.
  
- We define our
 */
 
 using namespace llvm;
@@ -31,28 +33,28 @@ public:
   // ~RALatticePoint() {}
   
   /*
-   Our representation maps values to integer ranges. The two booleans stand for left-infinite and right infinite. That is, if x->(-infinite, 8), the tuple would look like
-            (true, false, some value, 8).
-   
+   Our representation maps values to integer ranges. We make use of LLVM's constant range class.
    */
-  std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representation;
   
-
+  std::map<Value*, ConstantRange*> representation;
   
-  RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > > representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
+  RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, ConstantRange*>()) {}
   
-  // CPLatticePoint(bool bottomIN, bool topIN);
+  RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, ConstantRange*> representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
   
-  RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, std::pair<std::pair<bool, bool>, std::pair<ConstantInt *, ConstantInt *> > >()) {}
+  RALatticePoint(RALatticePoint &copy) : LatticePoint(LPK_RALatticePoint, copy.isBottom, copy.isTop), representation(copy.representation) {}
+  
   
   
   
   static bool classof(const LatticePoint *L) {
     return L->getKind() == LPK_RALatticePoint;
   }
+  
   LatticePoint* join(LatticePoint* in);
+  RALatticePoint* meet(LatticePoint* in);
   bool equals(LatticePoint* in);
-  std::string LPprint();
+  void printToErrs();
   
 };
 

@@ -24,9 +24,7 @@ public:
   RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}
 
   // Visited Instructions
-  void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-  void visitStoreInst(StoreInst   &I);
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
