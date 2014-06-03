@@ -83,10 +83,11 @@ RALatticePoint* RALatticePoint::meet(LatticePoint* in){
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
     if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
+      ConstantRange* r = new ConstantRange(32,true);
       ConstantRange* c1 = representation1[*it];
       ConstantRange* c2 = representation2[*it];
-      ConstantRange r = c1->intersectWith(*c2);
-      result_map[*it] = &r;
+      *r = c1->intersectWith(*c2);
+      result_map[*it] = r;
     }
   }
   
@@ -133,7 +134,8 @@ void RALatticePoint::printToErrs() {
 	errs() << "{ ";
 	for(std::map<Value*, ConstantRange*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
-    errs() << val << " --> ";
+    val->printAsOperand(errs());
+    errs() << " --> ";
 		ConstantRange* range = it->second;
     range->print(errs());
 		errs() << ", ";
