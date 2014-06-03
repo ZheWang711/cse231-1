@@ -10,7 +10,7 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
     //errs() << "Handed lattice point ";
-    temp->printToErrs();
+    //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
   info_out.clear();
@@ -77,7 +77,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
 
   //errs() << "Lattice point to be returned is ";
-  result->printToErrs();
+  //result->printToErrs();
   info_out.clear();
   info_out.push_back(result);
 }
