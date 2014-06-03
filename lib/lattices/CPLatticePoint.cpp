@@ -5,7 +5,7 @@
 //   LatticePoint( LPK_CPLatticePoint);
 //   this.isBottom = false;
 //   this.isTop = false;
-//   this.representation = std::map<Value*, Constant*>()
+//   this.representation = std::map<Value*, ConstantInt*>()
 // }
 
 // Define join method.
@@ -20,16 +20,16 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
   
   CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint>(in);
   
-  std::map<Value *, Constant *> representation1 = this->representation;
-  std::map<Value *, Constant *> representation2 = in_casted->representation;
+  std::map<Value *, ConstantInt *> representation1 = this->representation;
+  std::map<Value *, ConstantInt *> representation2 = in_casted->representation;
   
-  std::map<Value *, Constant *> result_map;
+  std::map<Value *, ConstantInt *> result_map;
   
-  for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value *, ConstantInt *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
-    Constant* c1 = it->second;
+    ConstantInt* c1 = it->second;
     if (representation2.count(elm) > 0){
-      Constant* c2 = representation2[elm];
+      ConstantInt* c2 = representation2[elm];
       if (c1 == c2){
         result_map[elm] = c1;
       }
@@ -47,17 +47,17 @@ bool CPLatticePoint::equals(LatticePoint* in){
     return in->isBottom == this->isBottom;
   }
   CPLatticePoint* in_casted =  dyn_cast<CPLatticePoint>(in);
-  std::map<Value *, Constant *> representation1 = this->representation;
-  std::map<Value *, Constant *> representation2 = in_casted->representation;
+  std::map<Value *, ConstantInt *> representation1 = this->representation;
+  std::map<Value *, ConstantInt *> representation2 = in_casted->representation;
   
-  for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+  for (std::map<Value *, ConstantInt *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
-    Constant* c1 = it->second;
+    ConstantInt* c1 = it->second;
     if (representation2.count(elm) <= 0){
       return false;
     }
     else{
-      Constant* c2 = representation2[elm];
+      ConstantInt* c2 = representation2[elm];
       if (c1 != c2){
         return false;
       }
@@ -70,10 +70,10 @@ std::string CPLatticePoint::LPprint() {
 	std::stringstream ss;
     ss << "\nCP: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
 	ss << "{ ";
-	for(std::map<Value*, Constant*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
+	for(std::map<Value*, ConstantInt*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
-		Constant* con = it->second;
-		ss << val << ": " << *(con->getUniqueInteger().getRawData()) << ", ";
+		ConstantInt* con = it->second;
+		ss << val << ": " << *(con->getValue().getRawData()) << ", ";
     }
     ss << " }\n";
     return ss.str();

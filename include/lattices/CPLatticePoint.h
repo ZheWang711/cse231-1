@@ -1,6 +1,7 @@
 #ifndef CPLATTICEPOINT_H_
 #define CPLATTICEPOINT_H_
 
+#include "llvm/IR/Constants.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
@@ -20,13 +21,13 @@ public:
   
   // ~CPLatticePoint() {}
 
-  std::map<Value*, Constant*> representation;
+  std::map<Value*, ConstantInt*> representation;
 
-  CPLatticePoint(bool bottomIN, bool topIN, std::map<Value*, Constant*> representationIN) : LatticePoint(LPK_CPLatticePoint, bottomIN, topIN), representation(representationIN) {}
+  CPLatticePoint(bool bottomIN, bool topIN, std::map<Value*, ConstantInt*> representationIN) : LatticePoint(LPK_CPLatticePoint, bottomIN, topIN), representation(representationIN) {}
 
   // CPLatticePoint(bool bottomIN, bool topIN);
   
-  CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, Constant*>()) {}
+  CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, ConstantInt*>()) {}
 
     static bool classof(const LatticePoint *L) {
       return L->getKind() == LPK_CPLatticePoint;

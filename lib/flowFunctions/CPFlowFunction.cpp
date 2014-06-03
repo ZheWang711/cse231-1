@@ -25,9 +25,33 @@ void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
   errs() << "Calling alloca visitor";
   // ++Count; 
   // just stick bottom in the ret_value every time we hit an alloca (testing)
-   ret_value = new CPLatticePoint(false, true, std::map<Value*, Constant*>());
+   ret_value = new CPLatticePoint(false, true, std::map<Value*, ConstantInt*>());
 }
 
 void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
   errs() << "CPflow visiting a binary operator";
+  // join ?
+  CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+
+  BinaryOperator* current = &BO;
+  std::pair<Use*, Use *> operands = helper::getOperands(BO);
+  Use* S1 = operands.first;
+  Use* S2 = operands.second;
+
+  ConstantInt* C1;
+  ConstantInt* C2;
+
+  if (isa<ConstantInt>(S1)) {
+    C1 = dyn_cast<ConstantInt>(S1);
+  } else if (result->representation.count(S1->get()) > 0) {
+    C1 = result->representation[S1->get()];
+  } 
+
+  if (isa<ConstantInt>(S2)) {
+    C2 = dyn_cast<ConstantInt>(S2->get());
+  } else if (result->representation.count(S2->get()) > 0) {
+    C2 = result->representation[S2->get()];
+  }
+  ret_value->representation[current] = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);
 }

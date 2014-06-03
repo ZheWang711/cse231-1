@@ -8,6 +8,7 @@
 
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/CPLatticePoint.h"
+#include "helper/helper.h"
 
 using namespace llvm;
 
@@ -19,7 +20,6 @@ public:
 
   // Constructor
   CPFlowFunction() : FlowFunction(FFK_CPFlowFunction) {}
-
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
