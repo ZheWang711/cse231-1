@@ -94,7 +94,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
     if (isa<ICmpInst>(cond)) {
       // may affect elements of our lattice.
       ICmpInst* cmp = cast<ICmpInst>(cond);
-      for (User::op_iterator OP = BI.op_begin(), OPE = BI.op_end(); OP != OPE; ++OP){
+      for (User::op_iterator OP = cmp->op_begin(), OPE = cmp->op_end(); OP != OPE; ++OP){
         errs() << *OP;
       }
     }
@@ -107,7 +107,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
 
 void RAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
-  RALatticePoint* result = new RALatticePoint(false, top, std::map<Value*, ConstantRange*>());
+  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
   info_out.push_back(result);
 }
 
