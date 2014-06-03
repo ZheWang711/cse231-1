@@ -36,7 +36,7 @@ public:
     std::map<std::pair<BasicBlock *, BasicBlock *>, LatticePoint *> edge_map;
     std::list<BasicBlock *> worklist;
     
-    // errs() << "\n Building worklist now \n";
+    //errs() << "\n Building worklist now \n";
     
     // We first initialize all edges to be bottom and add all basic block nodes to our worklist.
     for (Function::iterator BB = F.begin(), e = F.end(); BB != e; ++BB){
@@ -57,12 +57,12 @@ public:
     
     // Now we apply flow functions until we hit a fixed point.
     while (!worklist.empty()){
-      //errs() << "\n In worklist iteration... \n";
+      //errs() << "In worklist iteration... \n";
       BasicBlock *BB = worklist.front();
       worklist.remove(BB); // Remove all instances of BB in the worklist (handles multiples)
       std::list<BasicBlock *> predecessors = predecessor_map[BB];
       std::list<BasicBlock *> successors = successor_map[BB];
-      //errs() << "\n About to apply BBFF \n";
+      //errs() << "About to apply BBFF \n";
       bool flag = applyBasicBlockFlowFunctions(BB, edge_map, flowF, start, predecessors, successors);
       //errs() << "\n Done with BBFF \n";
       if (flag) {
@@ -149,7 +149,7 @@ public:
         inputs.push_back(edge_map[edge]);
       }
     }
-    //errs() << "\n In BBFF \n";
+    //errs() << "In BBFF \n";
     for (BasicBlock::iterator I = BB->begin(), e = BB->end(); I != e; ++I){
       inputs = applyFlowFunction(flowF, I, inputs);
     }
@@ -201,7 +201,8 @@ public:
       lps.pop_back();
       LatticePoint *l2 = lps.back();
       lps.pop_back();
-      lps.push_back(l1->join(l2));
+      LatticePoint* result = l1->join(l2);
+      lps.push_back(result);
     }
     return lps;
   }

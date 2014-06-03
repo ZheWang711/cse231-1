@@ -13,7 +13,7 @@
 #include <utility>
 #include <stack>
 #include <stdlib.h>
-
+#include "helper/helper.h"
 
 using namespace llvm;
 
@@ -34,18 +34,17 @@ struct RATest : public FunctionPass {
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
-    for (std::map<Instruction *, LatticePoint *>::iterator it = result.begin(); it != result.end(); ++it){
-      Instruction* I = it->first;
-      if (isa<RALatticePoint>(it->second)) {
-        RALatticePoint *rlp = dyn_cast<RALatticePoint>(it->second);
-        errs() << "Instruction " << I << " --> ";
-        rlp->printToErrs();
-      }
-      else{
-        errs() << "Instruction " << I << " missing RAlattice point. Is it a LatticePoint? " << isa<LatticePoint>(it->second) << "\n";
-      }
-      
-      
+    errs() << "We are dealing with the following function \n";
+    F.print(errs());
+    errs() << "Our analysis returned the following \n";
+    
+    // F is a pointer to a Function instance
+    for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
+      LatticePoint* lp = result[&*I];
+      RALatticePoint *rlp = dyn_cast<RALatticePoint>(lp);
+      I->print(errs());
+      errs() << " --> ";
+      rlp->printToErrs();
     }
     
     errs() << " -----Ending Function Pass------ \n";

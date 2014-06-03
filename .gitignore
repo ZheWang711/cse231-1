@@ -4,3 +4,6 @@
 *.so
 Makefile.common
 .dir
+*.config
+*.log
+*.status
