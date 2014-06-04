@@ -121,20 +121,20 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> branches = helper::getBranches(BI);
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
-      
+      /*
       errs() << "Examining instruction " << BI.getName() << " looks kinda like " << BI << "\n";
       errs() << "True branch " << true_branch->get()->getName() << " looks kinda like " << * (true_branch->get()) << "\n";
       errs() << "False branch " << false_branch->get()->getName() << " looks kinda like " << * (false_branch->get()) << "\n";
-      
+      */
       
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* right_hand_side = operands.first;
       Use*  left_hand_side = operands.second;
-      
+      /*
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
       errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
-      
+      */
       ConstantRange* lhs_range;
       ConstantRange* rhs_range;
       
@@ -160,43 +160,48 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       else{
         rhs_range = new ConstantRange(32, true);
       }
-      
+      /*
       errs() << "Left hand side has range ";
       lhs_range->print(errs());
       errs() << "\nRight hand side has range ";
       rhs_range->print(errs());
       errs() << " \n ";
+       */
       // First we compute the restrictions that cmp makes upon the regions.
       cmp->swapOperands();
       
-      errs() << " Compare looks like " << *cmp << "\n";
+      //errs() << " Compare looks like " << *cmp << "\n";
 
       ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
+      /*
       errs() << "True branch lhs_restriction: ";
       true_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      
+      */
       ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
+      /*
       errs() << "False branch lhs_restriction: ";
       false_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      
+      */
       cmp->swapOperands();
       
-      errs() << " After swapping, compare looks like " << *cmp << "\n";
+      //errs() << " After swapping, compare looks like " << *cmp << "\n";
 
       
       ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
+      /*
       errs() << "\nTrue branch rhs_restriction: ";
       true_branch_rhs_restriction.print(errs());
       errs() << " is it wrapped range? " << true_branch_rhs_restriction.isSignWrappedSet() << " is it empty? " << true_branch_rhs_restriction.isEmptySet() << " what is its size? " << true_branch_rhs_restriction.getSetSize() << "\n";
-      
+      */
       
       ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
+      /*
       errs() << "False branch rhs_restriction: ";
       false_branch_rhs_restriction.print(errs());
       errs() << "\n";
-      
+      */
 
       
       
