@@ -294,7 +294,7 @@ void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
 /*
  PHINode is NOT a terminator.
  */
-void visitPHINode(PHINode &PHI){
+void RAFlowFunction::visitPHINode(PHINode &PHI){
   while (lps.size() > 1) {
     RALatticePoint *l1 = info_in_casted.back();
     info_in_casted.pop_back();
