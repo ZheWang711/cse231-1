@@ -291,6 +291,24 @@ void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
   }
 }
 
+/*
+ PHINode is NOT a terminator.
+ */
+void visitPHINode(PHINode &PHI){
+  while (lps.size() > 1) {
+    RALatticePoint *l1 = info_in_casted.back();
+    info_in_casted.pop_back();
+    RALatticePoint *l2 = info_in_casted.back();
+    info_in_casted.pop_back();
+    RALatticePoint* result = l1->join(l2);
+    info_in_casted.push_back(result);
+  }
+  info_out.clear();
+  info_out.push_back(info_in_casted.back());
+}
+
+}
+
 
 /*
  UnaryInstruction is not terminator.
