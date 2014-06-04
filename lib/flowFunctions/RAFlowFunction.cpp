@@ -179,7 +179,16 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       
       //errs() << " Compare looks like " << *cmp << "\n";
 
-      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
+      int predicate = 0;
+      
+      if (cmp->isSigned()) {
+        predicate = cmp->getSignedPredicate();
+      }
+      else{
+        predicate = cmp->getUnsignedPredicate()
+      }
+      
+      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(predicate, *rhs_range);
       
       /*
       errs() << "True branch lhs_restriction: ";
@@ -200,7 +209,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       //errs() << " After swapping, compare looks like " << *cmp << "\n";
 
       
-      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(predicate,*lhs_range);
       
       /*
       errs() << "\nTrue branch rhs_restriction: ";
