@@ -268,7 +268,14 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       */
       
       out_map[true_branch->get()] = true_branchRLP;
+      
+      errs() << "\nTrue branch lattice point is ";
+      true_branchRLP->printToErrs();
+      
       out_map[false_branch->get()] = false_branchRLP;
+      
+      errs() << "\nFalse branch lattice point is ";
+      false_branchRLP->printToErrs();
       
     }
     else{
