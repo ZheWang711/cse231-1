@@ -184,18 +184,22 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       RALatticePoint* true_branchRLP = new RALatticePoint(*inRLP);
       RALatticePoint* false_branchRLP = new RALatticePoint(*inRLP);
       
+      
       true_branchRLP->isBottom = false;
       true_branchRLP->isTop = false;
 
       false_branchRLP->isBottom = false;
       false_branchRLP->isTop = false;
 
-      true_branchRLP->representation[left_hand_side->get()] = true_branch_lhs_range;
-      true_branchRLP->representation[right_hand_side->get()] = true_branch_rhs_range;
+      if (inRLP->representation.count(left_hand_side->get()) > 0){
+        true_branchRLP->representation[left_hand_side->get()] = true_branch_lhs_range;
+        false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
 
-      false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
-      false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
-      
+      }
+      if (inRLP->representation.count(right_hand_side->get()) > 0){
+        true_branchRLP->representation[right_hand_side->get()] = true_branch_rhs_range;
+        false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
+      }
       /*
        info_out.push_back(true_branchRLP);
        info_out.push_back(false_branchRLP);
