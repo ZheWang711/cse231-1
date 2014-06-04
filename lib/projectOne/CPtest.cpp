@@ -35,10 +35,10 @@ using namespace llvm;
       
 	  LLVMContext &someContext = F.getContext();
 
-	  std::map<Value*, Constant*> lpmap;
+	  std::map<Value*, ConstantInt*> lpmap;
       ConstantInt* ci = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 10, /*bool*/true));
 
-	  lpmap.insert(std::pair<Value*,Constant*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
+	  lpmap.insert(std::pair<Value*,ConstantInt*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
 
       CPLatticePoint clp = CPLatticePoint(false, true, lpmap);
       std::vector<LatticePoint* > sampleArgs;

@@ -39,14 +39,14 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   Use* S1 = operands.first;
   Use* S2 = operands.second;
 
-  ConstantInt* C1;
-  ConstantInt* C2;
+  ConstantInt* C1 = NULL;
+  ConstantInt* C2 = NULL;
 
   if (isa<ConstantInt>(S1)) {
     C1 = dyn_cast<ConstantInt>(S1);
   } else if (result->representation.count(S1->get()) > 0) {
     C1 = result->representation[S1->get()];
-  } 
+  }
 
   if (isa<ConstantInt>(S2)) {
     C2 = dyn_cast<ConstantInt>(S2->get());
