@@ -56,7 +56,7 @@ void visitBinaryOperator(BinaryOperator &BO) { ++Count; }
       
       errs() << " About to create CPLatticePoint \n";
       
-      CPLatticePoint clp = CPLatticePoint(false, true, std::map<Value*, Constant*>());
+      CPLatticePoint clp = CPLatticePoint(false, true, std::map<Value*, ConstantInt*>());
       
       errs() << " Created CPLatticePoint with address " << &clp << "\n";
 
