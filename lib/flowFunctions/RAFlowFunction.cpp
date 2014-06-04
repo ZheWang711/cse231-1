@@ -167,17 +167,18 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       rhs_range->print(errs());
       errs() << " \n ";
       // First we compute the restrictions that cmp makes upon the regions.
-
+      cmp->swapOperands();
+      
       errs() << " Compare looks like " << *cmp << "\n";
 
-      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *lhs_range);
+      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
       errs() << "True branch lhs_restriction: ";
-      true_branch_rhs_restriction.print(errs());
+      true_branch_lhs_restriction.print(errs());
       errs() << "\n";
       
-      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
+      ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
       errs() << "False branch lhs_restriction: ";
-      false_branch_rhs_restriction.print(errs());
+      false_branch_lhs_restriction.print(errs());
       errs() << "\n";
       
       cmp->swapOperands();
@@ -185,14 +186,14 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       errs() << " After swapping, compare looks like " << *cmp << "\n";
 
       
-      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*rhs_range);
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
       errs() << "\nTrue branch rhs_restriction: ";
-      true_branch_lhs_restriction.print(errs());
+      true_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
-      ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
+      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
       errs() << "False branch rhs_restriction: ";
-      false_branch_lhs_restriction.print(errs());
+      false_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
 
