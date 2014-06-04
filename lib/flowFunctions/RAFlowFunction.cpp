@@ -372,7 +372,7 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
   }
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   PHINode* current = &PHI;
-  ConstantRange* current_range = new ConstantRange(lhs_range->getBitWidth(), false);
+  ConstantRange* current_range = new ConstantRange(32, false);
   int num_incoming_vals = PHI.getNumIncomingValues();
   for (int i = 0; i != num_incoming_vals; i++){
     Value* val = PHI.getIncomingValue(i);
