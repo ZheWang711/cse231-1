@@ -163,10 +163,10 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       }
       
       // First we compute the restrictions that cmp makes upon the regions.
-      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getUnsignedPredicate(), *rhs_range);
+      ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
       ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
       cmp->swapOperands();
-      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getUnsignedPredicate(),*lhs_range);;
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);;
       ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
       
       // Next we intersect the ranges with the resulting restrictions.
