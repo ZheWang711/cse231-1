@@ -1,13 +1,18 @@
 #ifndef HELPER_H_
 #define HELPER_H_
 
+
+// IR stuff.
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
+#include "llvm/IR/Constants.h"
+
+// Support stuff.
 #include "llvm/Support/InstIterator.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/ConstantRange.h"
-#include "llvm/IR/Constants.h"
+
 
 #include <utility>
 
