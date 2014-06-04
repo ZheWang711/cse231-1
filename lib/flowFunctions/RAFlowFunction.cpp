@@ -370,8 +370,21 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
     RALatticePoint* result = dyn_cast<RALatticePoint>(l1->join(l2));
     info_in_casted.push_back(result);
   }
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  PHINode* current = &PHI;
+  ConstantRange* current_range = new ConstantRange(lhs_range->getBitWidth(), false);
+  int num_incoming_vals = PHI.getNumIncomingValues();
+  for (int i = 0; i != num_incoming_vals; i++){
+    Value* val = PHI.getIncomingValue(i);
+    if (inRLP->representation.count(val) > 0) {
+      *current_range = current_range->unionWith(*(inRLP->representation[val]));
+    }
+  }
+  
+  inRLP->representation[current] = current_range;
+  
   info_out.clear();
-  info_out.push_back(info_in_casted.back());
+  info_out.push_back(inRLP);
 }
 
 
