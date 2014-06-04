@@ -54,11 +54,11 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   std::pair<Use*, Use *> operands = helper::getOperands(BO);
   Use* S1 = operands.first;
   Use* S2 = operands.second;
-  
+  /*
   errs() << "Dealing with instruction " << *current << "\n";
   errs() << "First operand is " << *(S1->get()) << "\n";
   errs() << "Second operand is " << *(S2->get()) << "\n";
-  
+  */
   ConstantRange* R1;
   ConstantRange* R2;
   
@@ -127,22 +127,22 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> branches = helper::getBranches(BI);
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
-      
+      /*
       errs() << "Examining instruction" << BI << "\n";
       errs() << "True branch is " << * (true_branch->get()) << "\n";
       errs() << "False branch is " << * (false_branch->get()) << "\n";
-      
+      */
       
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* right_hand_side = operands.second;
       Use*  left_hand_side = operands.first;
       
-      
+      /*
       errs() << "Comparison " << *cmp << "\n";
       errs() << "Left hand side is " << * (left_hand_side->get()) << "\n";
       errs() << "Right hand side is " << * (right_hand_side->get()) << "\n";
-      
+      */
       ConstantRange* lhs_range;
       ConstantRange* rhs_range;
       
@@ -168,49 +168,55 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       else{
         rhs_range = new ConstantRange(32, true);
       }
-      
+      /*
       errs() << "Left hand side has range ";
       lhs_range->print(errs());
       errs() << "\nRight hand side has range ";
       rhs_range->print(errs());
       errs() << " \n ";
-      
+      */
       // First we compute the restrictions that cmp makes upon the regions.
       
-      errs() << " Compare looks like " << *cmp << "\n";
+      //errs() << " Compare looks like " << *cmp << "\n";
 
       ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
       
+      /*
       errs() << "True branch lhs_restriction: ";
       true_branch_lhs_restriction.print(errs());
       errs() << "\n";
+      */
       
       ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
       
+      /*
       errs() << "False branch lhs_restriction: ";
       false_branch_lhs_restriction.print(errs());
       errs() << "\n";
+      */
       
       cmp->swapOperands();
       
-      errs() << " After swapping, compare looks like " << *cmp << "\n";
+      //errs() << " After swapping, compare looks like " << *cmp << "\n";
 
       
       ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
       
+      /*
       errs() << "\nTrue branch rhs_restriction: ";
       true_branch_rhs_restriction.print(errs());
       errs() << " is it wrapped range? " << true_branch_rhs_restriction.isSignWrappedSet() << " is it empty? " << true_branch_rhs_restriction.isEmptySet() << " what is its size? " << true_branch_rhs_restriction.getSetSize() << "\n";
-      
+      */
       
       ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
       
+      /*
       errs() << "False branch rhs_restriction: ";
       false_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
       cmp->swapOperands();
-      
+      */
       
       // Next we intersect the ranges with the resulting restrictions.
       ConstantRange* true_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
@@ -224,6 +230,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       *true_branch_rhs_range = rhs_range->intersectWith(true_branch_rhs_restriction);
       *false_branch_rhs_range = rhs_range->intersectWith(false_branch_rhs_restriction);
       
+      /*
       errs() << "True branch lhs range ";
       true_branch_lhs_range->print(errs());
       errs() << "\n";
@@ -242,6 +249,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       errs() << "False branch rhs range ";
       false_branch_rhs_range->print(errs());
       errs() << "\n";
+      */
       
       RALatticePoint* true_branchRLP = new RALatticePoint(*inRLP);
       RALatticePoint* false_branchRLP = new RALatticePoint(*inRLP);
@@ -254,12 +262,12 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       false_branchRLP->isTop = false;
 
       if (inRLP->representation.count(left_hand_side->get()) > 0){
-        errs() << "\nIn if statement for lhs \n";
+        //errs() << "\nIn if statement for lhs \n";
 
         
         true_branchRLP->representation[left_hand_side->get()] = true_branch_lhs_range;
         false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
-        
+        /*
         errs() << "True branch lhs range ";
         true_branch_lhs_range->print(errs());
         errs() << "\n";
@@ -268,14 +276,14 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         errs() << "False branch lhs range ";
         false_branch_lhs_range->print(errs());
         errs() << "\n";
-
+         */
       }
       if (inRLP->representation.count(right_hand_side->get()) > 0){
-        errs() << "\nIn if statement for rhs \n";
+        //errs() << "\nIn if statement for rhs \n";
         
         true_branchRLP->representation[right_hand_side->get()] = true_branch_rhs_range;
         false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
-        
+        /*
         errs() << "True branch rhs range ";
         true_branch_rhs_range->print(errs());
         errs() << "\n";
@@ -284,7 +292,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         errs() << "False branch rhs range ";
         false_branch_rhs_range->print(errs());
         errs() << "\n";
-        
+        */
       }
       /*
        info_out.push_back(true_branchRLP);
@@ -292,15 +300,15 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       */
       
       out_map[true_branch->get()] = true_branchRLP;
-      
+      /*
       errs() << "\nTrue branch lattice point is ";
       true_branchRLP->printToErrs();
-      
+      */
       out_map[false_branch->get()] = false_branchRLP;
-      
+      /*
       errs() << "\nFalse branch lattice point is ";
       false_branchRLP->printToErrs();
-      
+      */
     }
     else{
       // does not affect our lattice.
