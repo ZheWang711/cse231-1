@@ -51,7 +51,9 @@ public:
       }
       i++;
     }
-    return std::make_pair(S2, S1);
+    
+    // S1 = LHS, S2 = RHS
+    return std::make_pair(S1, S2);
   }
   
   static std::pair<Use*, Use *> getBranches(BranchInst &BI){
