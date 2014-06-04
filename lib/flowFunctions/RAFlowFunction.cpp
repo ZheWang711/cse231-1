@@ -139,7 +139,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use*  left_hand_side = operands.second;
       
       
-      errs() << "Comparison " << *cmp;
+      errs() << "Comparison " << *cmp << "\n";
       errs() << "Left hand side is " << * (left_hand_side->get()) << "\n";
       errs() << "Right hand side is " << * (right_hand_side->get()) << "\n";
       
