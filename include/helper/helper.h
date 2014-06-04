@@ -6,7 +6,9 @@
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
 #include "llvm/Support/Casting.h"
+#include "llvm/Support/ConstantRange.h"
 #include "llvm/IR/Constants.h"
+
 #include <utility>
 
 using namespace llvm;
