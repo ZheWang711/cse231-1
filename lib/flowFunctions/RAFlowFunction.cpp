@@ -209,7 +209,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       false_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
-
+      cmp->swapOperands();
       
       
       // Next we intersect the ranges with the resulting restrictions.
