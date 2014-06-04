@@ -163,37 +163,30 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       }
       
       // First we compute the restrictions that cmp makes upon the regions.
-      
-      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
-      /*
-       errs() << "True branch rhs_restriction: ";
-       true_branch_rhs_restriction.print(errs());
-       errs() << "\n";
-       */
-      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
-      
-      /*
-       errs() << "False branch rhs_restriction: ";
-       false_branch_rhs_restriction.print(errs());
-       errs() << "\n";
-       */
-      
-      cmp->swapOperands();
-      
       ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
-      /*
+      
       errs() << "True branch lhs_restriction: ";
       true_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      */
+      
       ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
-      /*
       errs() << "False branch lhs_restriction: ";
       false_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      */
       
-
+      cmp->swapOperands();
+      
+      
+      ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
+      errs() << "True branch rhs_restriction: ";
+      true_branch_rhs_restriction.print(errs());
+      errs() << "\n";
+      
+      ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
+      errs() << "False branch rhs_restriction: ";
+      false_branch_rhs_restriction.print(errs());
+      errs() << "\n";
+      
       
       // Next we intersect the ranges with the resulting restrictions.
       ConstantRange* true_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
