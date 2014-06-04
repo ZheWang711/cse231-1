@@ -215,8 +215,10 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       false_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
-      cmp->swapOperands();
+      
       */
+      
+      cmp->swapOperands();
       
       // Next we intersect the ranges with the resulting restrictions.
       ConstantRange* true_branch_lhs_range = new ConstantRange(lhs_range->getBitWidth(), true);
