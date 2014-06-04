@@ -259,8 +259,20 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
 
       }
       if (inRLP->representation.count(right_hand_side->get()) > 0){
+        errs() << "\nIn if statement for rhs \n";
+        
         true_branchRLP->representation[right_hand_side->get()] = true_branch_rhs_range;
         false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
+        
+        errs() << "True branch rhs range ";
+        true_branch_rhs_range->print(errs());
+        errs() << "\n";
+        
+        
+        errs() << "False branch rhs range ";
+        false_branch_rhs_range->print(errs());
+        errs() << "\n";
+        
       }
       /*
        info_out.push_back(true_branchRLP);
