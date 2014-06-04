@@ -32,4 +32,11 @@ void CSEFlowFunction::visitAllocaInst(AllocaInst &AI) {
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
   errs() << "CSEflow visiting a binary operator \n";
+  // Haul representation out of lattice point we're supplied with
+  std::map<Value*, Instruction*> input_rep = info_in_casted.front()->representation;
+  // iterate over the pairs in the map. print them out for lack of
+  // anything better to do.
+  for (std::map<Value*, Instruction*>::iterator it=input_rep.begin(); it!=input_rep.end(); ++it){
+    std::cout << it->first << " => " << it->second << '\n';
+  }
 }

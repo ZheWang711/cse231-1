@@ -85,7 +85,9 @@ struct CSEtest : public FunctionPass {
     CSEFlowFunction CSEFlow_native = CSEFlowFunction();
     FlowFunction* CSEFlow_casted = dyn_cast<FlowFunction>(&CSEFlow_native);
 
-    // 3. Now call the flow function created above.
+    // 3. Now call the flow function created above. Since the lattice
+    // point handed in as part of sampleArgs is empty, this should do
+    // nothing but not crash.
 
     std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
     std::vector<LatticePoint* > secondEval = (*CSEFlow_casted)(secondI, sampleArgs);
@@ -95,12 +97,18 @@ struct CSEtest : public FunctionPass {
     // CSEFlowFunction member. This makes no sense based on previous
     // experience, but whatever.
 
-    // 4. Now, we want to call the flow function with some actual
+    // 4. Now, we want to call the flow function with nontrivial
     // sample arguments that are non-empty, to verify proper behavior
 
-    // std::map<Value*, Instruction*> lpmap;
+    // Create a CSELatticePoint representation of, eg, the very first
+    // instance of a value to instruction map.
+    std::map<Value*, Instruction*> lpmap;
+    lpmap.insert(std::pair<Value*, Instruction*>(firstI, firstI));
+    CSELatticePoint nontrivialExampleLP = CSELatticePoint(false, false, lpmap);
+    std::vector<LatticePoint* > nontrivialSampleArgs;
+    nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(&cselp));
     // sample map for CSElattice point with actual content in it
-    // lpmap.insert(std::pair<Value*, Instruction*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
+    
 
 
     errs() << " -----Ending Function Pass------ \n";
