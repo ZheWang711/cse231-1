@@ -168,47 +168,47 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       else{
         rhs_range = new ConstantRange(32, true);
       }
-      /*
+      
       errs() << "Left hand side has range ";
       lhs_range->print(errs());
       errs() << "\nRight hand side has range ";
       rhs_range->print(errs());
       errs() << " \n ";
-       */
+      
       // First we compute the restrictions that cmp makes upon the regions.
       
-      //errs() << " Compare looks like " << *cmp << "\n";
+      errs() << " Compare looks like " << *cmp << "\n";
 
       ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(), *rhs_range);
-      /*
+      
       errs() << "True branch lhs_restriction: ";
       true_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      */
+      
       ConstantRange false_branch_lhs_restriction = (ConstantRange(32, true)).difference(true_branch_lhs_restriction);
-      /*
+      
       errs() << "False branch lhs_restriction: ";
       false_branch_lhs_restriction.print(errs());
       errs() << "\n";
-      */
+      
       cmp->swapOperands();
       
-      //errs() << " After swapping, compare looks like " << *cmp << "\n";
+      errs() << " After swapping, compare looks like " << *cmp << "\n";
 
       
       ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
-      /*
+      
       errs() << "\nTrue branch rhs_restriction: ";
       true_branch_rhs_restriction.print(errs());
       errs() << " is it wrapped range? " << true_branch_rhs_restriction.isSignWrappedSet() << " is it empty? " << true_branch_rhs_restriction.isEmptySet() << " what is its size? " << true_branch_rhs_restriction.getSetSize() << "\n";
-      */
+      
       
       ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
-      /*
+      
       errs() << "False branch rhs_restriction: ";
       false_branch_rhs_restriction.print(errs());
       errs() << "\n";
-      */
+      
 
       
       
