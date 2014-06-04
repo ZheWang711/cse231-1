@@ -224,6 +224,25 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       *true_branch_rhs_range = rhs_range->intersectWith(true_branch_rhs_restriction);
       *false_branch_rhs_range = rhs_range->intersectWith(false_branch_rhs_restriction);
       
+      errs() << "True branch lhs range ";
+      true_branch_lhs_range->print(errs());
+      errs() << "\n";
+      
+      
+      errs() << "False branch lhs range ";
+      false_branch_lhs_range->print(errs());
+      errs() << "\n";
+      
+      
+      errs() << "True branch rhs range ";
+      true_branch_rhs_range->print(errs());
+      errs() << "\n";
+      
+      
+      errs() << "False branch rhs range ";
+      false_branch_rhs_range->print(errs());
+      errs() << "\n";
+      
       RALatticePoint* true_branchRLP = new RALatticePoint(*inRLP);
       RALatticePoint* false_branchRLP = new RALatticePoint(*inRLP);
       
