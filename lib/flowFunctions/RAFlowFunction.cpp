@@ -300,7 +300,7 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
     info_in_casted.pop_back();
     LatticePoint *l2 = info_in_casted.back();
     info_in_casted.pop_back();
-    LatticePoint* result = l1->join(l2);
+    RALatticePoint* result = dyn_cast<RALatticePoint>(l1->join(l2));
     info_in_casted.push_back(result);
   }
   info_out.clear();
