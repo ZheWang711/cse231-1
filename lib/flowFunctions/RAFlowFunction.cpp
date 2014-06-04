@@ -1,7 +1,9 @@
 #include "flowFunctions/RAFlowFunction.h"
 #include <list>
 
-
+/*
+ Non-terminator operator
+ */
 
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
@@ -20,6 +22,28 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
   return info_out;
 }
 
+/*
+ Terminator operator
+ */
+
+std::map<Value *, LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in, std::map<Value *, LatticePoint *> successor_map){
+  out_map = successor_map;
+  //errs() << "In terminator operator \n";
+  info_in_casted = std::vector<RALatticePoint *>();
+  for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
+    RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
+    //errs() << "Handed lattice point ";
+    //temp->printToErrs();
+    info_in_casted.push_back(temp);
+  }
+
+  this->visit(instr);
+  return out_map;
+}
+
+/*
+ Binary operator is NOT terminator.
+ */
 
 void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   RALatticePoint* result = new RALatticePoint(*(info_in_casted.back()));
@@ -55,11 +79,6 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   ConstantRange* range = new ConstantRange(32, true);
   *range = *(helper::foldBinaryOperator(current->getOpcode(), R1, R2));
   
-  /*
-  errs() << "Bit width of R1 is " << R1->getBitWidth() << "\n";
-  errs() << "Bit width of R2 is " << R2->getBitWidth() << "\n";
-  errs() << "Bit width of range is " << range->getBitWidth() << "\n";
-  */
   result->representation[current] = range;
   
   if (result->isTop && (result->representation[current])->isFullSet()) {
@@ -75,19 +94,25 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   else{
     result->isBottom = false;
   }
-
-  //errs() << "Lattice point to be returned is ";
-  //result->printToErrs();
   info_out.clear();
   info_out.push_back(result);
 }
+
+
+
+/*
+ BranchInst IS terminator.
+ */
 
 void RAFlowFunction::visitBranchInst(BranchInst &BI){
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   
   if (BI.isUnconditional()) {
-    info_out.push_back(inRLP);
+    for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+      Value* elm = it->first;
+      out_map[elm] = inRLP;
+    }
   }
   else{
     Value* cond = BI.getCondition();
@@ -171,16 +196,28 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       false_branchRLP->representation[left_hand_side->get()] = false_branch_lhs_range;
       false_branchRLP->representation[right_hand_side->get()] = false_branch_rhs_range;
       
-      info_out.push_back(true_branchRLP);
-      info_out.push_back(false_branchRLP);
+      /*
+       info_out.push_back(true_branchRLP);
+       info_out.push_back(false_branchRLP);
+      */
+      
+      out_map[true_branch->get()] = true_branchRLP;
+      out_map[false_branch->get()] = false_branchRLP;
+      
     }
     else{
       // does not affect our lattice.
-      info_out.push_back(inRLP);
+      for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+        Value* elm = it->first;
+        out_map[elm] = inRLP;
+      }
     }
   }
 }
 
+/*
+ CastInst is NOT terminator.
+ */
 
 void RAFlowFunction::visitCastInst(CastInst &I){
   info_out.clear();
@@ -188,6 +225,10 @@ void RAFlowFunction::visitCastInst(CastInst &I){
   info_in_casted.pop_back();
   info_out.push_back(inRLP);
 }
+
+/*
+ CmpInst is NOT terminator.
+ */
 
 
 void RAFlowFunction::visitCmpInst(CmpInst &I){
@@ -198,15 +239,22 @@ void RAFlowFunction::visitCmpInst(CmpInst &I){
 }
 
 
+/*
+ TerminatorInst IS terminator.
+ */
+
 void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
-  info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
-  info_in_casted.pop_back();
-  info_out.push_back(inRLP);
+  for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+    Value* elm = it->first;
+    out_map[elm] = inRLP;
+  }
 }
 
 
-// Be safe with memory!
+/*
+ UnaryInstruction is not terminator.
+ */
 void RAFlowFunction::visitUnaryInstruction(UnaryInstruction &I){
   info_out.clear();
   RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());

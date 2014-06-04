@@ -11,14 +11,16 @@
 #include "llvm/IR/Value.h"
 #include "helper/helper.h"
 #include <string>
+#include <map>
 
 using namespace llvm;
 
 class RAFlowFunction : public FlowFunction, public InstVisitor<RAFlowFunction>{
 public:
-  // local variables for passing argumentsm
+  // local variables for passing arguments
   std::vector<RALatticePoint *> info_in_casted;
   std::vector<LatticePoint *> info_out;
+  std::map<Value *, LatticePoint *> out_map;
 
   // Constructor
   RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}
@@ -33,8 +35,15 @@ public:
   void visitUnaryInstruction(UnaryInstruction &I);
   
   
-  // Flow Function Interface
+  // Flow Function Interface(s)
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  
+  /*  
+   Specifically for terminator instructions.
+   Input: current instruction, the current set of lattice points, a map from successors --> NULL pointers
+   Output: a map of successors -> LatticePoints.
+  */
+  std::map<Value *, LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in, std::map<Value *, LatticePoint *> successor_map);
 
   static bool classof(const FlowFunction *F) {
     return F->getKind() == FFK_RAFlowFunction;
