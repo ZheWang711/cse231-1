@@ -307,8 +307,6 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
   info_out.push_back(info_in_casted.back());
 }
 
-}
-
 
 /*
  UnaryInstruction is not terminator.
