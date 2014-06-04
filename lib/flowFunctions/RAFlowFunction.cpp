@@ -189,7 +189,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
       errs() << "\nTrue branch rhs_restriction: ";
       true_branch_rhs_restriction.print(errs());
-      errs() << " is it wrapped range? " << true_branch_rhs_restriction.isWrappedSet() << "\n";
+      errs() << " is it wrapped range? " << true_branch_rhs_restriction.isSignWrappedSet() << " is it empty? " << true_branch_rhs_restriction.isEmptySet() << "\n";
       
       
       ConstantRange false_branch_rhs_restriction = (ConstantRange(32, true)).difference(true_branch_rhs_restriction);
