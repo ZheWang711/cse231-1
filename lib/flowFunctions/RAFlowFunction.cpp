@@ -161,9 +161,14 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         rhs_range = new ConstantRange(32, true);
       }
       
+      errs() << "Left hand side has range ";
+      lhs_range.print(errs());
+      errs() << "\nRight hand side has range "
+      rhs_range.print(errs());
+      
       // First we compute the restrictions that cmp makes upon the regions.
       ConstantRange true_branch_rhs_restriction = ConstantRange::makeICmpRegion(cmp->getSignedPredicate(),*lhs_range);
-      errs() << "True branch rhs_restriction: ";
+      errs() << "\nTrue branch rhs_restriction: ";
       true_branch_rhs_restriction.print(errs());
       errs() << "\n";
       
