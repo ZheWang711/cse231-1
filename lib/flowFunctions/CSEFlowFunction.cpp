@@ -31,5 +31,5 @@ void CSEFlowFunction::visitAllocaInst(AllocaInst &AI) {
 }
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
-  errs() << "CSEflow visiting a binary operator";
+  errs() << "CSEflow visiting a binary operator \n";
 }
