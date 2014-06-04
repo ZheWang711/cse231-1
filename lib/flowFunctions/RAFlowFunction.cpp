@@ -176,7 +176,6 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       errs() << " \n ";
        */
       // First we compute the restrictions that cmp makes upon the regions.
-      cmp->swapOperands();
       
       //errs() << " Compare looks like " << *cmp << "\n";
 
