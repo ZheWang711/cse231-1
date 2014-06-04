@@ -50,9 +50,15 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   info_in_casted.pop_back();
   
   BinaryOperator* current = &BO;
+  
   std::pair<Use*, Use *> operands = helper::getOperands(BO);
   Use* S1 = operands.first;
   Use* S2 = operands.second;
+  
+  errs() << "Dealing with instruction " << *current << "\n";
+  errs() << "First operand is " << *(S1->get()) << "\n";
+  errs() << "Second operand is " << *(S2->get()) << "\n";
+  
   ConstantRange* R1;
   ConstantRange* R2;
   
@@ -121,20 +127,22 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       std::pair<Use*, Use *> branches = helper::getBranches(BI);
       Use* true_branch = branches.first;
       Use* false_branch = branches.second;
-      /*
-      errs() << "Examining instruction " << BI.getName() << " looks kinda like " << BI << "\n";
-      errs() << "True branch " << true_branch->get()->getName() << " looks kinda like " << * (true_branch->get()) << "\n";
-      errs() << "False branch " << false_branch->get()->getName() << " looks kinda like " << * (false_branch->get()) << "\n";
-      */
+      
+      errs() << "Examining instruction" << BI << "\n";
+      errs() << "True branch is " << * (true_branch->get()) << "\n";
+      errs() << "False branch is " << * (false_branch->get()) << "\n";
+      
       
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
       Use* right_hand_side = operands.first;
       Use*  left_hand_side = operands.second;
-      /*
-      errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
-      errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
-      */
+      
+      
+      errs() << "Comparison " << *cmp;
+      errs() << "Left hand side is " << * (left_hand_side->get()) << "\n";
+      errs() << "Right hand side is " << * (right_hand_side->get()) << "\n";
+      
       ConstantRange* lhs_range;
       ConstantRange* rhs_range;
       
