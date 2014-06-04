@@ -131,14 +131,12 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       Use* left_hand_side = operands.first;
       Use*  right_hand_side = operands.second;
       
-      /*
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
       errs() << "Right hand side " << right_hand_side->get()->getName() << " looks kinda like " << * (right_hand_side->get()) << "\n";
-      */
+      
       ConstantRange* lhs_range;
       ConstantRange* rhs_range;
       
-
       
       if (inRLP->representation.count(left_hand_side->get()) > 0) {
         lhs_range = inRLP->representation[left_hand_side->get()];
