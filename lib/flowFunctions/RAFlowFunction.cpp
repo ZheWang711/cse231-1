@@ -128,8 +128,8 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
        */
       ICmpInst* cmp = cast<ICmpInst>(cond);
       std::pair<Use*, Use *> operands = helper::getOperands(*cmp);
-      Use* right_hand_side = operands.first;
-      Use* left_hand_side = operands.second;
+      Use* left_hand_side = operands.first;
+      Use*  right_hand_side = operands.second;
       
       /*
       errs() << "Left hand side " << left_hand_side->get()->getName() << " looks kinda like " << * (left_hand_side->get()) << "\n";
