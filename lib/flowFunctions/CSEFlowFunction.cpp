@@ -41,9 +41,11 @@ void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     // errs() << print(it->first) << " => " << print(it->second) << '\n';
 
     Value* left_hand_side = it->first;
-    Value* right_hand_side = it->second;
+    Instruction* right_hand_side = it->second;
     left_hand_side->print(errs());
     right_hand_side->print(errs());
+    
+    errs() << "Instructions are " << right_hand_side->isIdenticalToWhenDefined(&BO)  << " equal\n";
 
   }
 }
