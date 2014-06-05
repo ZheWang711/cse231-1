@@ -119,8 +119,8 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   Value* pointer = LI.getPointerOperand();
   std::set<Value*> pointer_range;
   
-  if (inRLP->representation.count(&LI)) {
-    pointer_range = representation[&LI];
+  if (inRLP->representation.count(&LI) >0) {
+    pointer_range = inRLP->representation[&LI];
   }
   
   if (inRLP->representation.count(pointer) > 0){
@@ -155,7 +155,7 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   for (std::set<Value*>::iterator it = pointer_range.begin(); it != pointer_range.end(); ++it){
     std::set<Value*> points_to;
     if (inRLP->representation.count(*it) > 0){
-      points_to = inRLP->representation[*it]
+      points_to = inRLP->representation[*it];
       points_to.insert(value);
     }
     else{
