@@ -5,7 +5,7 @@
  Non-terminator operator
  */
 
-std::vector<LatticePoint *> PALatticePoint::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
+std::vector<LatticePoint *> PAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
   //errs() << "In operator \n";
   info_in_casted = std::vector<PALatticePoint *>();
@@ -39,7 +39,7 @@ void PALatticePoint::visitBinaryOperator(BinaryOperator &BO) {
  CastInst is NOT terminator.
  */
 
-void RAFlowFunction::visitCastInst(CastInst &I){
+void PAFlowFunction::visitCastInst(CastInst &I){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
@@ -109,7 +109,7 @@ void PALatticePoint::visitUnaryInstruction(UnaryInstruction &I){
 }
 
 // Be safe with memory!
-void RAFlowFunction::visitInstruction(Instruction &I){
+void PAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
   PALatticePoint* result = new PALatticePoint(false, true, std::map<Value*, std::set<Value*> >());
   info_out.push_back(result);
