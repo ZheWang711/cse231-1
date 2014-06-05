@@ -14,7 +14,10 @@
 #include "llvm/Support/ConstantRange.h"
 
 
+// Standard library stuff
 #include <utility>
+#include <set>
+#include <map>
 
 using namespace llvm;
 
@@ -159,7 +162,7 @@ public:
       case Instruction::Sub:
         *result = C1->sub(*C2);
         break;
-      case Instruction::Mul:
+      case Instruction::Mul: // Not fully implemented, apparently.
         *result = C1->multiply(*C2);
         break;
       case Instruction::UDiv:
