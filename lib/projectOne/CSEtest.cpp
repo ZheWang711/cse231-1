@@ -103,11 +103,22 @@ struct CSEtest : public FunctionPass {
     // Create a CSELatticePoint representation of, eg, the very first
     // instance of a value to instruction map.
     std::map<Value*, Instruction*> lpmap;
-    lpmap.insert(std::pair<Value*, Instruction*>(firstI, firstI));
-    CSELatticePoint nontrivialExampleLP = CSELatticePoint(false, false, lpmap);
+
+    // lpmap.insert(std::pair<Value*, Instruction*>(firstI, firstI));
+
+    lpmap[firstI] = firstI;
+
+    // for (std::map<Value*, Instruction*>::iterator it=lpmap.begin(); it!=lpmap.end(); ++it){
+    //   errs() << it->first << " => " << it->second << '\n';
+    // }
+
+    CSELatticePoint* nontrivialExampleLP = new CSELatticePoint(false, false, lpmap);
+
+    nontrivialExampleLP->printToErrs();
     std::vector<LatticePoint* > nontrivialSampleArgs;
-    nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(&cselp));
-    // sample map for CSElattice point with actual content in it
+    nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(nontrivialExampleLP));
+    
+    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(firstI, nontrivialSampleArgs);
     
 
 

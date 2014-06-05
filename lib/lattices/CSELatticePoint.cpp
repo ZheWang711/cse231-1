@@ -60,15 +60,22 @@ bool CSELatticePoint::equals(LatticePoint* in){
   return false;
 }
 
-std::string CSELatticePoint::LPprint() {
-  std::stringstream ss;
-  ss << "\nCSE: isBottom: " << this->isBottom << ", isTop: " << this->isTop << "\n";
-  // ss << "{ ";
-  // for(std::map<Value*, Constant*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
-  //   Value* val = it->first;
-  //   Constant* con = it->second;
-  //   ss << val << ": " << *(con->getUniqueInteger().getRawData()) << ", ";
-  // }
-  // ss << " }\n";
-  return ss.str();
+
+void CSELatticePoint::printToErrs() {
+  errs() << "CSELatticePoint: isBottom: " << this->isBottom << ", isTop: " << this->isTop << " | ";
+  if (this->isBottom || this->isTop){
+    errs() << "\n";
+    return;
+  }
+  errs() << "{ ";
+  for(std::map<Value*, Instruction*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
+    Value* val = it->first;
+    val->print(errs());
+    errs() << " --> ";
+    Instruction* instr = it->second;
+    instr->print(errs());
+    errs() << ", ";
+  }
+  errs() << " } \n";
+  return;
 }

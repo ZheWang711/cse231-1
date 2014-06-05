@@ -5,6 +5,7 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
+#include "llvm/Support/raw_ostream.h"
 
 #include <map>
 #include <string>
@@ -31,7 +32,8 @@ public:
   
   LatticePoint* join(LatticePoint* in);
   bool equals(LatticePoint* in);
-  std::string LPprint();
+  // std::string LPprint();
+  void printToErrs();
 };
 
 #endif /* CSELATTICEPOINT_H_ */
