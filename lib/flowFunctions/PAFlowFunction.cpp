@@ -142,7 +142,7 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   SI.print(errs());
   errs() << " Pointer is ";
   pointer->print(errs());
-  errs << " Value is ";
+  errs() << " Value is ";
   value->print(errs());
   errs() << "\n";
 }
