@@ -8,12 +8,13 @@
 LatticePoint* PALatticePoint::join(LatticePoint* in){
   
   PALatticePoint* in_casted =  dyn_cast<PALatticePoint>(in);
+  
   if (in->isTop || this->isBottom){
-    RALatticePoint* result = new RALatticePoint(*in_casted);
+    PALatticePoint* result = new PALatticePoint(*in_casted);
     return result;
   }
   if (this->isTop || in->isBottom) {
-    RALatticePoint* result = new RALatticePoint(*this);
+    PALatticePoint* result = new PALatticePoint(*this);
     return result;
   }
   
@@ -68,7 +69,7 @@ bool PALatticePoint::equals(LatticePoint* in){
     return in->isTop == this->isTop;
   }
   
-  RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
+  PALatticePoint* in_casted =  dyn_cast<PALatticePoint>(in);
   std::map<Value*, std::set<Value*> > representation1 = this->representation;
   std::map<Value*, std::set<Value*> >representation2 = in_casted->representation;
   
@@ -81,11 +82,11 @@ bool PALatticePoint::equals(LatticePoint* in){
     else{
       std::set<Value*> c2 = representation2[elm];
       if (c1.size() != c2.size()) {
-        return false
+        return false;
       }
       for (std::set<Value*>::iterator it = c1.begin(); it!=c1.end(); ++it){
         if (c2.count(*it) <= 0) {
-          return false
+          return false;
         }
       }
     }
@@ -107,7 +108,7 @@ void PALatticePoint::printToErrs() {
     val->print(errs());
     errs() << " --> [ ";
 		std::set<Value*> point_set = it->second;
-    for (std::set<Value*>::iterator it = c1.begin(); it!=c1.end(); ++it){
+    for (std::set<Value*>::iterator it = point_set.begin(); it!=point_set.end(); ++it){
       (*it)->print(errs());
       errs() << " ,";
     }
