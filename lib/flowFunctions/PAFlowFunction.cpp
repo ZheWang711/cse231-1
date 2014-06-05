@@ -24,7 +24,7 @@ std::vector<LatticePoint *> PAFlowFunction::operator()(llvm::Instruction* instr,
 
 
 /*
- Binary operator is NOT terminator.
+ By SSA, we will never overwrite a pointer with a binary operation. Thus, we punt on this lattice point.
  */
 
 void PAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
@@ -36,7 +36,7 @@ void PAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
 
 
 /*
- CastInst is NOT terminator.
+ We punt on this lattice point.
  */
 
 void PAFlowFunction::visitCastInst(CastInst &I){
@@ -47,7 +47,7 @@ void PAFlowFunction::visitCastInst(CastInst &I){
 }
 
 /*
- CmpInst is NOT terminator.
+ We punt on this lattice point.
  */
 void PAFlowFunction::visitCmpInst(CmpInst &I){
   info_out.clear();
@@ -58,7 +58,7 @@ void PAFlowFunction::visitCmpInst(CmpInst &I){
 
 
 /*
- TerminatorInst IS terminator.
+ We punt on this lattice point.
  */
 
 void PAFlowFunction::visitTerminatorInst(TerminatorInst &I){
@@ -69,7 +69,7 @@ void PAFlowFunction::visitTerminatorInst(TerminatorInst &I){
 }
 
 /*
- PHINode is NOT a terminator.
+ We need to union on incoming ranges.
  */
 void PAFlowFunction::visitPHINode(PHINode &PHI){
   while (info_in_casted.size() > 1) {
@@ -98,6 +98,41 @@ void PAFlowFunction::visitPHINode(PHINode &PHI){
   info_out.push_back(inRLP);
 }
 
+
+// Punt...
+void visitAllocaInst(AllocaInst &AI){
+  info_out.clear();
+  PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
+}
+
+/*
+  Corresponds to calls of the form 
+            y = *x;
+ */
+
+void visitLoadInst(LoadInst     &LI){
+  info_out.clear();
+  PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
+  
+  Value* pointer = LI.getPointerOperand();
+  info_in_casted.pop_back();
+  info_out.push_back(inRLP);
+}
+
+
+/*
+  Corresponds to calls of the form
+            *y = x;
+ */
+void visitStoreInst(StoreInst   &SI){
+  info_out.clear();
+  PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
+  
+  Value* pointer = SI.getPointerOperand();
+  Value* value = SI.getValueOperand();
+  info_out.push_back(inRLP);
+}
 
 /*
  UnaryInstruction is not terminator.
