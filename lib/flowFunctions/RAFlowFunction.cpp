@@ -185,7 +185,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         predicate = cmp->getSignedPredicate();
       }
       else{
-        predicate = cmp->getUnsignedPredicate();
+        predicate = cmp->getUnsignedPredicate();
       }
       
       ConstantRange true_branch_lhs_restriction = ConstantRange::makeICmpRegion(predicate, *rhs_range);
