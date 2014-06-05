@@ -8,7 +8,7 @@
 std::vector<LatticePoint *> PALatticePoint::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
   //errs() << "In operator \n";
-  info_in_casted = std::vector<RALatticePoint *>();
+  info_in_casted = std::vector<PALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     PALatticePoint* temp = dyn_cast<PALatticePoint>(*it);
     //errs() << "Handed lattice point ";
