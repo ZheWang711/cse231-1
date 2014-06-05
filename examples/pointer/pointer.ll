@@ -18,8 +18,10 @@ entry:
   %1 = load i32** %y, align 8
   %2 = load i32* %1, align 4
   store i32 %2, i32* %k, align 4
-  %3 = load i32* %k, align 4
-  ret i32 %3
+  %3 = load i32** %y_copy, align 8
+  store i32 10, i32* %3, align 4
+  %4 = load i32* %k, align 4
+  ret i32 %4
 }
 
 attributes #0 = { nounwind uwtable "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }
