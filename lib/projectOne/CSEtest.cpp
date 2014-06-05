@@ -31,10 +31,10 @@ struct CSEtest : public FunctionPass {
     errs() << " -----Starting Function Pass------ \n";
     errs() << " Testing CSE \n";
 
+    // Make a constant and print it out (or not) just to prove we can.
     LLVMContext &someContext = F.getContext();
-    
     ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
-    errs() << " \n Constant value is " << someConstant->getValue() << "\n";
+    // errs() << " \n Constant value is " << someConstant->getValue() << "\n";
 
     // note: this snippet works to get the first non phi instruction if we need it from F
     // Instruction* firstI = F.front().getFirstNonPHI();
@@ -42,7 +42,7 @@ struct CSEtest : public FunctionPass {
 
     // --------------------------------------------------
     // Test for instruction equivalence in LLVM, using first two
-    // instructions of function.
+    // instructions of function. Verify that it works as expected.
     // --------------------------------------------------
 
     // 1. get first two instructions of first basicblock
@@ -102,15 +102,9 @@ struct CSEtest : public FunctionPass {
 
     // Create a CSELatticePoint representation of, eg, the very first
     // instance of a value to instruction map.
+
     std::map<Value*, Instruction*> lpmap;
-
-    // lpmap.insert(std::pair<Value*, Instruction*>(firstI, firstI));
-
     lpmap[firstI] = firstI;
-
-    // for (std::map<Value*, Instruction*>::iterator it=lpmap.begin(); it!=lpmap.end(); ++it){
-    //   errs() << it->first << " => " << it->second << '\n';
-    // }
 
     CSELatticePoint* nontrivialExampleLP = new CSELatticePoint(false, false, lpmap);
 
@@ -118,9 +112,10 @@ struct CSEtest : public FunctionPass {
     std::vector<LatticePoint* > nontrivialSampleArgs;
     nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(nontrivialExampleLP));
     
-    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
+    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(firstI, nontrivialSampleArgs);
+    std::vector<LatticePoint* > nonTrivialEvalTwo = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
     
-
+    dyn_cast<CSELatticePoint>(nonTrivialEvalTwo.front())->printToErrs();
 
     errs() << " -----Ending Function Pass------ \n";
     return false;
