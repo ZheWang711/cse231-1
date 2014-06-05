@@ -100,7 +100,7 @@ void PAFlowFunction::visitPHINode(PHINode &PHI){
 
 
 // Punt...
-void visitAllocaInst(AllocaInst &AI){
+void PAFlowFunction::visitAllocaInst(AllocaInst &AI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   info_out.push_back(inRLP);
@@ -111,7 +111,7 @@ void visitAllocaInst(AllocaInst &AI){
             y = *x;
  */
 
-void visitLoadInst(LoadInst     &LI){
+void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   
@@ -125,7 +125,7 @@ void visitLoadInst(LoadInst     &LI){
   Corresponds to calls of the form
             *y = x;
  */
-void visitStoreInst(StoreInst   &SI){
+void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   
