@@ -6,22 +6,32 @@ target triple = "x86_64-unknown-linux-gnu"
 define i32 @_Z1fi(i32 %x) #0 {
 entry:
   %x.addr = alloca i32, align 4
+  %a = alloca i32, align 4
+  %b = alloca i32*, align 8
+  %c = alloca i32, align 4
   %y = alloca i32*, align 8
   %z = alloca i32**, align 8
   %y_copy = alloca i32*, align 8
   %k = alloca i32, align 4
   store i32 %x, i32* %x.addr, align 4
+  store i32 10, i32* %a, align 4
+  store i32* %a, i32** %b, align 8
+  %0 = load i32** %b, align 8
+  store i32 5, i32* %0, align 4
+  %1 = load i32** %b, align 8
+  %2 = load i32* %1, align 4
+  store i32 %2, i32* %c, align 4
   store i32* %x.addr, i32** %y, align 8
   store i32** %y, i32*** %z, align 8
-  %0 = load i32** %y, align 8
-  store i32* %0, i32** %y_copy, align 8
-  %1 = load i32** %y, align 8
-  %2 = load i32* %1, align 4
-  store i32 %2, i32* %k, align 4
-  %3 = load i32** %y_copy, align 8
-  store i32 10, i32* %3, align 4
-  %4 = load i32* %k, align 4
-  ret i32 %4
+  %3 = load i32** %y, align 8
+  store i32* %3, i32** %y_copy, align 8
+  %4 = load i32** %y, align 8
+  %5 = load i32* %4, align 4
+  store i32 %5, i32* %k, align 4
+  %6 = load i32** %y_copy, align 8
+  store i32 10, i32* %6, align 4
+  %7 = load i32* %k, align 4
+  ret i32 %7
 }
 
 attributes #0 = { nounwind uwtable "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }
