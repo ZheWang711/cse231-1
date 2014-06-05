@@ -18,7 +18,7 @@ public:
   std::map<Value *, LatticePoint *> out_map;
   
   // Constructor
-  RAFlowFunction() : FlowFunction(FFK_PAFlowFunction) {}
+  PAFlowFunction() : FlowFunction(FFK_PAFlowFunction) {}
   
   // Visited Instructions
   void visitBinaryOperator(BinaryOperator &BO);
