@@ -114,23 +114,34 @@ void PAFlowFunction::visitAllocaInst(AllocaInst &AI){
 void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
-  
-  Value* pointer = LI.getPointerOperand();
   info_in_casted.pop_back();
-  info_out.push_back(inRLP);
+
+  Value* pointer = LI.getPointerOperand();
+  std::set<Value*> pointer_range;
   
+  if (inRLP->representation.count(&LI)) {
+    pointer_range = representation[&LI];
+  }
+  
+  if (inRLP->representation.count(pointer) > 0){
+    std::set<Value*> c1 = inRLP->representation[pointer];
+    for (std::set<Value*>::iterator it = c1.begin(); it!=c1.end(); ++it){
+      pointer_range.insert(*it);
+    }
+  }
+  /*
   errs() << "In load instruction: ";
   LI.print(errs());
   errs() << " Pointer is ";
   pointer->print(errs());
   errs() << "\n";
-  
+  */
 }
 
 
 /*
   Corresponds to calls of the form
-            y = &x;
+            *y = x;
   We put in SI.getPointerOperand() --> SI.getValueOperand()
  */
 void PAFlowFunction::visitStoreInst(StoreInst   &SI){
@@ -140,9 +151,18 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   Value* pointer = SI.getPointerOperand();
   Value* value = SI.getValueOperand();
   
-  std::set<Value *> pointer_range;
-  pointer_range.insert(value);
-  inRLP->representation[pointer] = pointer_range;
+  std::set<Value *> pointer_range = inRLP->representation[pointer];
+  for (std::set<Value*>::iterator it = pointer_range.begin(); it != pointer_range.end(); ++it){
+    std::set<Value*> points_to;
+    if (inRLP->representation.count(*it) > 0){
+      points_to = inRLP->representation[*it]
+      points_to.insert(value);
+    }
+    else{
+      points_to.insert(value);
+    }
+    inRLP->representation[*it] = points_to;
+  }
   inRLP->isTop = false;
   inRLP->isBottom = false;
   info_out.push_back(inRLP);
