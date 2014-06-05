@@ -27,7 +27,7 @@ std::vector<LatticePoint *> PAFlowFunction::operator()(llvm::Instruction* instr,
  Binary operator is NOT terminator.
  */
 
-void PALatticePoint::visitBinaryOperator(BinaryOperator &BO) {
+void PAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
@@ -49,7 +49,7 @@ void PAFlowFunction::visitCastInst(CastInst &I){
 /*
  CmpInst is NOT terminator.
  */
-void PALatticePoint::visitCmpInst(CmpInst &I){
+void PAFlowFunction::visitCmpInst(CmpInst &I){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
@@ -61,7 +61,7 @@ void PALatticePoint::visitCmpInst(CmpInst &I){
  TerminatorInst IS terminator.
  */
 
-void PALatticePoint::visitTerminatorInst(TerminatorInst &I){
+void PAFlowFunction::visitTerminatorInst(TerminatorInst &I){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
@@ -71,7 +71,7 @@ void PALatticePoint::visitTerminatorInst(TerminatorInst &I){
 /*
  PHINode is NOT a terminator.
  */
-void PALatticePoint::visitPHINode(PHINode &PHI){
+void PAFlowFunction::visitPHINode(PHINode &PHI){
   while (info_in_casted.size() > 1) {
     LatticePoint *l1 = info_in_casted.back();
     info_in_casted.pop_back();
@@ -102,7 +102,7 @@ void PALatticePoint::visitPHINode(PHINode &PHI){
 /*
  UnaryInstruction is not terminator.
  */
-void PALatticePoint::visitUnaryInstruction(UnaryInstruction &I){
+void PAFlowFunction::visitUnaryInstruction(UnaryInstruction &I){
   info_out.clear();
   PALatticePoint* result = new PALatticePoint(false, true, std::map<Value*, std::set<Value*> >());
   info_out.push_back(result);
