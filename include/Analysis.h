@@ -24,6 +24,7 @@
 #include "flowFunctions/CPFlowFunction.h"
 #include "flowFunctions/RAFlowFunction.h"
 #include "flowFunctions/CSEFlowFunction.h"
+#include "flowFunctions/PAFlowFunction.h"
 
 class Analysis {
 public:
@@ -197,6 +198,10 @@ public:
       CSEFlowFunction* f = cast<CSEFlowFunction>(flowF);
       outputs = (*f)(I, inputs);
     }
+    else if(isa<PAFlowFunction>(flowF)){
+      PAFlowFunction* f = cast<PAFlowFunction>(flowF);
+      outputs = (*f)(I, inputs);
+    }
     else{
       errs() << "IN REALLY BAD CASE! \n";
     }
@@ -204,8 +209,7 @@ public:
   }
   
   /*
-    This case handles terminator instructions.
-    Should be modified for CPFlowFunction, CSEFlowFunction, and PointerFlowFunction
+    This case handles terminator instructions. We only do this for Range analysis. Everything else does the normal stuff.
    */
   
   static std::map<Value *, LatticePoint *> applyFlowFunction(FlowFunction* flowF, Instruction* I, std::vector<LatticePoint*> inputs,std::map<Value *, LatticePoint *> successor_map){
@@ -226,6 +230,15 @@ public:
     else if(isa<CSEFlowFunction>(flowF)){ // Not implemented here. We do a hack to make it work.
       std::vector<LatticePoint*> temp;
       CSEFlowFunction* f = cast<CSEFlowFunction>(flowF);
+      temp = (*f)(I, inputs);
+      for (std::map<Value*, LatticePoint*>::iterator it=successor_map.begin(); it!=successor_map.end(); ++it){
+        Value* elm = it->first;
+        outputs[elm] = temp.front();
+      }
+    }
+    else if(isa<PAFlowFunction>(flowF)){ // Not implemented here. We do a hack to make it work.
+      std::vector<LatticePoint*> temp;
+      PAFlowFunction* f = cast<PAFlowFunction>(flowF);
       temp = (*f)(I, inputs);
       for (std::map<Value*, LatticePoint*>::iterator it=successor_map.begin(); it!=successor_map.end(); ++it){
         Value* elm = it->first;
