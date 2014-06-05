@@ -10,54 +10,57 @@ LatticePoint* CSELatticePoint::join(LatticePoint* in){
     return in;
   }
   
-  // CSELatticePoint* in_casted =  dyn_cast<CSELatticePoint>(in);
+  CSELatticePoint* in_casted =  dyn_cast<CSELatticePoint>(in);
   
-  // std::map<Value *, Constant *> representation1 = this->representation;
-  // std::map<Value *, Constant *> representation2 = in_casted->representation;
+  std::map<Value*, Instruction*> representation1 = this->representation;
+  std::map<Value*, Instruction*> representation2 = in_casted->representation;
   
-  // std::map<Value *, Constant *> result_map;
+  std::map<Value*, Instruction*> result_map;
   
-  // for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
-  //   Value* elm = it->first;
-  //   Constant* c1 = it->second;
-  //   if (representation2.count(elm) > 0){
-  //     Constant* c2 = representation2[elm];
-  //     if (c1 == c2){
-  //       result_map[elm] = c1;
-  //     }
-  //   }
-  // }
-  // CSELatticePoint* result = new CSELatticePoint(false, false, result_map);
-  // return result;
-  
-  return in;
+  for (std::map<Value *, Instruction *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+    Value* elm = it->first;
+    Instruction* c1 = it->second;
+    if (representation2.count(elm) > 0){
+      Instruction* c2 = representation2[elm];
+      if (c1 == c2){
+        result_map[elm] = c1;
+      }
+    }
+  }
+  CSELatticePoint* result = new CSELatticePoint(false, false, result_map);
+  return result;
 }
 
 
 
 bool CSELatticePoint::equals(LatticePoint* in){
-  // if (in->isBottom || this->isBottom){
-  //   return in->isBottom == this->isBottom;
-  // }
-  // CSELatticePoint* in_casted =  dyn_cast<CSELatticePoint>(in);
-  // std::map<Value *, Constant *> representation1 = this->representation;
-  // std::map<Value *, Constant *> representation2 = in_casted->representation;
+  // I don't know if this works. What if the maps have equal elements
+  // but in a different order? Will C++ stl traverse maps that are
+  // identical in the same order? This code relies on that assumption
+  // which I cannot currently verify.
+  if (in->isBottom || this->isBottom){
+    return in->isBottom == this->isBottom;
+  }
+  CSELatticePoint* in_casted =  dyn_cast<CSELatticePoint>(in);
+  std::map<Value*, Instruction*> representation1 = this->representation;
+  std::map<Value*, Instruction*> representation2 = in_casted->representation;
   
-  // for (std::map<Value *, Constant *>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
-  //   Value* elm = it->first;
-  //   Constant* c1 = it->second;
-  //   if (representation2.count(elm) <= 0){
-  //     return false;
-  //   }
-  //   else{
-  //     Constant* c2 = representation2[elm];
-  //     if (c1 != c2){
-  //       return false;
-  //     }
-  //   }
-  // }
-  // return true;
-  return false;
+  for (std::map<Value*, Instruction*>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+    Value* elm = it->first;
+    Instruction* i1 = it->second;
+    if (representation2.count(elm) <= 0){
+      return false;
+    }
+    else{
+      Instruction* i2 = representation2[elm];
+      // here, we want to be using actual pointer equality... not
+      // instruction equality.
+      if (i1 != i2){
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 

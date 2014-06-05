@@ -1,6 +1,7 @@
 #include "flowFunctions/CSEFlowFunction.h"
 
 std::vector<LatticePoint *> CSEFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
+  info_in_cached = info_in;
   // dyncast on that vector;
   errs() << "In operator \n";
   info_in_casted = std::vector<CSELatticePoint *>();
@@ -9,6 +10,7 @@ std::vector<LatticePoint *> CSEFlowFunction::operator()(llvm::Instruction* instr
     temp->printToErrs();
     info_in_casted.push_back(temp);
   }
+  // precondition of any Visit: info_out is EMPTY
   info_out.clear();
   errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
   this->visit(instr);
@@ -39,18 +41,41 @@ void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   
   errs() << "Input instruction is: ";
   BO.print(errs());
-  errs() << " @ " << &BO;
+  errs() << "  @ " << &BO << " \n ";
 
-  for (std::map<Value*, Instruction*>::iterator it=input_rep.begin(); it!=input_rep.end(); ++it){
-    // errs() << print(it->first) << " => " << print(it->second) << '\n';
-    
+  errs() << "Input LP representation is: ";
+  info_in_casted.front()->printToErrs();
 
-    Value* left_hand_side = it->first;
-    Instruction* right_hand_side = it->second;
-    left_hand_side->print(errs());
-    right_hand_side->print(errs());
-    
-    errs() << "Instructions are " << right_hand_side->isIdenticalToWhenDefined(&BO)  << " equal \n";
-
+  if (input_rep.count(&BO) > 0){
+    errs() << "This value is already mapped to something \n";
+    info_out = info_in_cached;
+    return;
+  }else{ 
+    errs() << "This value is not mapped to anything, therefore we continue analysis \n";
   }
+  
+  Value* visited_value = &BO;
+  Instruction* equal_to_visited_value;
+  bool found_equal;
+  
+  for (std::map<Value*, Instruction*>::iterator it=input_rep.begin(); it!=input_rep.end(); ++it){
+
+    Value* left_hand_side_val = it->first;
+    Instruction* right_hand_side_instr = it->second;
+    Value* right_hand_side_val = it->second;
+
+    // left_hand_side->print(errs());
+    // right_hand_side->print(errs());
+
+    if(right_hand_side_instr->isIdenticalToWhenDefined(&BO)){
+      errs() << "Instructions are identical when defined \n";
+      equal_to_visited_value = right_hand_side_instr;
+      found_equal = true;
+    }    
+  }
+  if(found_equal){
+    input_rep[visited_value] = equal_to_visited_value;
+  }
+  info_out.push_back(new CSELatticePoint(false, false, input_rep));
+
 }
