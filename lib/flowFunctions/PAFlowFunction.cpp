@@ -118,13 +118,13 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   Value* pointer = LI.getPointerOperand();
   info_in_casted.pop_back();
   info_out.push_back(inRLP);
-  /*
+  
   errs() << "In load instruction: ";
   LI.print(errs());
   errs() << " Pointer is ";
   pointer->print(errs());
   errs() << "\n";
-  */
+  
 }
 
 
