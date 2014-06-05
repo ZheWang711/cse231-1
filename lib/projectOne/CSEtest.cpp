@@ -17,6 +17,7 @@
 // our stuff
 #include "lattices/CSELatticePoint.h"
 #include "flowFunctions/CSEFlowFunction.h"
+#include "Analysis.h"
 
 
 using namespace llvm;
@@ -116,6 +117,15 @@ struct CSEtest : public FunctionPass {
     std::vector<LatticePoint* > nonTrivialEvalTwo = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
     
     dyn_cast<CSELatticePoint>(nonTrivialEvalTwo.front())->printToErrs();
+
+    // 5. Finally, we call the flow function with the actual worklist
+    // algorithm.
+    
+    std::map<Value*, Instruction*> representation;
+    CSELatticePoint* bottom = new CSELatticePoint(true, false, representation);
+    std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, CSEFlow_casted);
+
+    
 
     errs() << " -----Ending Function Pass------ \n";
     return false;
