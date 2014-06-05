@@ -143,7 +143,8 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   std::set<Value *> pointer_range;
   pointer_range.insert(value);
   inRLP->representation[pointer] = pointer_range;
-  
+  inRLP->isTop = false;
+  inRLP->isBottom = false;
   info_out.push_back(inRLP);
   /*
   errs() << "In store instruction: ";
