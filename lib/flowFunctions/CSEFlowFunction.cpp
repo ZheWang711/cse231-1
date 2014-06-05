@@ -36,16 +36,21 @@ void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   std::map<Value*, Instruction*> input_rep = info_in_casted.front()->representation;
   // iterate over the pairs in the map. print them out for lack of
   // anything better to do.
+  
+  errs() << "Input instruction is: ";
+  BO.print(errs());
+  errs() << " @ " << &BO;
 
   for (std::map<Value*, Instruction*>::iterator it=input_rep.begin(); it!=input_rep.end(); ++it){
     // errs() << print(it->first) << " => " << print(it->second) << '\n';
+    
 
     Value* left_hand_side = it->first;
     Instruction* right_hand_side = it->second;
     left_hand_side->print(errs());
     right_hand_side->print(errs());
     
-    errs() << "Instructions are " << right_hand_side->isIdenticalToWhenDefined(&BO)  << " equal\n";
+    errs() << "Instructions are " << right_hand_side->isIdenticalToWhenDefined(&BO)  << " equal \n";
 
   }
 }

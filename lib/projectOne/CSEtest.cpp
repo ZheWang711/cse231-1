@@ -118,7 +118,7 @@ struct CSEtest : public FunctionPass {
     std::vector<LatticePoint* > nontrivialSampleArgs;
     nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(nontrivialExampleLP));
     
-    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(firstI, nontrivialSampleArgs);
+    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
     
 
 

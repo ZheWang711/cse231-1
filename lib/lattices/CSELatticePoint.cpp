@@ -71,10 +71,12 @@ void CSELatticePoint::printToErrs() {
   for(std::map<Value*, Instruction*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
     Value* val = it->first;
     val->print(errs());
+    errs() << "@" << val;
     errs() << " --> ";
     Instruction* instr = it->second;
     instr->print(errs());
-    errs() << ", ";
+    errs() << "@" << instr;
+    errs() << ", \n";
   }
   errs() << " } \n";
   return;
