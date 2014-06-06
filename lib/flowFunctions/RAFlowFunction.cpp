@@ -348,7 +348,7 @@ void RAFlowFunction::visitCastInst(CastInst &I){
 
 
 void RAFlowFunction::visitCmpInst(CmpInst &I){
-  errs() << "In cmp instruction \n";
+  //errs() << "In cmp instruction \n";
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();

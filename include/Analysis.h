@@ -94,16 +94,11 @@ public:
       TerminatorInst* TI = BB->getTerminator();
       std::vector<LatticePoint *> copy_inputs(inputs.size());
       std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
-      
-      Instruction* firstInst = &(BB->front());
-      if (isa<PHINode>(firstInst)) {
-        inputs.clear();
-      }
 
       
       for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
         if (isa<PHINode>(I)) {
-          std::vector<LatticePoint *> outputs = applyFlowFunction(flowF, I, copy_inputs);
+          std::vector<LatticePoint *> outputs = applyFlowFunction(flowF, I, inputs);
           inputs.push_back(outputs.back());
           result[I] = outputs.back();
         }
@@ -178,13 +173,9 @@ public:
     std::vector<LatticePoint *> copy_inputs(inputs.size());
     std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
     
-    Instruction* firstInst = &(BB->front());
-    if (isa<PHINode>(firstInst)) {
-      inputs.clear();
-    }
     for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
       if (isa<PHINode>(I)) {
-        std::vector<LatticePoint *> outputs = applyFlowFunction(flowF, I, copy_inputs);
+        std::vector<LatticePoint *> outputs = applyFlowFunction(flowF, I, inputs);
         inputs.push_back(outputs.back());
       }
       else{
