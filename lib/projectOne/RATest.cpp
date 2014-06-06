@@ -31,6 +31,17 @@ struct RATest : public FunctionPass {
     RAFlowFunction raf = RAFlowFunction();
     
     std::map<Value*, ConstantRange*> representation;
+    ConstantRange c1 = ConstantRange(APInt(32, 0), APInt(32, 100) );
+    ConstantRange c2 = ConstantRange(APInt(32, 25), APInt(32, 200) );
+    ConstantRange c3 = c1.add(c2);
+    errs() << "Adding constant ranges ";
+    c1->print(errs());
+    errs() << " + ";
+    c2->print(errs());
+    errs << " = ";
+    c3->print(errs());
+    errs() << "\n"; 
+    
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
