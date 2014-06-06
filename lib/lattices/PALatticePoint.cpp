@@ -37,10 +37,10 @@ LatticePoint* PALatticePoint::join(LatticePoint* in){
     key_set.insert(elm);
   }
   for (std::set<Value*>::iterator it = pointers_to_anything_1.begin(); it!=pointers_to_anything_1.end(); ++it) {
-    key_set.insert(*it)
+    key_set.insert(*it);
   }
   for (std::set<Value*>::iterator it = pointers_to_anything_2.begin(); it!=pointers_to_anything_2.end(); ++it) {
-    key_set.insert(*it)
+    key_set.insert(*it);
   }
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
