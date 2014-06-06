@@ -36,6 +36,8 @@ public:
    Our representation maps values to integer ranges. We make use of LLVM's constant range class.
    */
   
+  std::set<Value *> pointers_to_anything;
+  
   std::map<Value*, std::set<Value*> > representation;
   
   PALatticePoint() : LatticePoint(LPK_PALatticePoint), representation(std::map<Value*, std::set<Value*> >()) {}

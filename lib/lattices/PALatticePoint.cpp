@@ -4,7 +4,7 @@
 /*
  Join == Union!
  */
-// TODO
+
 LatticePoint* PALatticePoint::join(LatticePoint* in){
   
   PALatticePoint* in_casted =  dyn_cast<PALatticePoint>(in);
@@ -21,7 +21,11 @@ LatticePoint* PALatticePoint::join(LatticePoint* in){
   std::map<Value*, std::set<Value*> > representation1 = this->representation;
   std::map<Value*, std::set<Value*> >representation2 = in_casted->representation;
   
+  std::set<Value*> pointers_to_anything_1 = this->pointers_to_anything;
+  std::set<Value*> pointers_to_anything_2 = in_casted->pointers_to_anything;
+  
   std::map<Value*, std::set<Value*> > result_map;
+  std::set<Value*> pointers_to_anything_results;
   
   std::set<Value *> key_set;
   for (std::map<Value*, std::set<Value*> >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
@@ -32,9 +36,18 @@ LatticePoint* PALatticePoint::join(LatticePoint* in){
     Value* elm = it->first;
     key_set.insert(elm);
   }
+  for (std::set<Value*>::iterator it = pointers_to_anything_1.begin(); it!=pointers_to_anything_1.end(); ++it) {
+    key_set.insert(*it)
+  }
+  for (std::set<Value*>::iterator it = pointers_to_anything_2.begin(); it!=pointers_to_anything_2.end(); ++it) {
+    key_set.insert(*it)
+  }
   
   for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
-    if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
+    if (pointers_to_anything_1.count(*it) > 0 || pointers_to_anything_2.count(*it) > 0) {
+      pointers_to_anything_results.insert(*it);
+    }
+    else if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
       std::set<Value*> union_points;
       std::set<Value*> c1 = representation1[*it];
       std::set<Value*> c2 = representation2[*it];
@@ -73,6 +86,20 @@ bool PALatticePoint::equals(LatticePoint* in){
   std::map<Value*, std::set<Value*> > representation1 = this->representation;
   std::map<Value*, std::set<Value*> >representation2 = in_casted->representation;
   
+  std::set<Value*> pointers_to_anything_1 = this->pointers_to_anything;
+  std::set<Value*> pointers_to_anything_2 = in_casted->pointers_to_anything;
+  
+  if (pointers_to_anything_1.size() != pointers_to_anything_2.size()) {
+    return false;
+  }
+  
+  for (std::set<Value*>::iterator it = pointers_to_anything_1.begin(); it!=pointers_to_anything_1.end(); ++it) {
+    if (pointers_to_anything_2.count(*it) <= 0) {
+      return false;
+    }
+  }
+  
+  
   for (std::map<Value*, std::set<Value*> >::iterator it=representation1.begin(); it!=representation1.end(); ++it){
     Value* elm = it->first;
     std::set<Value*> c1 = it->second;
@@ -103,6 +130,14 @@ void PALatticePoint::printToErrs() {
     return;
   }
 	errs() << "{ ";
+  
+  std::set<Value*> pointers_to_anything_1 = this->pointers_to_anything;
+  for (std::set<Value*>::iterator it = pointers_to_anything_1.begin(); it!=pointers_to_anything_1.end(); ++it) {
+    (*it)->print(errs());
+    errs() << " --> (anything) ,";
+  }
+  
+  
 	for(std::map<Value*, std::set<Value*> >::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
     val->print(errs());
