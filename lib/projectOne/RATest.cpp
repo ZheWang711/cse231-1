@@ -33,15 +33,15 @@ struct RATest : public FunctionPass {
     std::map<Value*, ConstantRange*> representation;
     ConstantRange c1 = ConstantRange(APInt(32, 0), APInt(32, 2) );
     ConstantRange c2 = ConstantRange(APInt(32, 0), APInt(32, 2) );
-    for (int i = 0; i < 100; i++) {
-      c2 = c1.add(c2);
-    }
     errs() << "Adding constant ranges ";
     c1.print(errs());
     errs() << " + a few times ";
     c2.print(errs());
     errs() << " = ";
-    c1.print(errs());
+    for (int i = 0; i < 100; i++) {
+      c2 = c1.add(c2);
+    }
+    c2.print(errs());
     errs() << "\n";
     
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
