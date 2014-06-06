@@ -27,32 +27,36 @@ struct RATest : public FunctionPass {
   // This is the main body of our code.
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Function Pass------ \n";
+    
     /*
+     ConstantRange c1 = ConstantRange(APInt(32, 0), APInt(32, 2) );
+     ConstantRange c2 = ConstantRange(APInt(32, 0), APInt(32, 2) );
+     errs() << "Adding constant ranges ";
+     c1.print(errs());
+     errs() << " + a few times ";
+     c2.print(errs());
+     errs() << " = ";
+     for (int i = 0; i < 100; i++) {
+     c2 = c1.add(c2);
+     }
+     c2.print(errs());
+     errs() << "\n";
+     ConstantRange c3 = ConstantRange(APInt(32, 1000), APInt(32, 1002) );
+     errs() << "Unioning constant ranges ";
+     c1.print(errs());
+     errs() << " and ";
+     c3.print(errs());
+     errs() << " = ";
+     ConstantRange c4 = c3.unionWith(c1);
+     c4.print(errs());
+     errs() << "\n";
+     */
+    
+    
     RAFlowFunction raf = RAFlowFunction();
     
     std::map<Value*, ConstantRange*> representation;
-    ConstantRange c1 = ConstantRange(APInt(32, 0), APInt(32, 2) );
-    ConstantRange c2 = ConstantRange(APInt(32, 0), APInt(32, 2) );
-    errs() << "Adding constant ranges ";
-    c1.print(errs());
-    errs() << " + a few times ";
-    c2.print(errs());
-    errs() << " = ";
-    for (int i = 0; i < 100; i++) {
-      c2 = c1.add(c2);
-    }
-    c2.print(errs());
-    errs() << "\n";
-    ConstantRange c3 = ConstantRange(APInt(32, 1000), APInt(32, 1002) );
-    errs() << "Unioning constant ranges ";
-    c1.print(errs());
-    errs() << " and ";
-    c3.print(errs());
-    errs() << " = ";
-    ConstantRange c4 = c3.unionWith(c1);
-    c4.print(errs());
-    errs() << "\n";
-    */
+
     errs() << "We are dealing with the following function \n";
     F.print(errs());
     errs() << "Our analysis returned the following \n";
