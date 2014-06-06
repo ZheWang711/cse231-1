@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
+#include <algorithm>
 
 
 // LLVM
@@ -90,14 +91,21 @@ public:
         }
       }
     
-      
       TerminatorInst* TI = BB->getTerminator();
+      std::vector<Value*> copy_inputs;
+      std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
+      inputs.clear();
       for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
-        if (inputs.size() > 1){
-          inputs = Analysis::extendedJoin(inputs);
+        if (isa<PHINode>(I)) {
+          std::vector<Value*> outputs = applyFlowFunction(flowF, I, copy_inputs);
+          inputs.push_back(outputs.back());
+          result[I] = outputs.back();
         }
-        result[I] = inputs.front();
-        inputs = applyFlowFunction(flowF, I, inputs);
+        else{
+          inputs = Analysis::extendedJoin(inputs);
+          result[I] = inputs.front();
+          inputs = applyFlowFunction(flowF, I, inputs);
+        }
       }
       
       // One more time for the terminator.
@@ -161,8 +169,19 @@ public:
     }
 
     TerminatorInst* TI = BB->getTerminator();
+    std::vector<Value*> copy_inputs;
+    std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
+    inputs.clear();
+    
     for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
-      inputs = applyFlowFunction(flowF, I, inputs);
+      if (isa<PHINode>(I)) {
+        std::vector<Value*> outputs = applyFlowFunction(flowF, I, copy_inputs);
+        inputs.push_back(outputs.back());
+      }
+      else{
+        inputs = extendedJoin(inputs);
+        inputs = applyFlowFunction(flowF, I, inputs);
+      }
     }
     
     // Now apply the flow function to the terminator instruction.
