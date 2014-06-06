@@ -9,6 +9,7 @@
 #include <utility>
 #include <map>
 #include <set>
+#include <vector>
 #include "LatticePoint.h"
 #include "llvm/Support/ConstantRange.h"
 #include "llvm/Support/raw_ostream.h"
@@ -38,6 +39,7 @@ public:
   
   std::map<Value*, ConstantRange*> representation;
   
+  
   RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, ConstantRange*>()) {}
   
   RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, ConstantRange*> representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
@@ -55,6 +57,7 @@ public:
   RALatticePoint* meet(LatticePoint* in);
   bool equals(LatticePoint* in);
   void printToErrs();
+  std::vector<Value *> differInRange(RALatticePoint* in);
   
 };
 

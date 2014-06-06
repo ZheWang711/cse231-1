@@ -7,18 +7,31 @@
 
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
-  //errs() << "In operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    //errs() << "Handed lattice point ";
-    //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
+  
+  RALatticePoint* old_state = new RALatticePoint(info_in_casted.back());
   info_out.clear();
-  //errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
   this->visit(instr);
-  //errs() << "Done with visit \n";
+  RALatticePoint* new_state = new RALatticePoint(info_out.back());
+  std::vector<Value*> differing_vals = new_state->differInRange(old_state);
+  for (int i = 0; i < differing_vals.size(); i++) {
+    Value* val = differing_vals[i];
+    if (counter_map.count(val) <= 0){
+      counter_map = 1;
+    }
+    else if (counter_map[val] == MAX_COUNT);{
+      new_state->representation[val] = new ConstantRange(32, true);
+    }
+    else{
+      counter_map[val] = counter_map[val] + 1;
+    }
+  }
+  info_out.clear();
+  info_out.push_back(new_state);
   return info_out;
 }
 

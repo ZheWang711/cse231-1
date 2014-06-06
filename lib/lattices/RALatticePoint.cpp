@@ -143,3 +143,33 @@ void RALatticePoint::printToErrs() {
   errs() << " } \n";
   return;
 }
+
+std::vector<Value *> RALatticePoint::differInRange(RALatticePoint* in){
+  std::map<Value*, ConstantRange*> representation1 = this->representation;
+  std::map<Value*, ConstantRange*> representation2 = in->representation;
+  
+  std::set<Value *> key_set;
+  for (std::map<Value*, ConstantRange*>::iterator it=representation1.begin(); it!=representation1.end(); ++it){
+    Value* elm = it->first;
+    key_set.insert(elm);
+  }
+  for (std::map<Value*, ConstantRange*>::iterator it=representation2.begin(); it!=representation2.end(); ++it){
+    Value* elm = it->first;
+    key_set.insert(elm);
+  }
+  std::vector<Value *> result;
+  for (std::set<Value *>::iterator it = key_set.begin(); it != key_set.end(); ++it){
+    if (representation1.count(*it) > 0 && representation2.count(*it) > 0){
+      ConstantRange* c1 = representation1[*it];
+      ConstantRange* c2 = representation2[*it];
+      if (*c1 != *c2) {
+        result.push_back(*it);
+      }
+    }
+    else{
+      result.push_back(*it);
+    }
+  }
+  return result;
+}
+

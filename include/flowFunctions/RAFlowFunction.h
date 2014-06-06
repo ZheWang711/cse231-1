@@ -21,7 +21,11 @@ public:
   std::vector<RALatticePoint *> info_in_casted;
   std::vector<LatticePoint *> info_out;
   std::map<Value *, LatticePoint *> out_map;
-
+  
+  // Keeps track of how many times we have changed the range of a value
+  std::map<Value *, int> counter_map;
+  int MAX_COUNT = 1000;
+  
   // Constructor
   RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}
 
