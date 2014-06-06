@@ -43,6 +43,15 @@ struct RATest : public FunctionPass {
     }
     c2.print(errs());
     errs() << "\n";
+    ConstantRange c3 = ConstantRange(APInt(32, 1000), APInt(32, 1002) );
+    errs() << "Unioning constant ranges ";
+    c1.print(errs());
+    errs() << " and ";
+    c3.print(errs());
+    errs() << " = ";
+    ConstantRange c4 = c3.unionWith(c1);
+    c4.print(errs());
+    errs() << "\n";
     
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
