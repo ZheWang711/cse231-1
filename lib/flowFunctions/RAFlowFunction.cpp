@@ -70,7 +70,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     R1 = result->representation[S1->get()];
   }
   else{
-    R1 = new ConstantRange(32, true);
+    R1 = new ConstantRange(32, false);
   }
   if (isa<ConstantInt>(S2)) {
     ConstantInt* C2 = cast<ConstantInt>(S2);
@@ -80,7 +80,7 @@ void RAFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     R2 = result->representation[S2->get()];
   }
   else{
-    R2 = new ConstantRange(32, true);
+    R2 = new ConstantRange(32, false);
   }
   ConstantRange* range = new ConstantRange(32, true);
   *range = *(helper::foldBinaryOperator(current->getOpcode(), R1, R2));
@@ -155,7 +155,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         lhs_range = new ConstantRange(C2->getValue());
       }
       else{
-        lhs_range = new ConstantRange(32, true);
+        lhs_range = new ConstantRange(32, false);
       }
       
       if (inRLP->representation.count(right_hand_side->get()) > 0) {
@@ -166,7 +166,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
         rhs_range = new ConstantRange(C2->getValue());
       }
       else{
-        rhs_range = new ConstantRange(32, true);
+        rhs_range = new ConstantRange(32, false);
       }
       /*
       errs() << "Left hand side has range ";
@@ -387,10 +387,7 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
   for (int i = 0; i != num_incoming_vals; i++){
     Value* val = PHI.getIncomingValue(i);
     if (inRLP->representation.count(val) > 0) {
-      *current_range = current_range->unionWith(*(inRLP->representation[val]));
-    }
-    else{
-      current_range = new ConstantRange(32, true);
+      *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
     }
   }
   
