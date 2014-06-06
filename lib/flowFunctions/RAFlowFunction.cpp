@@ -392,6 +392,7 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
   }
   
   inRLP->representation[current] = current_range;
+  inRLP->printToErrs();
   
   info_out.clear();
   info_out.push_back(inRLP);
