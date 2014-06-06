@@ -92,7 +92,7 @@ public:
       }
     
       TerminatorInst* TI = BB->getTerminator();
-      std::vector<LatticePoint *> copy_inputs;
+      std::vector<LatticePoint *> copy_inputs(inputs.size());
       std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
       inputs.clear();
       for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
@@ -169,7 +169,7 @@ public:
     }
 
     TerminatorInst* TI = BB->getTerminator();
-    std::vector<LatticePoint *> copy_inputs;
+    std::vector<LatticePoint *> copy_inputs(inputs.size());
     std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
     inputs.clear();
     
@@ -269,8 +269,6 @@ public:
     }
     return outputs;
   }
-
-  
   
   /*
     Performs a join of all the lattice points in lps and returns a singleton vector.
