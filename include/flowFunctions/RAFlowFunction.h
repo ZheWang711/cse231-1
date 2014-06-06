@@ -24,7 +24,7 @@ public:
   
   // Keeps track of how many times we have changed the range of a value
   std::map<Value *, int> counter_map;
-  int MAX_COUNT = 1000;
+  static int MAX_COUNT = 1000;
   
   // Constructor
   RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}

@@ -16,7 +16,9 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
   RALatticePoint* old_state = new RALatticePoint(*(info_in_casted.back()));
   info_out.clear();
   this->visit(instr);
-  RALatticePoint* new_state = new RALatticePoint(*(info_out.back()));
+  LatticePoint* temp = info_out.back();
+  RALatticePoint* temp1 = dyn_cast<RALatticePoint>(temp);
+  RALatticePoint* new_state = new RALatticePoint(*temp1);
   std::vector<Value*> differing_vals = new_state->differInRange(old_state);
   for (int i = 0; i < differing_vals.size(); i++) {
     Value* val = differing_vals[i];
