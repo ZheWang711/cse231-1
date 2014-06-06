@@ -27,7 +27,7 @@ struct RATest : public FunctionPass {
   // This is the main body of our code.
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Function Pass------ \n";
-    
+    /*
     RAFlowFunction raf = RAFlowFunction();
     
     std::map<Value*, ConstantRange*> representation;
@@ -52,13 +52,15 @@ struct RATest : public FunctionPass {
     ConstantRange c4 = c3.unionWith(c1);
     c4.print(errs());
     errs() << "\n";
+    */
+    errs() << "We are dealing with the following function \n";
+    F.print(errs());
+    errs() << "Our analysis returned the following \n";
     
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
-    errs() << "We are dealing with the following function \n";
-    F.print(errs());
-    errs() << "Our analysis returned the following \n";
+
     
     // F is a pointer to a Function instance
     for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
