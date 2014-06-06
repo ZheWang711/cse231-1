@@ -24,10 +24,10 @@ public:
   
   // Keeps track of how many times we have changed the range of a value
   std::map<Value *, int> counter_map;
-  static int MAX_COUNT = 1000;
+  int MAX_COUNT;
   
   // Constructor
-  RAFlowFunction() : FlowFunction(FFK_RAFlowFunction) {}
+  RAFlowFunction() : FlowFunction(FFK_RAFlowFunction), MAX_COUNT(1000) {}
 
   // Visited Instructions
   void visitBinaryOperator(BinaryOperator &BO);
