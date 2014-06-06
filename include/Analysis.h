@@ -173,7 +173,7 @@ public:
       std::pair<BasicBlock *, BasicBlock *> edge;
       edge = std::make_pair(BB, *Succ);
       LatticePoint* current_lp = successor_map[*Succ];
-      result = result || current_lp->equals(edge_map[edge]);
+      result = result || (!current_lp->equals(edge_map[edge]));
       edge_map[edge] = current_lp;
     }
     return result;
