@@ -389,6 +389,9 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
     if (inRLP->representation.count(val) > 0) {
       *current_range = current_range->unionWith(*(inRLP->representation[val]));
     }
+    else{
+      current_range = new ConstantRange(32, true);
+    }
   }
   
   inRLP->representation[current] = current_range;
