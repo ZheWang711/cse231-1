@@ -178,8 +178,8 @@ public:
     std::vector<LatticePoint *> copy_inputs(inputs.size());
     std::copy(inputs.begin(), inputs.end(), copy_inputs.begin());
     
-    Instruction firstInst = BB->front();
-    if (isa<PHINode>(&firstInst)) {
+    Instruction* firstInst = &(BB->front());
+    if (isa<PHINode>(firstInst)) {
       inputs.clear();
     }
     for (BasicBlock::iterator I = BB->begin(); !I->isTerminator(); ++I){ // Iteratively apply the flow function until we get to the terminator of BB.
