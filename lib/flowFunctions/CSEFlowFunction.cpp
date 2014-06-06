@@ -75,6 +75,8 @@ void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   if(found_equal){
     input_rep[visited_value] = equal_to_visited_value;
+  }else{
+    input_rep[visited_value] = dyn_cast<Instruction>(visited_value);
   }
   info_out.push_back(new CSELatticePoint(false, false, input_rep));
 
