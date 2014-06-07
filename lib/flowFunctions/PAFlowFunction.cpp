@@ -142,8 +142,8 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
 
   Value* y = &LI;
-  Value* x = LI.getPointerOperand();
-  AllocaInst* x = dyn_cast<AllocaInst>(x);
+  Value* tmp = LI.getPointerOperand();
+  AllocaInst* x = dyn_cast<AllocaInst>(tmp);
   
   Type* x_alloca = x->getAllocatedType();
   if (isa<PointerType>(x_alloca)) {
