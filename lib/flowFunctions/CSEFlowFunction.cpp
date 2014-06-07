@@ -46,31 +46,39 @@ void CSEFlowFunction::visitPHINode(PHINode &PHI){
     info_in_casted.pop_back();
     LatticePoint *l2 = info_in_casted.back();
     info_in_casted.pop_back();
-    RALatticePoint* result = dyn_cast<CSELatticePoint>(l1->join(l2));
+    CSELatticePoint* result = dyn_cast<CSELatticePoint>(l1->join(l2));
     info_in_casted.push_back(result);
   }
 
-  // get a pointer to the phi node (by executing address of on a
+  // get a pointer to the phi node (by executing "address of" on a
   // reference, as if that isn't an insane and broken language
   // construct)
   PHINode* current = &PHI;
 
-  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  CSELatticePoint* inCSELP = new CSELatticePoint(*(info_in_casted.back()));
 
-  ConstantRange* current_range = new ConstantRange(32, false);
+  // Now: compare each incoming expression to each incoming
+  // instruction pairwise
+
   int num_incoming_vals = PHI.getNumIncomingValues();
-  for (int i = 0; i != num_incoming_vals; i++){
-    Value* val = PHI.getIncomingValue(i);
-    if (inRLP->representation.count(val) > 0) {
-      *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
+  for (int i = 0; i+1 <= num_incoming_vals; i++){
+    Value* val_left = PHI.getIncomingValue(i);
+    Value* val_right = PHI.getIncomingValue(i+1);
+    if (Instruction* instL = dyn_cast<Instruction>(val_left)){
+      if(Instruction* instR = dyn_cast<Instruction>(val_right)) {
+	// both operands are instructions
+	if(instL->isIdenticalToWhenDefined(instR)){
+	  continue;
+	}else{
+	  info_out.push_back(inCSELP);
+	  return;
+	}
+      }
     }
   }
-  
-  inRLP->representation[current] = current_range;
-  //inRLP->printToErrs();
-  
-  info_out.clear();
-  info_out.push_back(inRLP);
+  inCSELP->representation[current] = dyn_cast<Instruction>(PHI.getIncomingValue(0));
+  info_out.push_back(inCSELP);
+  return;
 }
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 

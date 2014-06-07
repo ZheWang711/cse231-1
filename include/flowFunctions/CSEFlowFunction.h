@@ -24,7 +24,9 @@ public:
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-
+  void visitBranchInst(BranchInst &BI);
+  void visitPHINode(PHINode &PHI);
+  
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
 

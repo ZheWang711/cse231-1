@@ -71,13 +71,14 @@ struct CSEtest : public FunctionPass {
     // algorithm will actually call CSEFlowFunction with.        
     
     errs() << " About to create CSELatticePoint \n";  
-    CSELatticePoint cselp = CSELatticePoint();
+    std::map<Value*, Instruction*> repr;
+    CSELatticePoint* cselp = new CSELatticePoint();
     std::vector<LatticePoint* > sampleArgs;
-    sampleArgs.push_back(dyn_cast<LatticePoint>(&cselp));
+    sampleArgs.push_back(dyn_cast<LatticePoint>(cselp));
 
-    errs() << " Created CSELatticePoint with address " << &cselp << "\n";
-    errs() << " isBottom " << cselp.isBottom;
-    errs() << " isTop " << cselp.isTop;
+    errs() << " Created CSELatticePoint with address " << cselp << "\n";
+    errs() << " isBottom " << cselp->isBottom;
+    errs() << " isTop " << cselp->isTop;
 
     // 2. Create an instance of CSEFlowFunction to call, casting it
     // "up" to a FlowFunction* which is what the worklist algorithm
