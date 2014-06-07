@@ -1,12 +1,14 @@
-; ModuleID = 'super-simple-cse-mem2reg.bc'
+; ModuleID = 'extra/benchmarks/welcome/welcome2reg.bc'
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
 ; Function Attrs: nounwind uwtable
-define i32 @main() #0 {
+define i32 @_Z1fi(i32 %y) #0 {
 entry:
-  %add = add nsw i32 10, 10
-  ret i32 %add
+  %add0 = add i32 2, 11
+  %add1 = add i32 2, 11
+  %add2 = add i32 %add1, %add1
+  ret i32 %add2
 }
 
 attributes #0 = { nounwind uwtable "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }

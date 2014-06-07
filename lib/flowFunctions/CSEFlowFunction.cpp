@@ -31,6 +31,48 @@ void CSEFlowFunction::visitAllocaInst(AllocaInst &AI) {
   info_out.push_back(new CSELatticePoint(false, true, std::map<Value*, Instruction*>()));
 }
 
+void CSEFlowFunction::visitBranchInst(BranchInst &BI){
+  // In this case, we just copy back whatever was passed in, because
+  // branch instruction do nothing for us.
+  info_out = info_in_cached;
+  return;
+}
+ 
+void CSEFlowFunction::visitPHINode(PHINode &PHI){
+  // this will pairwise-join all incoming CSELatticePoints on the
+  // edges
+  while (info_in_casted.size() > 1) {
+    LatticePoint *l1 = info_in_casted.back();
+    info_in_casted.pop_back();
+    LatticePoint *l2 = info_in_casted.back();
+    info_in_casted.pop_back();
+    RALatticePoint* result = dyn_cast<CSELatticePoint>(l1->join(l2));
+    info_in_casted.push_back(result);
+  }
+
+  // get a pointer to the phi node (by executing address of on a
+  // reference, as if that isn't an insane and broken language
+  // construct)
+  PHINode* current = &PHI;
+
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+
+  ConstantRange* current_range = new ConstantRange(32, false);
+  int num_incoming_vals = PHI.getNumIncomingValues();
+  for (int i = 0; i != num_incoming_vals; i++){
+    Value* val = PHI.getIncomingValue(i);
+    if (inRLP->representation.count(val) > 0) {
+      *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
+    }
+  }
+  
+  inRLP->representation[current] = current_range;
+  //inRLP->printToErrs();
+  
+  info_out.clear();
+  info_out.push_back(inRLP);
+}
+
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
   errs() << "CSEflow visiting a binary operator \n";
   errs() << "Info_in_casted.size() = " << info_in_casted.size() << "\n";

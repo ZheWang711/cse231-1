@@ -58,7 +58,7 @@ struct CSEtest : public FunctionPass {
     
     // 2. attempt to see if they are equal
 
-    errs() << "Instructions are " << firstI->isIdenticalToWhenDefined(secondI)  << " equal\n";
+    // errs() << "Instructions are " << firstI->isIdenticalToWhenDefined(secondI)  << " equal\n";
     
     
     // --------------------------------------------------
@@ -90,8 +90,8 @@ struct CSEtest : public FunctionPass {
     // point handed in as part of sampleArgs is empty, this should do
     // nothing but not crash.
 
-    std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
-    std::vector<LatticePoint* > secondEval = (*CSEFlow_casted)(secondI, sampleArgs);
+    // std::vector<LatticePoint* > firstEval = (*CSEFlow_casted)(firstI, sampleArgs);
+    // std::vector<LatticePoint* > secondEval = (*CSEFlow_casted)(secondI, sampleArgs);
 
     // NOTE: the behavior here is curious. CSEFlow_casted is a
     // FlowFunction*, but this call is correctly calling the
@@ -113,11 +113,11 @@ struct CSEtest : public FunctionPass {
     std::vector<LatticePoint* > nontrivialSampleArgs;
     nontrivialSampleArgs.push_back(dyn_cast<LatticePoint>(nontrivialExampleLP));
     
-    std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(firstI, nontrivialSampleArgs);
-    std::vector<LatticePoint* > nonTrivialEvalTwo = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
+    // std::vector<LatticePoint* > nonTrivialEval = (*CSEFlow_casted)(firstI, nontrivialSampleArgs);
+    // std::vector<LatticePoint* > nonTrivialEvalTwo = (*CSEFlow_casted)(secondI, nontrivialSampleArgs);
     
-    dyn_cast<CSELatticePoint>(nonTrivialEvalTwo.front())->printToErrs();
-
+    // dyn_cast<CSELatticePoint>(nonTrivialEvalTwo.front())->printToErrs();
+    
     // 5. Finally, we call the flow function with the actual worklist
     // algorithm.
     
@@ -125,6 +125,15 @@ struct CSEtest : public FunctionPass {
     CSELatticePoint* bottom = new CSELatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, CSEFlow_casted);
 
+    errs() << "Our analysis returned the following: \n";
+    // F is a pointer to a Function instance
+    for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
+      LatticePoint* lp = result[&*I];
+      CSELatticePoint *cselp = dyn_cast<CSELatticePoint>(lp);
+      I->print(errs());
+      errs() << " --> ";
+      cselp->printToErrs();
+    }
     
 
     errs() << " -----Ending Function Pass------ \n";
