@@ -118,6 +118,8 @@ public:
       case Instruction::Shl:
         result = ConstantInt::get(context, c1_value.shl(c2_value));
         break;
+      default:
+        errs() << "default\n";
     }
     return result;
   }

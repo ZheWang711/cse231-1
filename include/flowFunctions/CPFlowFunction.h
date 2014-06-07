@@ -9,6 +9,7 @@
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/CPLatticePoint.h"
 #include "helper/helper.h"
+#include <map>
 
 using namespace llvm;
 

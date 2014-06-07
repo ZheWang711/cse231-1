@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 // our stuff
+#include "Analysis.h"
 #include "lattices/CPLatticePoint.h"
 #include "flowFunctions/CPFlowFunction.h"
 
@@ -40,8 +41,8 @@ using namespace llvm;
 
 	  lpmap.insert(std::pair<Value*,ConstantInt*>(F.front().getInstList().front().getNextNode()->getPrevNode(), ci));
 
-      CPLatticePoint clp = CPLatticePoint(false, true, lpmap);
-      std::vector<LatticePoint* > sampleArgs;
+      CPLatticePoint* bottom = new CPLatticePoint(true, false, std::map<Value*, ConstantInt*>());
+      /*std::vector<LatticePoint* > sampleArgs;
       sampleArgs.push_back(dyn_cast<LatticePoint>(&clp));
       errs() << " Created CPLatticePoint with address " << &clp << "\n";
 
@@ -49,17 +50,24 @@ using namespace llvm;
 
 	errs() << " isTop " << clp.isTop;
 
-
+*/
 	ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
 
       	errs() << " \n Constant value is " << someConstant->getValue();
 
        	CPFlowFunction cpf = CPFlowFunction();
-	std::vector<std::vector< LatticePoint* > > lps;
+//	std::vector<std::vector< LatticePoint* > > lps;
+
+        std::map<Instruction*, LatticePoint*> result = Analysis::analyze(F, bottom, &cpf);
 
      	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
 	  // cpf.visit(*I);
-	  lps.push_back(cpf(&(*I), sampleArgs));
+	  //lps.push_back(cpf(&(*I), sampleArgs));
+          LatticePoint* lp = result[&*I];
+          CPLatticePoint* clp = dyn_cast<CPLatticePoint>(lp);
+          errs() << clp->LPprint();
+          I->print(errs());
+          errs() << " --> ";
       	}
 
         // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {

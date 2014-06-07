@@ -29,29 +29,30 @@ void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
 }
 
 void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
-  errs() << "CPflow visiting a binary operator";
+  errs() << "\nCPflow visiting a binary operator\n";
   // join ?
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
-
   BinaryOperator* current = &BO;
   std::pair<Use*, Use *> operands = helper::getOperands(BO);
   Use* S1 = operands.first;
   Use* S2 = operands.second;
-
   ConstantInt* C1 = NULL;
   ConstantInt* C2 = NULL;
 
   if (isa<ConstantInt>(S1)) {
     C1 = dyn_cast<ConstantInt>(S1);
+    errs() << "S1 isa ConstantInt\n";
   } else if (result->representation.count(S1->get()) > 0) {
     C1 = result->representation[S1->get()];
   }
-
   if (isa<ConstantInt>(S2)) {
     C2 = dyn_cast<ConstantInt>(S2->get());
+    errs() << "S2 isa ConstantInt\n";
   } else if (result->representation.count(S2->get()) > 0) {
     C2 = result->representation[S2->get()];
   }
+  // representation never initialized
+  ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
   ret_value->representation[current] = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);
 }
