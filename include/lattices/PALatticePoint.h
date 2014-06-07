@@ -44,7 +44,7 @@ public:
   
   PALatticePoint(bool bottomIN, bool topIN, std::map<Value*, std::set<Value*> > representationIN) : LatticePoint(LPK_PALatticePoint, bottomIN, topIN), representation(representationIN) {}
   
-  PALatticePoint(PALatticePoint &copy) : LatticePoint(LPK_PALatticePoint, copy.isBottom, copy.isTop), representation(copy.representation) {}
+  PALatticePoint(PALatticePoint &copy) : LatticePoint(LPK_PALatticePoint, copy.isBottom, copy.isTop), representation(copy.representation), pointers_to_anything(copy.pointers_to_anything)  {}
   
   
   

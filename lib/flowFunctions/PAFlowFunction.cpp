@@ -69,7 +69,7 @@ void PAFlowFunction::visitTerminatorInst(TerminatorInst &I){
 }
 
 /*
- We need to union on incoming ranges.
+  We need to union on incoming points_to sets.
  */
 void PAFlowFunction::visitPHINode(PHINode &PHI){
   while (info_in_casted.size() > 1) {
@@ -81,19 +81,28 @@ void PAFlowFunction::visitPHINode(PHINode &PHI){
     info_in_casted.push_back(result);
   }
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
-  /*
+  
   PHINode* current = &PHI;
-  ConstantRange* current_range = new ConstantRange(32, false);
+  
+  std::set<Value*> current_points_to_set;
   int num_incoming_vals = PHI.getNumIncomingValues();
   for (int i = 0; i != num_incoming_vals; i++){
     Value* val = PHI.getIncomingValue(i);
-    if (inRLP->representation.count(val) > 0) {
-      *current_range = current_range->unionWith(*(inRLP->representation[val]));
+    if (inRLP->pointers_to_anything.count(val) > 0) {
+      inRLP->pointers_to_anything.insert(current);
+      break;
+    }
+    else if (inRLP->representation.count(val) > 0) {
+      std::set<Value*> val_points_to_set = inRLP->representation[val];
+      for (std::set<Value*>::iterator it = val_points_to_set.begin(); it!=val_points_to_set.end(); ++it) {
+        current_points_to_set.insert(*it);
+      }
     }
   }
+  if (inRLP->pointers_to_anything.count(val) <= 0) {
+    inRLP->representation[current] = current_points_to_set;
+  }
   
-  inRLP->representation[current] = current_range;
-  */
   info_out.clear();
   info_out.push_back(inRLP);
 }
@@ -109,26 +118,60 @@ void PAFlowFunction::visitAllocaInst(AllocaInst &AI){
 /*
   Corresponds to calls of the form 
             y = *x;
+  This means for an instruction like %y = load %x, we add elements of the form y --> a to our lattice point, 
+  where there exists a b s.t. x --> b and b -->a are both in our lattice point.
+ 
+  LI.getPointerOperand() corresponds to %x in the above.
+  LI corresponds to %y.
  */
 
 void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
-  info_in_casted.pop_back();
 
-  Value* pointer = LI.getPointerOperand();
-  std::set<Value*> pointer_range;
+  Value* y = &LI;
+  Value* x = LI.getPointerOperand();
   
-  if (inRLP->representation.count(&LI) >0) {
-    pointer_range = inRLP->representation[&LI];
-  }
-  
-  if (inRLP->representation.count(pointer) > 0){
-    std::set<Value*> c1 = inRLP->representation[pointer];
-    for (std::set<Value*>::iterator it = c1.begin(); it!=c1.end(); ++it){
-      pointer_range.insert(*it);
+  Type* x_alloca = x->getAllocatedType();
+  if (isa<PointerType>(x_alloca)) {
+    std::set<Value*> y_points_to_set;
+    if (inRLP->pointers_to_anything.count(x) > 0){
+      inRLP->pointers_to_anything.insert(y);
+    }
+    else if (inRLP->representation.count(x) > 0){
+      std::set<Value*> x_points_to_set = inRLP->representation[x];
+      for (std::set<Value*>::iterator it = x_points_to_set.begin(); it!=x_points_to_set.end(); ++it){
+        Value* b = *it;
+        if (inRLP->pointers_to_anything.count(b) > 0) {
+          inRLP->pointers_to_anything.insert(y);
+          break;
+        }
+        else if(inRLP->pointers_to_anything.count(b) > 0){
+          std::set<Value*> b_points_to_set = inRLP->representation[b];
+          for (std::set<Value*>::iterator it1 = x_points_to_set.begin(); it1!=x_points_to_set.end(); ++it){
+            Value* a = *it1;
+            y_points_to_set.insert(a);
+          }
+        }
+      }
+    }
+    if (inRLP->pointers_to_anything.count(y) <= 0) {  // Is y pointing to anything?
+      if (y_points_to_set.size() == 0 && inRLP->isBottom) { // We are still at bottom.
+        inRLP->isTop = false;
+        inRLP->isBottom = true;
+      }
+      else{ // We are neither top nor bottom
+        inRLP->isTop = false;
+        inRLP->isBottom = false;
+        inRLP->representation[y] = y_points_to_set;
+      }
+    }
+    else if(inRLP->isTop){ // We are still at top then
+      inRLP->isTop = true;
+      inRLP->isBottom = false;
     }
   }
+  info_out.push_back(inRLP);
   /*
   errs() << "In load instruction: ";
   LI.print(errs());
@@ -141,31 +184,21 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
 
 /*
   Corresponds to calls of the form
-            *y = x;
-  We put in SI.getPointerOperand() --> SI.getValueOperand()
+    x = &y    and    *x = y
+  
+  This means for instructions like store %y %x, we add x --> y to our lattice point and all elements of the form
+  a --> b where x--> a and y --> b.
+ 
+  In our code, x corresponds to SI.getPointerOperand() and y corresponds to SI.getValueOperand()
  */
+
 void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   
-  Value* pointer = SI.getPointerOperand();
-  Value* value = SI.getValueOperand();
+  Value* x = SI.getPointerOperand();
+  Value* y = SI.getValueOperand();
   
-  std::set<Value *> pointer_range = inRLP->representation[pointer];
-  for (std::set<Value*>::iterator it = pointer_range.begin(); it != pointer_range.end(); ++it){
-    std::set<Value*> points_to;
-    if (inRLP->representation.count(*it) > 0){
-      points_to = inRLP->representation[*it];
-      points_to.insert(value);
-    }
-    else{
-      points_to.insert(value);
-    }
-    inRLP->representation[*it] = points_to;
-  }
-  inRLP->isTop = false;
-  inRLP->isBottom = false;
-  info_out.push_back(inRLP);
   /*
   errs() << "In store instruction: ";
   SI.print(errs());

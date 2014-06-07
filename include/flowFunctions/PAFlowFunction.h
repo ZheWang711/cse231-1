@@ -3,6 +3,7 @@
 
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/PALatticePoint.h"
+#include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Value.h"
 #include "helper/helper.h"
 #include <string>
