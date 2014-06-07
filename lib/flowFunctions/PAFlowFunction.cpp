@@ -143,6 +143,7 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
 
   Value* y = &LI;
   Value* x = LI.getPointerOperand();
+  AllocaInst* x = dyn_cast<AllocaInst>(x);
   
   Type* x_alloca = x->getAllocatedType();
   if (isa<PointerType>(x_alloca)) {
