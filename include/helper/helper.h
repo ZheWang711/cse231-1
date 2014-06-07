@@ -14,14 +14,17 @@
 #include "llvm/Support/ConstantRange.h"
 
 
+// Standard library stuff
 #include <utility>
+#include <set>
+#include <map>
 
 using namespace llvm;
 
 class helper {
 public:
-  // Returns first two operands of an instruction. NOT SAFE FOR INSTRUCTIONS WITH ONLY ONE OPERAND.
-  static std::pair<Use*, Use *> getOperands(Instruction &BO){
+  // Returns the operands of a binary operator.
+  static std::pair<Use*, Use *> getOperands(BinaryOperator &BO){
     Use* S1;
     Use* S2;
     int i = 0;
@@ -34,6 +37,25 @@ public:
       }
       i++;
     }
+    return std::make_pair(S1, S2);
+  }
+  
+  // Returns the operands of a comparison operator.
+  static std::pair<Use*, Use *> getOperands(CmpInst &BO){
+    Use* S1;
+    Use* S2;
+    int i = 0;
+    for (User::op_iterator OP = BO.op_begin(), OPE = BO.op_end(); OP != OPE; ++OP){
+      if(i == 0){
+        S1 = &*OP;
+      }
+      else{
+        S2 = &*OP;
+      }
+      i++;
+    }
+    
+    // S1 = LHS, S2 = RHS
     return std::make_pair(S1, S2);
   }
   
@@ -142,7 +164,7 @@ public:
       case Instruction::Sub:
         *result = C1->sub(*C2);
         break;
-      case Instruction::Mul:
+      case Instruction::Mul: // Not fully implemented, apparently.
         *result = C1->multiply(*C2);
         break;
       case Instruction::UDiv:

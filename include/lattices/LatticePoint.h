@@ -18,7 +18,8 @@ public:
   enum LatticePointKind {
     LPK_CPLatticePoint,
     LPK_RALatticePoint,
-    LPK_CSELatticePoint
+    LPK_CSELatticePoint,
+    LPK_PALatticePoint
   };
   
 

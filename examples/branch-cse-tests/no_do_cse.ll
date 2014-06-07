@@ -14,14 +14,14 @@ if.then:                                          ; preds = %entry
   br label %if.end
 
 if.else:                                          ; preds = %entry
-  %sub = sub nsw i32 0, %add
+  %add2 = add nsw i32 1, %add
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then
-  %x.0 = phi i32 [ %add1, %if.then ], [ %sub, %if.else ]
-  %y.addr.0 = phi i32 [ %y, %if.then ], [ %sub, %if.else ]
-  %add2 = add nsw i32 %x.0, %x.0
-  ret i32 %add2
+  %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]
+  %y.addr.0 = phi i32 [ %y, %if.then ], [ %add2, %if.else ]
+  %add3 = add nsw i32 %x.0, %x.0
+  ret i32 %add3
 }
 
 attributes #0 = { nounwind uwtable "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }

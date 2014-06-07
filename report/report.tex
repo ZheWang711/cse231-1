@@ -1,0 +1,148 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{framed}
+
+%% Simple AMSthm environments, numbered together.
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}[lem]{Theorem}
+\newtheorem{conj}[lem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{defn}[lem]{Definition}
+
+\title{Project 2 Report}
+\begin{document}
+\maketitle
+
+\section{Overview}
+\begin{framed}
+  Discuss the high level goals of your work, along with any
+  interesting/key findings.
+\end{framed}
+
+
+Difficult, because there were no interesting findings. Consider:
+``huh, LLVM has an API for some of this stuff I guess,'' or ``Wow C++
+is painful.'' I (marco) will be able to make up some stuff for this
+once I'm done with CSE (which should soon).
+
+\section{Interface Design}
+\begin{framed}
+  Describe interface. Discuss what alternative designs you may have
+  also considered, and explain the tradeoffs that ultimately led to
+  your choice.
+\end{framed}
+
+Unsure how honest to be here. Tradeoffs ended up being, how many C++
+features can we avoid and still have a functioning C++ program? Other
+than this issue, describing our interface (flowfunction object,
+latticepoint object, and a blob of code implementing the worklist
+algorithm that uses runtime polymorphism to use these objects) is
+pretty straightforward. I (marco) can write this.
+
+\section{Analyses}
+
+\subsection{Constant Propagation}
+\subsubsection{Mathematical Flow Functions}
+\begin{framed}
+  define your lattice and flow functions in mathematical notation
+  (i.e., in the style used in the lecture notes and on the midterm).
+\end{framed}
+
+
+\subsubsection{Implementation Considerations}
+\begin{framed}
+  discuss how you actually went about implementing the lattice and
+  flow functions. For instance, some interesting questions are: what
+  data structure(s) did you use, and how do you represent potentially
+  infinite sets? How are input facts passed to your flow functions,
+  and how do output facts get propagated?
+\end{framed}
+\subsection{Available Expressions}
+\subsubsection{Mathematical Flow Functions}
+\begin{framed}
+  define your lattice and flow functions in mathematical notation
+  (i.e., in the style used in the lecture notes and on the midterm).
+\end{framed}
+\subsubsection{Implementation Considerations}
+\begin{framed}
+  discuss how you actually went about implementing the lattice and
+  flow functions. For instance, some interesting questions are: what
+  data structure(s) did you use, and how do you represent potentially
+  infinite sets? How are input facts passed to your flow functions,
+  and how do output facts get propagated?
+\end{framed}
+\subsection{Range Analysis}
+\subsubsection{Mathematical Flow Functions}
+\begin{framed}
+  define your lattice and flow functions in mathematical notation
+  (i.e., in the style used in the lecture notes and on the midterm).
+\end{framed}
+\subsubsection{Implementation Considerations}
+\begin{framed}
+  discuss how you actually went about implementing the lattice and
+  flow functions. For instance, some interesting questions are: what
+  data structure(s) did you use, and how do you represent potentially
+  infinite sets? How are input facts passed to your flow functions,
+  and how do output facts get propagated?
+\end{framed}
+\subsection{Intra-Procedural Pointer Analysis}
+\subsubsection{Mathematical Flow Functions}
+\begin{framed}
+  define your lattice and flow functions in mathematical notation
+  (i.e., in the style used in the lecture notes and on the midterm).
+\end{framed}
+\subsubsection{Implementation Considerations}
+\begin{framed}
+  discuss how you actually went about implementing the lattice and
+  flow functions. For instance, some interesting questions are: what
+  data structure(s) did you use, and how do you represent potentially
+  infinite sets? How are input facts passed to your flow functions,
+  and how do output facts get propagated?
+\end{framed}
+\section{Testing}
+\begin{framed}
+  Make sure to explain assumptions you make about the code you
+  analyze. For instance, for pointer analysis, you may have made some
+  assumptions about the aliasing information known about input
+  parameters. Explain those assumptions and why they are reasonable.
+
+  Part of this project is to come up with a useful set of benchmarks
+  on which to test and improve your analysis. Discuss why you chose
+  those benchmarks, and what makes them interesting. If your
+  implementation fails on some benchmarks (there's no shame in it!),
+  then explain why and how the analysis might be improved.
+\end{framed}
+\subsection{Benchmarks/Assumptions in Common}
+Because we have a common pool of benchmarks, we can list them here
+along with common assumptions on code. More specialized discussion of
+per-analysis benchmark goes below. Here, we can also introduce the
+Straight Line Program/Branching Program distinction.
+
+\subsection{Constant Propagation}
+\subsection{Available Expressions}
+\subsection{Range Analysis}
+\subsection{Intra-Procedural Pointer Analysis}
+
+
+
+\section{Conclusion/Challenges}
+\begin{framed}
+  As this project is significantly more exploratory than the first, we
+  want you to tell us what you found particularly
+  interesting/challenging/frustrating. What extensions to the project
+  did you attempt? (for instance, did you try combining the results of
+  analyses, or did you try your hand at interprocedural
+  analysis?). What aspects of LLVM made it easy/hard to implement your
+  design? If you could redo your project with what you know now, what
+  changes would you make?
+\end{framed}
+Also unsure how honest to be here. Most of our challenges had to do
+with counter-intuitive LLVM design and poor documentation, as well as
+the unpredictability of C++ features.
+
+\end{document}
+

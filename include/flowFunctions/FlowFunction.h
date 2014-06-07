@@ -35,7 +35,8 @@ public:
   enum FlowFunctionKind {
     FFK_CPFlowFunction,
     FFK_RAFlowFunction,
-    FFK_CSEFlowFunction
+    FFK_CSEFlowFunction,
+    FFK_PAFlowFunction
   };
 
   FlowFunctionKind getKind() const { return Kind; }

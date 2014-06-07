@@ -1,5 +1,5 @@
-#ifndef RALATTICEPOINT_H_
-#define RALATTICEPOINT_H_
+#ifndef PALATTICEPOINT_H_
+#define PALATTICEPOINT_H_
 
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
@@ -9,25 +9,24 @@
 #include <utility>
 #include <map>
 #include <set>
-#include <vector>
 #include "LatticePoint.h"
 #include "llvm/Support/ConstantRange.h"
 #include "llvm/Support/raw_ostream.h"
 
 
 /*
-
+ 
  This is the range analysis lattice/latticepoint class. Range analysis is a MAY analysis. Thus, top is defined to be the full set and bottom is defined to be empty.
  
  Join must be union over ranges.
  
  Meet is intersection over ranges.
  
-*/
+ */
 
 using namespace llvm;
 
-class RALatticePoint : public LatticePoint {
+class PALatticePoint : public LatticePoint {
   
 public:
   
@@ -37,28 +36,28 @@ public:
    Our representation maps values to integer ranges. We make use of LLVM's constant range class.
    */
   
-  std::map<Value*, ConstantRange*> representation;
+  std::set<Value *> pointers_to_anything;
   
+  std::map<Value*, std::set<Value*> > representation;
   
-  RALatticePoint() : LatticePoint(LPK_RALatticePoint), representation(std::map<Value*, ConstantRange*>()) {}
+  PALatticePoint() : LatticePoint(LPK_PALatticePoint), representation(std::map<Value*, std::set<Value*> >()) {}
   
-  RALatticePoint(bool bottomIN, bool topIN, std::map<Value*, ConstantRange*> representationIN) : LatticePoint(LPK_RALatticePoint, bottomIN, topIN), representation(representationIN) {}
+  PALatticePoint(bool bottomIN, bool topIN, std::map<Value*, std::set<Value*> > representationIN) : LatticePoint(LPK_PALatticePoint, bottomIN, topIN), representation(representationIN) {}
   
-  RALatticePoint(RALatticePoint &copy) : LatticePoint(LPK_RALatticePoint, copy.isBottom, copy.isTop), representation(copy.representation) {}
+  PALatticePoint(PALatticePoint &copy) : LatticePoint(LPK_PALatticePoint, copy.isBottom, copy.isTop), pointers_to_anything(copy.pointers_to_anything),  representation(copy.representation){}
   
   
   
   
   static bool classof(const LatticePoint *L) {
-    return L->getKind() == LPK_RALatticePoint;
+    return L->getKind() == LPK_PALatticePoint;
   }
   
   LatticePoint* join(LatticePoint* in);
-  RALatticePoint* meet(LatticePoint* in);
+  //PALatticePoint* meet(LatticePoint* in);
   bool equals(LatticePoint* in);
   void printToErrs();
-  std::vector<Value *> differInRange(RALatticePoint* in);
   
 };
 
-#endif /* RALATTICEPOINT_H_ */
+#endif /* PALATTICEPOINT_H_ */

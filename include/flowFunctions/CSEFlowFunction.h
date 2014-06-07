@@ -15,6 +15,7 @@ class CSEFlowFunction : public FlowFunction, public InstVisitor<CSEFlowFunction>
 public:
   // local variables for passing arguments
   std::vector<CSELatticePoint *> info_in_casted;
+  std::vector<LatticePoint *> info_in_cached;
   std::vector<LatticePoint *> info_out;
 
   // Constructor
