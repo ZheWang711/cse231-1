@@ -140,9 +140,15 @@ void PAFlowFunction::visitAllocaInst(AllocaInst &AI){
 void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
-
+  
   Value* y = &LI;
   Value* tmp = LI.getPointerOperand();
+  errs() << "In load instruction: ";
+  LI.print(errs());
+  errs() << " Pointer is ";
+  tmp->print(errs());
+  errs() << "\n";
+  
   AllocaInst* x = dyn_cast<AllocaInst>(tmp);
   
   Type* x_alloca = x->getAllocatedType();
@@ -185,13 +191,7 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
     }
   }
   info_out.push_back(inRLP);
-  /*
-  errs() << "In load instruction: ";
-  LI.print(errs());
-  errs() << " Pointer is ";
-  pointer->print(errs());
-  errs() << "\n";
-  */
+  
 }
 
 
