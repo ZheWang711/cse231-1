@@ -19,7 +19,9 @@ if.else:                                          ; preds = %entry
 
 if.end:                                           ; preds = %if.else, %if.then
   %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]
-  %y.addr.0 = phi i32 [ %y, %if.then ], [ %add2, %if.else ]
+;  %y.addr.0 = phi i32 [ %y, %if.then ], [ %add2, %if.else ]
+  %addb = add nsw i32 2, %y	     	
+  %x.1 = add nsw i32 20, %add
   %add3 = add nsw i32 %x.0, %x.0
   ret i32 %add3
 }

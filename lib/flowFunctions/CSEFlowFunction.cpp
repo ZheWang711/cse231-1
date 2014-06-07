@@ -37,6 +37,12 @@ void CSEFlowFunction::visitBranchInst(BranchInst &BI){
   info_out = info_in_cached;
   return;
 }
+
+void CSEFlowFunction::visitCmpInst(CmpInst &I){
+  errs() << "In cmp instruction \n";
+  info_out = info_in_cached;
+}
+
  
 void CSEFlowFunction::visitPHINode(PHINode &PHI){
   // this will pairwise-join all incoming CSELatticePoints on the
@@ -61,24 +67,43 @@ void CSEFlowFunction::visitPHINode(PHINode &PHI){
   // instruction pairwise
 
   int num_incoming_vals = PHI.getNumIncomingValues();
-  for (int i = 0; i+1 <= num_incoming_vals; i++){
+  errs() << "phi node has " << num_incoming_vals << " incoming values \n";
+
+  for (int i = 0; i+1 <= (num_incoming_vals-1); i++){
     Value* val_left = PHI.getIncomingValue(i);
     Value* val_right = PHI.getIncomingValue(i+1);
     if (Instruction* instL = dyn_cast<Instruction>(val_left)){
       if(Instruction* instR = dyn_cast<Instruction>(val_right)) {
-	// both operands are instructions
-	if(instL->isIdenticalToWhenDefined(instR)){
-	  continue;
-	}else{
-	  info_out.push_back(inCSELP);
-	  return;
-	}
+  	// both operands are instructions
+  	if(instL->isIdenticalToWhenDefined(instR)){
+	  // 
+	  errs() << "a pair of phi operands compared equal \n";
+  	  continue;
+  	}else{
+	  errs() << "a pair of phi operands compared NOT equal \n";
+  	  info_out = info_in_cached;
+  	  return;
+  	}
+      }else{
+	errs() << "operand to PHI not an instruction, can't do CSE \n";
+	info_out = info_in_cached;
+	return;
       }
+    }else {
+      errs() << "operand to PHI not an instruction, can't do CSE \n";
+      info_out = info_in_cached;
+      return;
     }
   }
+  
   inCSELP->representation[current] = dyn_cast<Instruction>(PHI.getIncomingValue(0));
   info_out.push_back(inCSELP);
+  
+  errs() <<  "sending back" << info_out.size() << "elements \n";
+  inCSELP->printToErrs();
   return;
+  // info_out.push_back(inCSELP);
+  // return;
 }
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
