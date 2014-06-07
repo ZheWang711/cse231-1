@@ -99,8 +99,20 @@ void PAFlowFunction::visitPHINode(PHINode &PHI){
       }
     }
   }
-  if (inRLP->pointers_to_anything.count(val) <= 0) {
-    inRLP->representation[current] = current_points_to_set;
+  if (inRLP->pointers_to_anything.count(current) <= 0) {
+    if (current_points_to_set.size() == 0 && inRLP->isBottom) { // We are still at bottom.
+      inRLP->isTop = false;
+      inRLP->isBottom = true;
+    }
+    else{ // We are neither top nor bottom
+      inRLP->isTop = false;
+      inRLP->isBottom = false;
+      inRLP->representation[current] = current_points_to_set;
+    }
+  }
+  else if(inRLP->isTop){ // We are still at top then
+    inRLP->isTop = true;
+    inRLP->isBottom = false;
   }
   
   info_out.clear();
