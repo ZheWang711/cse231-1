@@ -142,18 +142,18 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   PALatticePoint* inRLP = new PALatticePoint(*(info_in_casted.back()));
   
   Value* y = &LI;
-  Value* tmp = LI.getPointerOperand();
+  Value* x = LI.getPointerOperand();
+  
   errs() << "In load instruction: ";
   LI.print(errs());
   errs() << " Pointer is ";
-  tmp->print(errs());
-  errs() << ". Is it a pointer type? " << isa<PointerType>(tmp);
+  x->print(errs());
   errs() << "\n";
   
-  AllocaInst* x = dyn_cast<AllocaInst>(tmp);
+  PointerType* x_type = dyn_cast<PointerType>(x->getType());
+  Type* x_points_to_type = x_type->getPointerElementType();
   
-  Type* x_alloca = x->getAllocatedType();
-  if (isa<PointerType>(x_alloca)) {
+  if (isa<PointerType>(x_points_to_type)) {
     std::set<Value*> y_points_to_set;
     if (inRLP->pointers_to_anything.count(x) > 0){
       inRLP->pointers_to_anything.insert(y);
