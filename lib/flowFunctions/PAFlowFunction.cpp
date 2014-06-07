@@ -147,6 +147,7 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   LI.print(errs());
   errs() << " Pointer is ";
   tmp->print(errs());
+  errs() << ". Is it a pointer type? " << isa<PointerType>(tmp);
   errs() << "\n";
   
   AllocaInst* x = dyn_cast<AllocaInst>(tmp);
