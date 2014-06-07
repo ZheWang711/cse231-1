@@ -212,6 +212,9 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   Value* x = SI.getPointerOperand();
   Value* y = SI.getValueOperand();
   
+  
+  
+  info_out.push_back(inRLP);
   /*
   errs() << "In store instruction: ";
   SI.print(errs());
