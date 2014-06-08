@@ -477,15 +477,15 @@ void RAFlowFunction::visitStoreInst(StoreInst   &SI){
  */
 void RAFlowFunction::visitUnaryInstruction(UnaryInstruction &I){
   info_out.clear();
-  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
-  info_out.push_back(result);
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
 }
 
 // Be safe with memory!
 void RAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
-  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
-  info_out.push_back(result);
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
 }
 
 
