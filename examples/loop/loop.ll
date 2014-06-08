@@ -12,7 +12,7 @@ entry:
 while.cond:                                       ; preds = %while.body, %entry
   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ]
   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ]
-  %cmp = icmp slt i32 %i.0, 3
+  %cmp = icmp slt i32 %i.0, 100
   br i1 %cmp, label %while.body, label %while.end
 
 while.body:                                       ; preds = %while.cond
