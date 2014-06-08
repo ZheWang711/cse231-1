@@ -420,7 +420,7 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
  
  
  */
-void visitAllocaInst(AllocaInst &AI)
+void RAFlowFunction::visitAllocaInst(AllocaInst &AI)
 {
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
@@ -430,7 +430,7 @@ void visitAllocaInst(AllocaInst &AI)
 /*
  Since we don't know much about pointers, at the end of this, the only thing that will change is that LI --> full-range
  */
-void visitLoadInst(LoadInst     &LI){
+void RAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   Value* current = &LI;
@@ -451,7 +451,7 @@ void visitLoadInst(LoadInst     &LI){
  of all variables in our lattice point to include the stored value.
  */
 
-void visitStoreInst(StoreInst   &SI){
+void RAFlowFunction::visitStoreInst(StoreInst   &SI){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   
