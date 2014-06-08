@@ -438,7 +438,7 @@ void RAFlowFunction::visitLoadInst(LoadInst     &LI){
     info_out.push_back(inRLP);
   }
   else{
-    ConstantRange current_range = new ConstantRange(32, true);
+    ConstantRange* current_range = new ConstantRange(32, true);
     inRLP->representation[current] = current_range;
     info_out.push_back(inRLP);
   }
@@ -465,7 +465,7 @@ void RAFlowFunction::visitStoreInst(StoreInst   &SI){
       Value* elm = it->first;
       ConstantRange* curr_range = it->second;
       ConstantRange* new_range = new ConstantRange(32, true);
-      *new_range = current_range->unionWith(c_range);
+      *new_range = curr_range->unionWith(*c_range);
       inRLP->representation[elm] = new_range;
     }
   }
