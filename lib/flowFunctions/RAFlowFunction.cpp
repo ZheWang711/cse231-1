@@ -20,6 +20,8 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
   RALatticePoint* temp1 = dyn_cast<RALatticePoint>(temp);
   RALatticePoint* new_state = new RALatticePoint(*temp1);
   std::vector<Value*> differing_vals = new_state->differInRange(old_state);
+  
+  
   for (int i = 0; i < differing_vals.size(); i++) {
     Value* val = differing_vals[i];
     if (counter_map.count(val) <= 0){
@@ -413,6 +415,62 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
   info_out.push_back(inRLP);
 }
 
+
+/*
+ 
+ 
+ */
+void visitAllocaInst(AllocaInst &AI)
+{
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
+}
+
+/*
+ Since we don't know much about pointers, at the end of this, the only thing that will change is that LI --> full-range
+ */
+void visitLoadInst(LoadInst     &LI){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  Value* current = &LI;
+  if(inRLP->isTop){
+    info_out.push_back(inRLP);
+  }
+  else{
+    ConstantRange current_range = new ConstantRange(32, true);
+    inRLP->representation[current] = current_range;
+    info_out.push_back(inRLP);
+  }
+}
+
+/*
+ We don't know much about pointers, stores can affect any variable.
+ However, because LLVM has type-safety, the only stores that can affect
+ variables we care about are stores of ConstantInts. Thus, we must expand all the ranges
+ of all variables in our lattice point to include the stored value.
+ */
+
+void visitStoreInst(StoreInst   &SI){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  
+  Value* y = SI.getValueOperand();
+  if (isa<ConstantInt>(y)) {
+    ConstantInt* c = cast<ConstantInt>(y);
+    ConstantRange* c_range = new ConstantRange(c->getValue());
+    
+    std::map<Value*, ConstantRange*> representation = inRLP->representation;
+    for (std::map<Value*, ConstantRange*>::iterator it=representation.begin(); it!=representation.end(); ++it){
+      Value* elm = it->first;
+      ConstantRange* curr_range = it->second;
+      ConstantRange* new_range = new ConstantRange(32, true);
+      *new_range = current_range->unionWith(c_range);
+      inRLP->representation[elm] = new_range;
+    }
+  }
+  info_out.push_back(inRLP);
+}
 
 /*
  UnaryInstruction is not terminator.
