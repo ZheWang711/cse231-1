@@ -416,16 +416,15 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
 }
 
 
-/*
+
  
- 
- */
 void RAFlowFunction::visitAllocaInst(AllocaInst &AI)
 {
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   info_out.push_back(inRLP);
 }
+ 
 
 /*
  Since we don't know much about pointers, at the end of this, the only thing that will change is that LI --> full-range
@@ -454,7 +453,7 @@ void RAFlowFunction::visitLoadInst(LoadInst     &LI){
 void RAFlowFunction::visitStoreInst(StoreInst   &SI){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
-  
+  /*
   Value* y = SI.getValueOperand();
   if (isa<ConstantInt>(y)) {
     ConstantInt* c = cast<ConstantInt>(y);
@@ -469,6 +468,7 @@ void RAFlowFunction::visitStoreInst(StoreInst   &SI){
       inRLP->representation[elm] = new_range;
     }
   }
+   */
   info_out.push_back(inRLP);
 }
 
