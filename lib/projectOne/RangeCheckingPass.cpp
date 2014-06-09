@@ -52,8 +52,9 @@ struct RangeCheckingPass : public FunctionPass {
         GetElementPtrInst* gep = cast<GetElementPtrInst>(current_instruction);
         errs() << "GEP instruction: ";
         gep->print(errs());
-        errs() << " has pointer address space " << gep->getPointerAddressSpace() << "\n";
-        errs() << " and address space " << gep->getAddressSpace() << "\n";
+        errs() << " has pointer ";
+        gep->getPointerOperand()->print(errs());
+        errs() << "\n";
 
       }
       
