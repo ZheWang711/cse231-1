@@ -44,8 +44,7 @@ struct RangeCheckingPass : public FunctionPass {
     int i = 1;
     bool has_range_warnings = false;
     for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
-      
-      Value* current_instruction = &*I;
+      Instruction* current_instruction = &*I;
       LatticePoint* lp = result[current_instruction];
       RALatticePoint *rlp = dyn_cast<RALatticePoint>(lp);
       
