@@ -5,8 +5,14 @@
 */
 
 LatticePoint* RALatticePoint::join(LatticePoint* in){
+
   
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
+  
+  errs() << "Attempting to join: ";
+  this->printToErrs();
+  errs() << "with ";
+  in_casted->printToErrs();
   if (in->isTop || this->isBottom){
     RALatticePoint* result = new RALatticePoint(*in_casted);
     return result;
