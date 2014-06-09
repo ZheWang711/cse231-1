@@ -416,6 +416,11 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
     if (inRLP->representation.count(val) > 0) {
       *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
     }
+    else if(isa<ConstantInt>(val)){
+      ConstantInt* c_val = cast<ConstantInt>(val);
+      ConstantRange* c_range = new ConstantRange(c_val->getValue());
+      *current_range = current_range->unionWith(c_range);
+    }
   }
   
   inRLP->representation[current] = current_range;
