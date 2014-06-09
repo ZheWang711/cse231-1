@@ -7,6 +7,10 @@ int f(int x){
     i = i + 1;
     z = z + 3;
   }
-  a[z] = 20;
+  if (z < 10){
+    if (z >= 0){
+      a[z] = 20;
+    }
+  }
   return a[3];
 }
