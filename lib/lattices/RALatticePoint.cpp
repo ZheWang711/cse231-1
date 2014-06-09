@@ -8,16 +8,17 @@ LatticePoint* RALatticePoint::join(LatticePoint* in){
 
   
   RALatticePoint* in_casted =  dyn_cast<RALatticePoint>(in);
-  
-  errs() << "Attempting to join: ";
-  this->printToErrs();
-  errs() << "with ";
-  in_casted->printToErrs();
-  if (in->isTop || this->isBottom){
+  if (in->isBottom && this->isBottom) {
+    RALatticePoint* result = new RALatticePoint(true, false, std::map<Value*, ConstantRange*>());
+  }
+  else if(in->isTop || this->isTop){
+    RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
+  }
+  else if (this->isBottom){
     RALatticePoint* result = new RALatticePoint(*in_casted);
     return result;
   }
-  if (this->isTop || in->isBottom) {
+  else if (in->isBottom) {
     RALatticePoint* result = new RALatticePoint(*this);
     return result;
   }
