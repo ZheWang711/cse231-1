@@ -8,12 +8,14 @@
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
   info_in_casted = std::vector<RALatticePoint *>();
+  /*
   errs() << "In instruction ";
   instr->print(errs());
   errs() << "Handed lattice point(s): \n";
+   */
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    temp->printToErrs();
+    //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
   
@@ -51,12 +53,14 @@ std::map<Value *, LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* 
   out_map = successor_map;
   //errs() << "In terminator operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
+  /*
   errs() << "In instruction ";
   instr->print(errs());
   errs() << "Handed lattice point(s): \n";
+   */
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    temp->printToErrs();
+    //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
 
