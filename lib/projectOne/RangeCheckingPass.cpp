@@ -31,7 +31,7 @@ struct RangeCheckingPass : public FunctionPass {
     
     Module* M = F.getParent();
     
-    DataLayout* dl = M->getDataLayout();
+    //DataLayout* dl = M->getDataLayout();
     
     RAFlowFunction raf = RAFlowFunction();
     
