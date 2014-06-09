@@ -365,19 +365,16 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
 void RAFlowFunction::visitCastInst(CastInst &I){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+
+  Value* val = helper::getCastOperand(I);
   
-  errs() << "In cast instruction ";
-  I.print(errs());
-  errs() << "\n";
-  int i = 0;
-  for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
-    errs() << "---Operand " << i << " is ";
-    OP->get()->print(errs());
-    errs() << "\n";
-    i++;
+  if (inRLP->representation.count(val) > 0) {
+    Value* current = &I;
+    ConstantRange* range = new ConstantRange(32, true);
+    *range = *(inRLP-representation[val]);
+    inRLP-representation[current] = range;
   }
   
-  info_in_casted.pop_back();
   info_out.push_back(inRLP);
 }
 
