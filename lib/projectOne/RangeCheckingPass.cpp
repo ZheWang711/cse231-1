@@ -54,7 +54,7 @@ struct RangeCheckingPass : public FunctionPass {
         gep->print(errs());
         errs() << " has pointer ";
         gep->getPointerOperand()->print(errs());
-        AllocaInst* al = dyn_cast<AllocaInst>(gep->getPointerOperand())
+        AllocaInst* al = dyn_cast<AllocaInst>(gep->getPointerOperand());
         errs() << " with ";
         al->getArraySize()->print(errs());
         errs() << " elements \n";
