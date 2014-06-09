@@ -63,7 +63,12 @@ struct RangeCheckingPass : public FunctionPass {
         errs() << " with ";
         al->getArraySize()->print(errs());
         errs() << " elements, alignment: ";
-        errs() << al->getAlignment();
+        errs() << al->getAlignment() << "\n";
+        errs() << "Type is ";
+        al->getType()->print(errs());
+        errs() << "\n";
+        errs() << "Allocated type is ";
+        al->getAllocatedType()->print(errs());
         errs() << "\n";
 
       }
