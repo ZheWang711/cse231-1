@@ -388,8 +388,8 @@ void RAFlowFunction::visitCmpInst(CmpInst &I){
  */
 
 void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
-  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+    RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
     Value* elm = it->first;
     out_map[elm] = inRLP;
   }
