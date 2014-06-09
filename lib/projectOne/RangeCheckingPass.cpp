@@ -69,6 +69,8 @@ struct RangeCheckingPass : public FunctionPass {
         errs() << "\n";
         errs() << "Allocated type is ";
         al->getAllocatedType()->print(errs());
+        ArrayType* arrtype = dyn_cast<ArrayType>(al->getAllocatedType());
+        errs() << " with size " << arrtype->getNumElements();
         errs() << "\n";
 
       }
