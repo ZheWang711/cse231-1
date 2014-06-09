@@ -368,10 +368,12 @@ void RAFlowFunction::visitCastInst(CastInst &I){
   
   errs() << "In cast instruction ";
   I.print(errs());
+  errs() << "\n";
   int i = 0;
   for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
     errs() << "---Operand " << i << " is ";
     OP->get()->print(errs());
+    errs() << "\n";
     i++;
   }
   
