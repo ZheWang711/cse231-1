@@ -359,12 +359,22 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
 }
 
 /*
- CastInst is NOT terminator.
+ CastInst is NOT terminator. Should have that I has the same range as what it is casting.
  */
 
 void RAFlowFunction::visitCastInst(CastInst &I){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  
+  errs() << "In cast instruction ";
+  I->print(errs());
+  int i = 0;
+  for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
+    errs() << "---Operand " << i << " is ";
+    OP->getValue()->print(errs());
+    i++;
+  }
+  
   info_in_casted.pop_back();
   info_out.push_back(inRLP);
 }
@@ -443,6 +453,7 @@ void RAFlowFunction::visitAllocaInst(AllocaInst &AI)
 
 /*
  Since we don't know much about pointers, at the end of this, the only thing that will change is that LI --> full-range
+ -- Make sure that Load has pointer to ConstantInt.
  */
 void RAFlowFunction::visitLoadInst(LoadInst     &LI){
   info_out.clear();
@@ -463,6 +474,10 @@ void RAFlowFunction::visitLoadInst(LoadInst     &LI){
  However, because LLVM has type-safety, the only stores that can affect
  variables we care about are stores of ConstantInts. Thus, we must expand all the ranges
  of all variables in our lattice point to include the stored value.
+ */
+
+/*
+ Stores don't affect our ranges.
  */
 
 void RAFlowFunction::visitStoreInst(StoreInst   &SI){

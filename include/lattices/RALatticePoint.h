@@ -1,4 +1,4 @@
-#ifndef RALATTICEPOINT_H_
+t#ifndef RALATTICEPOINT_H_
 #define RALATTICEPOINT_H_
 
 #include "llvm/IR/Module.h"
