@@ -2,6 +2,7 @@
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/DataLayout.h"
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
 #include "llvm/Support/InstIterator.h"
@@ -27,6 +28,10 @@ struct RangeCheckingPass : public FunctionPass {
   // This is the main body of our code.
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Range Function Checking Pass------ \n";
+    
+    Module* M = F.getParent();
+    
+    DataLayout* dl = M->getDataLayout();
     
     RAFlowFunction raf = RAFlowFunction();
     
@@ -57,7 +62,9 @@ struct RangeCheckingPass : public FunctionPass {
         AllocaInst* al = dyn_cast<AllocaInst>(gep->getPointerOperand());
         errs() << " with ";
         al->getArraySize()->print(errs());
-        errs() << " elements \n";
+        errs() << " elements, alignment: ";
+        errs() << al->getAlignment();
+        errs() << "\n";
 
       }
       
