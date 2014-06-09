@@ -367,11 +367,11 @@ void RAFlowFunction::visitCastInst(CastInst &I){
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   
   errs() << "In cast instruction ";
-  I->print(errs());
+  I.print(errs());
   int i = 0;
   for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
     errs() << "---Operand " << i << " is ";
-    OP->getValue()->print(errs());
+    OP->get()->print(errs());
     i++;
   }
   
