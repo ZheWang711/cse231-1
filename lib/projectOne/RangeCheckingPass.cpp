@@ -63,10 +63,10 @@ struct RangeCheckingPass : public FunctionPass {
     }
     
     if (has_range_warnings) {
-      errs() << "Done with range checking. Exited with errors!\n\n"
+      errs() << "Done with range checking. Exited with errors!\n\n";
     }
     else{
-      errs() << "Done with range checking. Exited with no errors.\n\n"
+      errs() << "Done with range checking. Exited with no errors.\n\n";
 
     }
     
@@ -78,5 +78,5 @@ struct RangeCheckingPass : public FunctionPass {
 };
 //}
 
-char RATest::ID = 0;
+char RangeCheckingPass::ID = 0;
 static RegisterPass<RangeCheckingPass> X("RangeCheckingPass", "RangeCheckingPass Pass", false, false);
