@@ -371,7 +371,7 @@ void RAFlowFunction::visitCastInst(CastInst &I){
   if (inRLP->representation.count(val) > 0) {
     Value* current = &I;
     ConstantRange* range = new ConstantRange(32, true);
-    *range = *(inRLP-representation[val]);
+    *range = *(inRLP->representation[val]);
     inRLP-representation[current] = range;
   }
   
