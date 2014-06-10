@@ -39,6 +39,13 @@ public:
   void visitUnaryInstruction(UnaryInstruction &I);
   void visitPHINode(PHINode &PHI);
   
+  
+  void visitAllocaInst(AllocaInst &AI);
+  void visitLoadInst(LoadInst     &LI);
+  void visitStoreInst(StoreInst   &SI);
+  
+  
+  
   // Flow Function Interface(s)
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
   

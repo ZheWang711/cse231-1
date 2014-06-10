@@ -37,6 +37,12 @@ void CSEFlowFunction::visitBranchInst(BranchInst &BI){
   info_out = info_in_cached;
   return;
 }
+
+void CSEFlowFunction::visitCmpInst(CmpInst &I){
+  errs() << "In cmp instruction \n";
+  info_out = info_in_cached;
+}
+
  
 void CSEFlowFunction::visitPHINode(PHINode &PHI){
   // this will pairwise-join all incoming CSELatticePoints on the
@@ -46,31 +52,58 @@ void CSEFlowFunction::visitPHINode(PHINode &PHI){
     info_in_casted.pop_back();
     LatticePoint *l2 = info_in_casted.back();
     info_in_casted.pop_back();
-    RALatticePoint* result = dyn_cast<CSELatticePoint>(l1->join(l2));
+    CSELatticePoint* result = dyn_cast<CSELatticePoint>(l1->join(l2));
     info_in_casted.push_back(result);
   }
 
-  // get a pointer to the phi node (by executing address of on a
+  // get a pointer to the phi node (by executing "address of" on a
   // reference, as if that isn't an insane and broken language
   // construct)
   PHINode* current = &PHI;
 
-  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  CSELatticePoint* inCSELP = new CSELatticePoint(*(info_in_casted.back()));
 
-  ConstantRange* current_range = new ConstantRange(32, false);
+  // Now: compare each incoming expression to each incoming
+  // instruction pairwise
+
   int num_incoming_vals = PHI.getNumIncomingValues();
-  for (int i = 0; i != num_incoming_vals; i++){
-    Value* val = PHI.getIncomingValue(i);
-    if (inRLP->representation.count(val) > 0) {
-      *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
+  errs() << "phi node has " << num_incoming_vals << " incoming values \n";
+
+  for (int i = 0; i+1 <= (num_incoming_vals-1); i++){
+    Value* val_left = PHI.getIncomingValue(i);
+    Value* val_right = PHI.getIncomingValue(i+1);
+    if (Instruction* instL = dyn_cast<Instruction>(val_left)){
+      if(Instruction* instR = dyn_cast<Instruction>(val_right)) {
+  	// both operands are instructions
+  	if(instL->isIdenticalToWhenDefined(instR)){
+	  // 
+	  errs() << "a pair of phi operands compared equal \n";
+  	  continue;
+  	}else{
+	  errs() << "a pair of phi operands compared NOT equal \n";
+  	  info_out = info_in_cached;
+  	  return;
+  	}
+      }else{
+	errs() << "operand to PHI not an instruction, can't do CSE \n";
+	info_out = info_in_cached;
+	return;
+      }
+    }else {
+      errs() << "operand to PHI not an instruction, can't do CSE \n";
+      info_out = info_in_cached;
+      return;
     }
   }
   
-  inRLP->representation[current] = current_range;
-  //inRLP->printToErrs();
+  inCSELP->representation[current] = dyn_cast<Instruction>(PHI.getIncomingValue(0));
+  info_out.push_back(inCSELP);
   
-  info_out.clear();
-  info_out.push_back(inRLP);
+  errs() <<  "sending back" << info_out.size() << "elements \n";
+  inCSELP->printToErrs();
+  return;
+  // info_out.push_back(inCSELP);
+  // return;
 }
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 

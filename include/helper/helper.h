@@ -40,6 +40,14 @@ public:
     return std::make_pair(S1, S2);
   }
   
+  static Value* getCastOperand(CastInst &I){
+    Value* val;
+    for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
+      val = OP->get();
+    }
+    return val;
+  }
+  
   // Returns the operands of a comparison operator.
   static std::pair<Use*, Use *> getOperands(CmpInst &BO){
     Use* S1;

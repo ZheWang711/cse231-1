@@ -64,7 +64,6 @@ struct RATest : public FunctionPass {
     RALatticePoint* bottom = new RALatticePoint(true, false, representation);
     std::map<Instruction *, LatticePoint *> result = Analysis::analyze(F, bottom, &raf);
     
-
     
     // F is a pointer to a Function instance
     for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){

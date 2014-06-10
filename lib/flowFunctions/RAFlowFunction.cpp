@@ -8,8 +8,14 @@
 std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // dyncast on that vector;
   info_in_casted = std::vector<RALatticePoint *>();
+  /*
+  errs() << "In instruction ";
+  instr->print(errs());
+  errs() << "Handed lattice point(s): \n";
+   */
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
+    //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
   
@@ -20,6 +26,8 @@ std::vector<LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* instr,
   RALatticePoint* temp1 = dyn_cast<RALatticePoint>(temp);
   RALatticePoint* new_state = new RALatticePoint(*temp1);
   std::vector<Value*> differing_vals = new_state->differInRange(old_state);
+  
+  
   for (int i = 0; i < differing_vals.size(); i++) {
     Value* val = differing_vals[i];
     if (counter_map.count(val) <= 0){
@@ -45,9 +53,13 @@ std::map<Value *, LatticePoint *> RAFlowFunction::operator()(llvm::Instruction* 
   out_map = successor_map;
   //errs() << "In terminator operator \n";
   info_in_casted = std::vector<RALatticePoint *>();
+  /*
+  errs() << "In instruction ";
+  instr->print(errs());
+  errs() << "Handed lattice point(s): \n";
+   */
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
     RALatticePoint* temp = dyn_cast<RALatticePoint>(*it);
-    //errs() << "Handed lattice point ";
     //temp->printToErrs();
     info_in_casted.push_back(temp);
   }
@@ -347,13 +359,22 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
 }
 
 /*
- CastInst is NOT terminator.
+ CastInst is NOT terminator. Should have that I has the same range as what it is casting.
  */
 
 void RAFlowFunction::visitCastInst(CastInst &I){
   info_out.clear();
   RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
-  info_in_casted.pop_back();
+
+  Value* val = helper::getCastOperand(I);
+  
+  if (inRLP->representation.count(val) > 0) {
+    Value* current = &I;
+    ConstantRange* range = new ConstantRange(32, true);
+    *range = *(inRLP->representation[val]);
+    inRLP->representation[current] = range;
+  }
+  
   info_out.push_back(inRLP);
 }
 
@@ -376,8 +397,8 @@ void RAFlowFunction::visitCmpInst(CmpInst &I){
  */
 
 void RAFlowFunction::visitTerminatorInst(TerminatorInst &I){
-  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
   for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+    RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
     Value* elm = it->first;
     out_map[elm] = inRLP;
   }
@@ -404,6 +425,11 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
     if (inRLP->representation.count(val) > 0) {
       *current_range = current_range->unionWith(*(inRLP->representation[val])); // Optimistic analysis
     }
+    else if(isa<ConstantInt>(val)){
+      ConstantInt* c_val = cast<ConstantInt>(val);
+      ConstantRange* c_range = new ConstantRange(c_val->getValue());
+      *current_range = current_range->unionWith(*c_range);
+    }
   }
   
   inRLP->representation[current] = current_range;
@@ -414,20 +440,81 @@ void RAFlowFunction::visitPHINode(PHINode &PHI){
 }
 
 
+
+ 
+void RAFlowFunction::visitAllocaInst(AllocaInst &AI)
+{
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
+}
+ 
+
+/*
+ Since we don't know much about pointers, at the end of this, the only thing that will change is that LI --> full-range
+ -- Make sure that Load has pointer to ConstantInt.
+ */
+void RAFlowFunction::visitLoadInst(LoadInst     &LI){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  Value* current = &LI;
+  if(inRLP->isTop){
+    info_out.push_back(inRLP);
+  }
+  else{
+    ConstantRange* current_range = new ConstantRange(32, true);
+    inRLP->representation[current] = current_range;
+    info_out.push_back(inRLP);
+  }
+}
+
+/*
+ We don't know much about pointers, stores can affect any variable.
+ However, because LLVM has type-safety, the only stores that can affect
+ variables we care about are stores of ConstantInts. Thus, we must expand all the ranges
+ of all variables in our lattice point to include the stored value.
+ */
+
+/*
+ Stores don't affect our ranges.
+ */
+
+void RAFlowFunction::visitStoreInst(StoreInst   &SI){
+  info_out.clear();
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  /*
+  Value* y = SI.getValueOperand();
+  if (isa<ConstantInt>(y)) {
+    ConstantInt* c = cast<ConstantInt>(y);
+    ConstantRange* c_range = new ConstantRange(c->getValue());
+    
+    std::map<Value*, ConstantRange*> representation = inRLP->representation;
+    for (std::map<Value*, ConstantRange*>::iterator it=representation.begin(); it!=representation.end(); ++it){
+      Value* elm = it->first;
+      ConstantRange* curr_range = it->second;
+      ConstantRange* new_range = new ConstantRange(32, true);
+      *new_range = curr_range->unionWith(*c_range);
+      inRLP->representation[elm] = new_range;
+    }
+  }
+   */
+  info_out.push_back(inRLP);
+}
+
 /*
  UnaryInstruction is not terminator.
  */
 void RAFlowFunction::visitUnaryInstruction(UnaryInstruction &I){
   info_out.clear();
-  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
-  info_out.push_back(result);
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
 }
 
 // Be safe with memory!
 void RAFlowFunction::visitInstruction(Instruction &I){
   info_out.clear();
-  RALatticePoint* result = new RALatticePoint(false, true, std::map<Value*, ConstantRange*>());
-  info_out.push_back(result);
+  RALatticePoint* inRLP = new RALatticePoint(*(info_in_casted.back()));
+  info_out.push_back(inRLP);
 }
 
 

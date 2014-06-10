@@ -22,9 +22,11 @@ public:
   std::map<Value*, Instruction*> representation;
 
   // Constructors
+  CSELatticePoint() : LatticePoint(LPK_CSELatticePoint), representation(std::map<Value*, Instruction*>()) {}
+
   CSELatticePoint(bool bottomIN, bool topIN, std::map<Value*, Instruction*> representationIN) : LatticePoint(LPK_CSELatticePoint, bottomIN, topIN), representation(representationIN) {}
 
-  CSELatticePoint() : LatticePoint(LPK_CSELatticePoint), representation(std::map<Value*, Instruction*>()) {}
+  CSELatticePoint(CSELatticePoint &copy) : LatticePoint(LPK_CSELatticePoint, copy.isBottom, copy.isTop), representation(copy.representation) {}
 
   static bool classof(const LatticePoint *L) {
     return L->getKind() == LPK_CSELatticePoint;
