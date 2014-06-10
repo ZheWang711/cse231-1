@@ -88,7 +88,8 @@ struct RangeCheckingPass : public FunctionPass {
             
           }
           else if (isa<ConstantInt>(index)){
-            ConstantRange* index_range = new ConstantRange(index->getValue());
+            ConstantInt* index_value = cast<ConstantInt>(index);
+            ConstantRange* index_range = new ConstantRange(index_value->getValue());
             errs() << "Array range: ";
             arr_range->print(errs());
             errs() << " index range: ";
