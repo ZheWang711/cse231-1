@@ -17,7 +17,7 @@ class CPFlowFunction : public FlowFunction, public InstVisitor<CPFlowFunction>{
 public:
   // local variables for passing arguments
   std::vector<CPLatticePoint *> info_in_casted;
-  CPLatticePoint* ret_value;
+  CPLatticePoint* ret_value = NULL;
 
   // Constructor
   CPFlowFunction() : FlowFunction(FFK_CPFlowFunction) {}
@@ -25,6 +25,11 @@ public:
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
+  void visitLoadInst(LoadInst &LI);
+  void visitStoreInst(StoreInst &SI);
+  void visitBranchInst(BranchInst &BI);
+  void visitPHINode(PHINode &PI);
+  void visitCmpInst(CmpInst &I);
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);

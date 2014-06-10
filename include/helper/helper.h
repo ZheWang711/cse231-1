@@ -79,6 +79,22 @@ public:
     return std::make_pair(S1, S2);
   }
   
+  static std::pair<Use*, Use *> getOps(Instruction &I){
+    Use* S1;
+    Use* S2;
+    int i = 0;
+    for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
+      if(i == 1){
+        S1 = &*OP;
+      }
+      else if(i == 2){
+        S2 = &*OP;
+      }
+      i++;
+    }
+    return std::make_pair(S2, S1);
+  }
+
   static std::pair<Use*, Use *> getBranches(BranchInst &BI){
     Use* S1;
     Use* S2;
@@ -94,6 +110,7 @@ public:
     }
     return std::make_pair(S2, S1);
   }
+
   /*
   static std::pair<Use*, Use *> getOperands(ICmpInst &cmp){
     Use* S1;
