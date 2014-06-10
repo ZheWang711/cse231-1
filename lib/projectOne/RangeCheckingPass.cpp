@@ -59,37 +59,31 @@ struct RangeCheckingPass : public FunctionPass {
         PointerType* pointer_type = dyn_cast<PointerType>(pt);
         
         Type* elm_type = pointer_type->getElementType();
+        
         errs() << "GEP instruction: ";
         gep->print(errs());
         
-        if (isa<ArrayType>(elm_type)) {
-          ArrayType* arr_type = cast<ArrayType>(elm_type);
-          errs() << " number of elements is " << arr_type->getNumElements();
+        Value* val;
+        int i = 0;
+        for (User::op_iterator OP = gep->op_begin(), OPE = gep->op_end(); OP != OPE; ++OP){
+          val = OP->get();
+          errs() << "\n operand " << i << " has value \n";
+          val->print(errs());
         }
         
         
-        
-
-        /*
-        errs() << "gep->getPointerOperandType() returns ";
-        gep->getPointerOperandType()->print(errs());
-        errs() << " has pointer ";
-        gep->getPointerOperand()->print(errs());
-        AllocaInst* al = dyn_cast<AllocaInst>(gep->getPointerOperand());
-        errs() << " with ";
-        al->getArraySize()->print(errs());
-        errs() << " elements, alignment: ";
-        errs() << al->getAlignment() << "\n";
-        errs() << "Type is ";
-        al->getType()->print(errs());
-        errs() << "\n";
-        errs() << "Allocated type is ";
-        al->getAllocatedType()->print(errs());
-        ArrayType* arrtype = dyn_cast<ArrayType>(al->getAllocatedType());
-        errs() << " with size " << arrtype->getNumElements();
-        */
-         
-        errs() << "\n";
+        if (isa<ArrayType>(elm_type)) {
+          ArrayType* arr_type = cast<ArrayType>(elm_type);
+          //errs() << " number of elements is " << arr_type->getNumElements();
+          int size = arr_type->getNumElements();
+          APInt* max_size = new APInt(32, size - 1);
+          APInt* zero = new APInt(32, 0);
+          
+          ConstantRange* arr_range = new ConstantRange(zero, max_size);
+          
+          
+        }
+        //errs() << "\n";
 
       }
       
