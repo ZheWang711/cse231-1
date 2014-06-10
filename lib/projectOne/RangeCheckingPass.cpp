@@ -84,10 +84,17 @@ struct RangeCheckingPass : public FunctionPass {
             errs() << " index range: ";
             index_range->print(errs());
             errs() << "\n";
+            errs() << "Array range contains index range? " <<arr_range->contains(*index_range) << "\n";
+            
           }
-          else{
-            errs() << "Index not in our range. Printing out lattice...\n";
-            rlp->printToErrs();
+          else if (isa<ConstantInt>(index)){
+            ConstantRange* index_range = new ConstantRange(index->getValue());
+            errs() << "Array range: ";
+            arr_range->print(errs());
+            errs() << " index range: ";
+            index_range->print(errs());
+            errs() << "\n";
+            errs() << "Array range contains index range? " <<arr_range->contains(*index_range) << "\n";
           }
 
           
