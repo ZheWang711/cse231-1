@@ -116,10 +116,10 @@ struct RangeCheckingPass : public FunctionPass {
     }
     
     if (has_range_warnings) {
-      errs() << "Done with range checking. Exited with warnings!\n\n";
+      errs() << "\n\nDone with range checking. Exited with warnings!\n\n";
     }
     else{
-      errs() << "Done with range checking. Exited with no warnings.\n\n";
+      errs() << "\n\nDone with range checking. Exited with no warnings.\n\n";
 
     }
     
