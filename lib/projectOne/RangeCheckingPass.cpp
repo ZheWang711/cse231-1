@@ -27,7 +27,7 @@ struct RangeCheckingPass : public FunctionPass {
   
   // This is the main body of our code.
   virtual bool runOnFunction(Function &F){
-    errs() << " -----Starting Range Function Checking Pass------ \n";
+    errs() << " ----- Starting Range Checking Pass on Function " <<  F.getName() << " ------ \n";
     
     //Module* M = F.getParent();
     
@@ -60,12 +60,6 @@ struct RangeCheckingPass : public FunctionPass {
         
         Type* elm_type = pointer_type->getElementType();
         
-        errs() << "GEP instruction: ";
-        gep->print(errs());
-        errs() << "\n";
-        
-        
-        
         if (isa<ArrayType>(elm_type)) {
           ArrayType* arr_type = cast<ArrayType>(elm_type);
           //errs() << " number of elements is " << arr_type->getNumElements();
@@ -81,12 +75,18 @@ struct RangeCheckingPass : public FunctionPass {
             ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
             
             ConstantRange* index_range = rlp->representation[index];
-            errs() << "Array range: ";
-            arr_range->print(errs());
-            errs() << " index range: ";
-            index_range->print(errs());
-            errs() << "\n";
-            errs() << "Array range contains index range? " <<arr_range->contains(*index_range) << "\n";
+            
+            if (!arr_range->contains(*index_range)) {
+              has_range_warnings = true;
+              errs() << "Warning: possible out of bounds array access at line " << i;
+              errs() << "\n-Instruction: ";
+              gep->print(errs());
+              errs() << "\n--- Valid array possitions: ";
+              arr_range->print(errs());
+              errs() << "\n--- Index has possible range: ";
+              index_range->print(errs());
+              errs() << "\n";
+            }
             
           }
           else if (isa<ConstantInt>(index)){
@@ -97,37 +97,33 @@ struct RangeCheckingPass : public FunctionPass {
             APInt* zero = new APInt(index_value->getBitWidth(), 0);
             
             ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
-            errs() << "Array range: ";
-            arr_range->print(errs());
-            errs() << " index range: ";
-            index_range->print(errs());
-            errs() << "\n";
-            errs() << "Array range contains index range? " <<arr_range->contains(*index_range) << "\n";
+            
+            if (!arr_range->contains(*index_range)) {
+              has_range_warnings = true;
+              errs() << "Warning: possible out of bounds array access at line " << i;
+              errs() << "\n-Instruction: ";
+              gep->print(errs());
+              errs() << "\n--- Valid array possitions: ";
+              arr_range->print(errs());
+              errs() << "\n--- Index has possible range: ";
+              index_range->print(errs());
+              errs() << "\n";
+            }
           }
-
-          
         }
-        //errs() << "\n";
-
       }
-      
-      /*
-      I->print(errs());
-      errs() << " --> ";
-      rlp->printToErrs();
-       */
       i++;
     }
     
     if (has_range_warnings) {
-      errs() << "Done with range checking. Exited with errors!\n\n";
+      errs() << "Done with range checking. Exited with warnings!\n\n";
     }
     else{
-      errs() << "Done with range checking. Exited with no errors.\n\n";
+      errs() << "Done with range checking. Exited with no warnings.\n\n";
 
     }
     
-    errs() << " -----Ending Range Function Checking Pass------ \n";
+    errs() << " ----- Ending Range Checking Pass on Function " <<  F.getName() << " ------ \n";
     
     return false;
   }
