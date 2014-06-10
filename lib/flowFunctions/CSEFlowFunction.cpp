@@ -1,15 +1,39 @@
 #include "flowFunctions/CSEFlowFunction.h"
 
+
+
 std::vector<LatticePoint *> CSEFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
-  info_in_cached = info_in;
-  // dyncast on that vector;
-  errs() << "In operator \n";
-  info_in_casted = std::vector<CSELatticePoint *>();
+  // Print tells us what we're doing.
+  errs() << "In operator for CSEFlowFunction: setting up state for the current call. \n";
+
+  // First, make ABSOLUTELY SURE that info_in_cached has a safe copy
+  // of the input, in case we want to return the input latticePoint
+  // with no changes. This way, nothing can change info_in_cached if
+  // it changes info_in.
+  info_in_cached.clear();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
-    CSELatticePoint* temp = dyn_cast<CSELatticePoint>(*it);
-    temp->printToErrs();
-    info_in_casted.push_back(temp);
+    if (CSELatticePoint* CSELP = dyn_cast<CSELatticePoint>(*it)) {
+      CSELatticePoint* tmp = new CSELatticePoint(CSELP);
+      // if this causes problems maybe cast tmp to a LatticePoint*
+      info_in_cached.push_back(tmp);
+    }else{
+      errs() << "BAD BAD THERE IS TERRIBLE PROBLEM PASSED IN A WRONG TYPE LATTICE POINT TO CSEFLOW \n";
+    }
   }
+
+  // Next, dyn_cast everything in info_in from a LatticePoint to a
+  // CSELatticePoint. Also copy here, giving us freedom to mess with
+  // info_in_casted and not touch info_in.
+  info_in_casted.clear();
+  for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
+    if (CSELatticePoint* CSELP = dyn_cast<CSELatticePoint>(*it)) {
+      CSELatticePoint* tmp = new CSELatticePoint(CSELP);
+      info_in_casted.push_back(tmp);
+    }else{
+      errs() << "BAD BAD THERE IS TERRIBLE PROBLEM PASSED IN A WRONG TYPE LATTICE POINT TO CSEFLOW \n";
+    }
+  }
+
   // precondition of any Visit: info_out is EMPTY
   info_out.clear();
   errs() << "About to call visit with " << info_in_casted.size() << " arguments \n";
@@ -23,6 +47,18 @@ std::vector<LatticePoint *> CSEFlowFunction::operator()(llvm::Instruction* instr
     return info_out;
   }
 }
+
+// A comment on return idioms: I believe that it is ok to use info_out
+// = info_in_cached if this is the VERY LAST LINE of a visit
+// implementation, because given that the return point will always be
+// the same no mutation of either of these things occurs.
+
+// Of course, the worklist algorithm now has a pointer to,
+// essentially, info_out and info_in_cached in this instance. Does
+// this mean that using clear() locally could screw up the worklist
+// algorithm? Should I switch this to making fresh info_* objects
+// every time operator() is invoked?
+
 
 void CSEFlowFunction::visitAllocaInst(AllocaInst &AI) {
   errs() << "CSEflow visiting an alloca \n";
