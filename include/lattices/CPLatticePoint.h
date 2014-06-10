@@ -6,6 +6,7 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Support/InstIterator.h"
+#include "llvm/Support/raw_ostream.h"
 
 #include <map>
 #include <string>
@@ -30,6 +31,7 @@ public:
   CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, ConstantInt*>()) {}
 
     static bool classof(const LatticePoint *L) {
+      errs() << L->getKind() << " classof?\n";
       return L->getKind() == LPK_CPLatticePoint;
     }
   LatticePoint* join(LatticePoint* in);

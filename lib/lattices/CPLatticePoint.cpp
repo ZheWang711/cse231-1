@@ -35,7 +35,7 @@ LatticePoint* CPLatticePoint::join(LatticePoint* in){
       }
     }
   }
-  CPLatticePoint* result = new CPLatticePoint(false, false, result_map);
+  CPLatticePoint* result = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result_map));
   return result;
 }
 
