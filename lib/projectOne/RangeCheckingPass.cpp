@@ -51,7 +51,7 @@ struct RangeCheckingPass : public FunctionPass {
     for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I){
       Instruction* current_instruction = &*I;
       LatticePoint* lp = result[current_instruction];
-      RALatticePoint *rlp = dyn_cast<RALatticePoint>(lp);
+      RALatticePoint* rlp = dyn_cast<RALatticePoint>(lp);
       
       if (isa<GetElementPtrInst>(current_instruction)) {
         GetElementPtrInst* gep = cast<GetElementPtrInst>(current_instruction);
@@ -59,19 +59,11 @@ struct RangeCheckingPass : public FunctionPass {
         PointerType* pointer_type = dyn_cast<PointerType>(pt);
         
         Type* elm_type = pointer_type->getElementType();
-        
+        /*
         errs() << "GEP instruction: ";
         gep->print(errs());
         errs() << "\n";
-        Value* val;
-        int i = 0;
-        for (User::op_iterator OP = gep->op_begin(), OPE = gep->op_end(); OP != OPE; ++OP){
-          val = OP->get();
-          errs() << "-- Operand " << i << " has value ";
-          val->print(errs());
-          errs() << "\n";
-          i++;
-        }
+        */
         
         
         if (isa<ArrayType>(elm_type)) {
@@ -83,6 +75,15 @@ struct RangeCheckingPass : public FunctionPass {
           
           ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
           
+          Value* index = helper::getGEPIndex(*gep);
+
+          ConstantRange* index_range = rlp->representation[index];
+          
+          errs() << "Array range: ";
+          arr_range->print(errs());
+          errs() << " index range: ";
+          index_range->print(errs());
+          errs() << "\n";
           
         }
         //errs() << "\n";
