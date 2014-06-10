@@ -92,6 +92,10 @@ void CSEFlowFunction::visitPHINode(PHINode &PHI){
     info_in_casted.push_back(result);
   }
 
+  for (std::vector<CSELatticePoint *>::iterator it = info_in_casted.begin(); it != info_in_casted.end(); ++it){
+    errs() << "Post join, visitPHINode has this lattice point:";
+    (*it)->printToErrs();
+  }
   // get a pointer to the phi node (by executing "address of" on a
   // reference, as if that isn't an insane and broken language
   // construct)
@@ -131,28 +135,31 @@ void CSEFlowFunction::visitPHINode(PHINode &PHI){
       return;
     }
   }
-  
+
+  // this is actually wrong. We need to make the PHI node point at one
+  // of these things, not one of the instructions point to each other.
+
   inCSELP->representation[current] = dyn_cast<Instruction>(PHI.getIncomingValue(0));
   info_out.push_back(inCSELP);
   
   errs() <<  "sending back" << info_out.size() << "elements \n";
   inCSELP->printToErrs();
   return;
-  // info_out.push_back(inCSELP);
-  // return;
 }
 
 void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
   errs() << "CSEflow visiting a binary operator \n";
   errs() << "Info_in_casted.size() = " << info_in_casted.size() << "\n";
-  // Haul representation out of lattice point we're supplied with
-  std::map<Value*, Instruction*> input_rep = info_in_casted.front()->representation;
-  // iterate over the pairs in the map. print them out for lack of
-  // anything better to do.
   
+
+  // Haul representation out of lattice point we're supplied with. Of
+  // course, this looks like it is just aliasing? Maybe it actually
+  // copies because we're going from one std::map to another?
+  std::map<Value*, Instruction*> input_rep = info_in_casted.front()->representation;
+
   errs() << "Input instruction is: ";
   BO.print(errs());
-  errs() << "  @ " << &BO << " \n ";
+  errs() << "  @  " << &BO << " \n ";
 
   errs() << "Input LP representation is: ";
   info_in_casted.front()->printToErrs();
@@ -189,6 +196,6 @@ void CSEFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }else{
     input_rep[visited_value] = dyn_cast<Instruction>(visited_value);
   }
+  
   info_out.push_back(new CSELatticePoint(false, false, input_rep));
-
 }
