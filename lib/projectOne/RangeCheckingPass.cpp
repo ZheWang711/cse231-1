@@ -70,14 +70,16 @@ struct RangeCheckingPass : public FunctionPass {
           ArrayType* arr_type = cast<ArrayType>(elm_type);
           //errs() << " number of elements is " << arr_type->getNumElements();
           int size = arr_type->getNumElements();
-          APInt* max_size = new APInt(32, size - 1);
-          APInt* zero = new APInt(32, 0);
-          
-          ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
+
           
           Value* index = helper::getGEPIndex(*gep);
 
           if (rlp->representation.count(index) > 0) {
+            APInt* max_size = new APInt(32, size - 1);
+            APInt* zero = new APInt(32, 0);
+            
+            ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
+            
             ConstantRange* index_range = rlp->representation[index];
             errs() << "Array range: ";
             arr_range->print(errs());
@@ -90,6 +92,11 @@ struct RangeCheckingPass : public FunctionPass {
           else if (isa<ConstantInt>(index)){
             ConstantInt* index_value = cast<ConstantInt>(index);
             ConstantRange* index_range = new ConstantRange(index_value->getValue());
+            
+            APInt* max_size = new APInt(index_value->getBitWidth(), size - 1);
+            APInt* zero = new APInt(index_value->getBitWidth(), 0);
+            
+            ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
             errs() << "Array range: ";
             arr_range->print(errs());
             errs() << " index range: ";
