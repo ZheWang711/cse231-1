@@ -52,7 +52,7 @@ public:
     Value* val;
     int i = 0;
     for (User::op_iterator OP = I.op_begin(), OPE = I.op_end(); OP != OPE; ++OP){
-      if (i = 2) {
+      if (i == 2) {
         val = OP->get();
       }
       i++;
