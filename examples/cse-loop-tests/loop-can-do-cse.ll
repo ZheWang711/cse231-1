@@ -21,6 +21,7 @@ while.body:                                       ; preds = %while.cond
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
+  %z = add nsw i32 0, 0				  						  
   ret i32 %x.addr.0
 }
 
