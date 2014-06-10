@@ -79,7 +79,7 @@ struct RangeCheckingPass : public FunctionPass {
           APInt* max_size = new APInt(32, size - 1);
           APInt* zero = new APInt(32, 0);
           
-          ConstantRange* arr_range = new ConstantRange(zero, max_size);
+          ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
           
           
         }
