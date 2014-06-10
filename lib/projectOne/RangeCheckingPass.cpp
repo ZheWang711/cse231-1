@@ -69,7 +69,7 @@ struct RangeCheckingPass : public FunctionPass {
           val = OP->get();
           errs() << "-- Operand " << i << " has value ";
           val->print(errs());
-          errs() << "\n"
+          errs() << "\n";
           i++;
         }
         
