@@ -75,7 +75,7 @@ struct RangeCheckingPass : public FunctionPass {
           Value* index = helper::getGEPIndex(*gep);
 
           if (rlp->representation.count(index) > 0) {
-            APInt* max_size = new APInt(32, size - 1);
+            APInt* max_size = new APInt(32, size);
             APInt* zero = new APInt(32, 0);
             
             ConstantRange* arr_range = new ConstantRange(*zero, *max_size);
