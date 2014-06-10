@@ -62,13 +62,15 @@ struct RangeCheckingPass : public FunctionPass {
         
         errs() << "GEP instruction: ";
         gep->print(errs());
-        
+        errs() << "\n";
         Value* val;
         int i = 0;
         for (User::op_iterator OP = gep->op_begin(), OPE = gep->op_end(); OP != OPE; ++OP){
           val = OP->get();
-          errs() << "\n operand " << i << " has value \n";
+          errs() << "-- Operand " << i << " has value ";
           val->print(errs());
+          errs() << "\n"
+          i++;
         }
         
         
