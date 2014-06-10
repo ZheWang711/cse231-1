@@ -55,8 +55,22 @@ struct RangeCheckingPass : public FunctionPass {
       
       if (isa<GetElementPtrInst>(current_instruction)) {
         GetElementPtrInst* gep = cast<GetElementPtrInst>(current_instruction);
+        Type* pt = gep->getPointerOperandType();
+        PointerType* pointer_type = dyn_cast<PointerType>(pt);
+        
+        Type* elm_type = pointer_type->getElementType();
         errs() << "GEP instruction: ";
         gep->print(errs());
+        
+        if (isa<ArrayType>(elm_type)) {
+          ArrayType* arr_type = cast<ArrayType>(elm_type);
+          errs() << " number of elements is " << arr_type->getNumElements();
+        }
+        
+        
+        
+
+        /*
         errs() << "gep->getPointerOperandType() returns ";
         gep->getPointerOperandType()->print(errs());
         errs() << " has pointer ";
@@ -73,6 +87,8 @@ struct RangeCheckingPass : public FunctionPass {
         al->getAllocatedType()->print(errs());
         ArrayType* arrtype = dyn_cast<ArrayType>(al->getAllocatedType());
         errs() << " with size " << arrtype->getNumElements();
+        */
+         
         errs() << "\n";
 
       }
