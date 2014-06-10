@@ -29,7 +29,7 @@ struct RangeCheckingPass : public FunctionPass {
   virtual bool runOnFunction(Function &F){
     errs() << " -----Starting Range Function Checking Pass------ \n";
     
-    Module* M = F.getParent();
+    //Module* M = F.getParent();
     
     //DataLayout* dl = M->getDataLayout();
     
@@ -59,11 +59,11 @@ struct RangeCheckingPass : public FunctionPass {
         PointerType* pointer_type = dyn_cast<PointerType>(pt);
         
         Type* elm_type = pointer_type->getElementType();
-        /*
+        
         errs() << "GEP instruction: ";
         gep->print(errs());
         errs() << "\n";
-        */
+        
         
         
         if (isa<ArrayType>(elm_type)) {
@@ -77,13 +77,19 @@ struct RangeCheckingPass : public FunctionPass {
           
           Value* index = helper::getGEPIndex(*gep);
 
-          ConstantRange* index_range = rlp->representation[index];
-          
-          errs() << "Array range: ";
-          arr_range->print(errs());
-          errs() << " index range: ";
-          index_range->print(errs());
-          errs() << "\n";
+          if (rlp->representation.count(index) > 0) {
+            ConstantRange* index_range = rlp->representation[index];
+            errs() << "Array range: ";
+            arr_range->print(errs());
+            errs() << " index range: ";
+            index_range->print(errs());
+            errs() << "\n";
+          }
+          else{
+            errs() << "Index not in our range. Printing out lattice...\n";
+            rlp->printToErrs();
+          }
+
           
         }
         //errs() << "\n";
