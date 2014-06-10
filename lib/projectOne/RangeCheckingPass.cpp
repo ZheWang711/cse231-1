@@ -57,6 +57,8 @@ struct RangeCheckingPass : public FunctionPass {
         GetElementPtrInst* gep = cast<GetElementPtrInst>(current_instruction);
         errs() << "GEP instruction: ";
         gep->print(errs());
+        errs() << "gep->getPointerOperandType() returns ";
+        gep->getPointerOperandType()->print(errs());
         errs() << " has pointer ";
         gep->getPointerOperand()->print(errs());
         AllocaInst* al = dyn_cast<AllocaInst>(gep->getPointerOperand());
