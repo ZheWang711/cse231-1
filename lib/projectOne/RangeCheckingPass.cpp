@@ -27,7 +27,7 @@ struct RangeCheckingPass : public FunctionPass {
   
   // This is the main body of our code.
   virtual bool runOnFunction(Function &F){
-    errs() << " ----- Starting Range Checking Pass on Function " <<  F.getName() << " ------ \n";
+    errs() << " ----- Starting Range Checking Pass on Function " <<  F.getName() << " ------ \n\n";
     
     //Module* M = F.getParent();
     
@@ -116,10 +116,10 @@ struct RangeCheckingPass : public FunctionPass {
     }
     
     if (has_range_warnings) {
-      errs() << "\n\nDone with range checking. Exited with warnings!\n\n";
+      errs() << "\nDone with range checking. Exited with warnings!\n\n";
     }
     else{
-      errs() << "\n\nDone with range checking. Exited with no warnings.\n\n";
+      errs() << "\nDone with range checking. Exited with no warnings.\n\n";
 
     }
     
