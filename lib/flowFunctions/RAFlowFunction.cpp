@@ -144,7 +144,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
   if (BI.isUnconditional()) {
     for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
       Value* elm = it->first;
-      out_map[elm] = inRLP;
+      out_map[elm] = new RALatticePoint(*inRLP);
     }
   }
   else{
@@ -352,7 +352,7 @@ void RAFlowFunction::visitBranchInst(BranchInst &BI){
       // does not affect our lattice.
       for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
         Value* elm = it->first;
-        out_map[elm] = inRLP;
+        out_map[elm] = new RALatticePoint(*inRLP);
       }
     }
   }

@@ -9,6 +9,8 @@
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/CSELatticePoint.h"
 
+#include <algorithm>
+
 using namespace llvm;
 
 class CSEFlowFunction : public FlowFunction, public InstVisitor<CSEFlowFunction>{

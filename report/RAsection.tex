@@ -1,0 +1,69 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{framed}
+
+%% Simple AMSthm environments, numbered together.
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}[lem]{Theorem}
+\newtheorem{conj}[lem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{defn}[lem]{Definition}
+
+\begin{document}
+
+\subsubsection{Mathematical Flow Functions}
+
+\begin{framed}
+  define your lattice and flow functions in mathematical notation
+  (i.e., in the style used in the lecture notes and on the midterm).
+\end{framed}
+
+Unlike the previous two analyses, range analysis is a `may' analysis. Thus the most conservative range for a variable is the full set and the most optimistic is the empty set. With these considerations in mind, let us define our lattice and flow functions. 
+
+One may be tempted to write the domain as
+
+\[ 2^{ \{ x \rightarrow [a , b] \; | \; x \in \text{Vars} \, \wedge \, -\infty \leq a \leq b \leq \infty \} }.  \]
+
+While this has the correct intuition, it is quite imprecise, as we do not want there to be the possibility of a variable having more than one range. Given a variable $x \in$ Vars, let us define $D_x$ as the domain of $x$, i.e. 
+
+\[ D_x =  2^{ \{ x \rightarrow [a , b] \; | \;  -\infty \leq a \leq b \leq \infty \} }. \]
+
+Then our final domain is the Cartesian product of $D_x$'s, which we write as
+
+\[ D = \prod_{x \in \text{Vars}} D_x. \]
+
+Top will correspond to the product of full sets, that is if $x_1, x_2, \ldots$ is an enumeration of Vars, then
+
+\[  \top = (x_1 \rightarrow [-\infty, \infty], x_2 \rightarrow [-\infty, \infty], \ldots). \]
+
+Similarly, we have
+
+\[ \bot =  (x_1 \rightarrow \emptyset , x_2 \rightarrow \emptyset, \ldots). \]
+
+Given two elements of our domain, $A, B \in D$, we can write $A = (x_1 \rightarrow [a_1, b_1] , x_2 \rightarrow [a_2, b_2], \ldots)$ and $B = (x_1 \rightarrow [a'_1, b'_1] , x_2 \rightarrow [a'_2, b'_2], \ldots)$. Then $A \sqsubseteq B$ if and only if $[a_i, b_]) \subseteq [a'_i, b'_i]$ for all $i$. Additionally, if for all $i$, we let $\overline{a_i} = \max \{ a_i, a'_i \}$ and $\underline{a_i} = \min \{ a_i, a'_i \}$ (similarly for $\overline{b_i}$ and $\underline{b_i})$, then we can write
+
+\[ A \sqcup B = (x_1 \rightarrow [\underline{a_i}, \overline{b_1} ], x_2 \rightarrow [\underline{a_2}, \overline{b_2} ] )\]
+
+\noindent and
+
+\[ A \sqcap B = (x_1 \rightarrow [\overline{a_i}, \underline{b_1} ], x_2 \rightarrow [\overline{a_2}, \underline{b_2} ] )\]
+
+\noindent where we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Now that the lattice has been defined, let's turn our attention to the various flow functions. To make the analysis more concrete, given an element $A \in D$ where let $A(x_i \rightarrow [a', b'])$ denote the exact same element of $D$ with the exception that the new range of $x_i$ is $[a', b']$.
+
+
+
+\subsubsection{Implementation Considerations}
+\begin{framed}
+  discuss how you actually went about implementing the lattice and
+  flow functions. For instance, some interesting questions are: what
+  data structure(s) did you use, and how do you represent potentially
+  infinite sets? How are input facts passed to your flow functions,
+  and how do output facts get propagated?
+\end{framed}
+
+\end{document}
+

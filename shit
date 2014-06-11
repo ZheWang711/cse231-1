@@ -1,251 +1,31 @@
  -----Starting Function Pass------ 
  Testing CSE 
-First Instruction: 0x3eef7c0 add, 2 arg(s)
-Second Instruction: 0x3ef4fc0 icmp, 2 arg(s)
+First Instruction: 0x29c27c0 add, 2 arg(s)
+Second Instruction: 0x29c7fc0 icmp, 2 arg(s)
  About to create CSELatticePoint 
- Created CSELatticePoint with address 0x3ef6190
- isBottom 0 isTop 0CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
+ Created CSELatticePoint with address 0x29c9190
+ isBottom 0 isTop 0CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x29c27c0 -->   %add = add nsw i32 2, %y@0x29c27c0, 
  } 
-In operator 
-CSELatticePoint: isBottom: 1, isTop: 0 | 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add = add nsw i32 2, %y  @ 0x3eef7c0 
- Input LP representation is: CSELatticePoint: isBottom: 1, isTop: 0 | 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-In cmp instruction 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add1 = add nsw i32 20, %add  @ 0x3ef5100 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add1 = add nsw i32 20, %add@0x3ef5100 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
- } 
-About to call visit with 1 arguments 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add2 = add nsw i32 20, %add  @ 0x3ef5210 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add2 = add nsw i32 20, %add@0x3ef5210 -->   %add2 = add nsw i32 20, %add@0x3ef5210, 
- } 
-About to call visit with 1 arguments 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add2 = add nsw i32 20, %add@0x3ef5210 -->   %add2 = add nsw i32 20, %add@0x3ef5210, 
- } 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add1 = add nsw i32 20, %add@0x3ef5100 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
- } 
-About to call visit with 2 arguments 
-phi node has 2 incoming values 
-a pair of phi operands compared equal 
-sending back1elements 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]@0x3eef5b0 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
-  %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %addb = add nsw i32 2, %y  @ 0x3ef5430 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Instructions are identical when defined 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %x.1 = add nsw i32 20, %add  @ 0x3ef54c0 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add3 = add nsw i32 %x.0, %x.0  @ 0x3ef5550 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
-  %add3 = add nsw i32 %x.0, %x.0@0x3ef5550 -->   %add3 = add nsw i32 %x.0, %x.0@0x3ef5550, 
- } 
-About to call visit with 1 arguments 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 1, isTop: 0 | 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add = add nsw i32 2, %y  @ 0x3eef7c0 
- Input LP representation is: CSELatticePoint: isBottom: 1, isTop: 0 | 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-In cmp instruction 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add1 = add nsw i32 20, %add  @ 0x3ef5100 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add2 = add nsw i32 20, %add  @ 0x3ef5210 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add2 = add nsw i32 20, %add@0x3ef5210 -->   %add2 = add nsw i32 20, %add@0x3ef5210, 
- } 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add1 = add nsw i32 20, %add@0x3ef5100 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
- } 
-About to call visit with 2 arguments 
-phi node has 2 incoming values 
-a pair of phi operands compared equal 
-sending back1elements 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]@0x3eef5b0 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
-  %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %addb = add nsw i32 2, %y  @ 0x3ef5430 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Instructions are identical when defined 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %x.1 = add nsw i32 20, %add  @ 0x3ef54c0 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-In operator 
-CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
- } 
-About to call visit with 1 arguments 
-CSEflow visiting a binary operator 
-Info_in_casted.size() = 1
-Input instruction is:   %add3 = add nsw i32 %x.0, %x.0  @ 0x3ef5550 
- Input LP representation is: CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
- } 
-This value is not mapped to anything, therefore we continue analysis 
-Done with visit 
-Our analysis returned the following: 
-  %add = add nsw i32 2, %y --> CSELatticePoint: isBottom: 1, isTop: 0 | 
-  %cmp = icmp sgt i32 %add, 10 --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  br i1 %cmp, label %if.then, label %if.else --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  %add1 = add nsw i32 20, %add --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  br label %if.end --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add1 = add nsw i32 20, %add@0x3ef5100 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
- } 
-  %add2 = add nsw i32 20, %add --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  br label %if.end --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %add2 = add nsw i32 20, %add@0x3ef5210 -->   %add2 = add nsw i32 20, %add@0x3ef5210, 
- } 
-  %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ] --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]@0x3eef5b0 -->   %add1 = add nsw i32 20, %add@0x3ef5100, 
-  %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  %addb = add nsw i32 2, %y --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  %x.1 = add nsw i32 20, %add --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
- } 
-  %add3 = add nsw i32 %x.0, %x.0 --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
- } 
-  ret i32 %add3 --> CSELatticePoint: isBottom: 0, isTop: 0 | {   %add = add nsw i32 2, %y@0x3eef7c0 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %addb = add nsw i32 2, %y@0x3ef5430 -->   %add = add nsw i32 2, %y@0x3eef7c0, 
-  %x.1 = add nsw i32 20, %add@0x3ef54c0 -->   %x.1 = add nsw i32 20, %add@0x3ef54c0, 
-  %add3 = add nsw i32 %x.0, %x.0@0x3ef5550 -->   %add3 = add nsw i32 %x.0, %x.0@0x3ef5550, 
- } 
- -----Ending Function Pass------ 
+0  opt             0x00000000013e6c52 llvm::sys::PrintStackTrace(_IO_FILE*) + 34
+1  opt             0x00000000013e6839
+2  libpthread.so.0 0x00007f12a2f3b030
+3  libc.so.6       0x00007f12a1ef5094
+4  projectOne.so   0x00007f12a1b7abc0 LatticePoint** std::__copy_move<false, true, std::random_access_iterator_tag>::__copy_m<LatticePoint*>(LatticePoint* const*, LatticePoint* const*, LatticePoint**) + 80
+5  projectOne.so   0x00007f12a1b7ab49 LatticePoint** std::__copy_move_a<false, LatticePoint**, LatticePoint**>(LatticePoint**, LatticePoint**, LatticePoint**) + 41
+6  projectOne.so   0x00007f12a1b7bc0f __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > > std::__copy_move_a2<false, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > > >(__gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >) + 95
+7  projectOne.so   0x00007f12a1b79647 __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > > std::copy<__gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > > >(__gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >, __gnu_cxx::__normal_iterator<LatticePoint**, std::vector<LatticePoint*, std::allocator<LatticePoint*> > >) + 87
+8  projectOne.so   0x00007f12a1b91e42 CSEFlowFunction::operator()(llvm::Instruction*, std::vector<LatticePoint*, std::allocator<LatticePoint*> >) + 146
+9  projectOne.so   0x00007f12a1b7996e Analysis::applyFlowFunction(FlowFunction*, llvm::Instruction*, std::vector<LatticePoint*, std::allocator<LatticePoint*> >) + 558
+10 projectOne.so   0x00007f12a1b7914b Analysis::applyBasicBlockFlowFunctions(llvm::BasicBlock*, std::map<std::pair<llvm::BasicBlock*, llvm::BasicBlock*>, LatticePoint*, std::less<std::pair<llvm::BasicBlock*, llvm::BasicBlock*> >, std::allocator<std::pair<std::pair<llvm::BasicBlock*, llvm::BasicBlock*> const, LatticePoint*> > >&, FlowFunction*, LatticePoint*, std::list<llvm::BasicBlock*, std::allocator<llvm::BasicBlock*> >, std::list<llvm::BasicBlock*, std::allocator<llvm::BasicBlock*> >) + 971
+11 projectOne.so   0x00007f12a1b761ac Analysis::analyze(llvm::Function&, LatticePoint*, FlowFunction*) + 844
+12 projectOne.so   0x00007f12a1b82d70 CSEtest::runOnFunction(llvm::Function&) + 1232
+13 opt             0x0000000001377f4f llvm::FPPassManager::runOnFunction(llvm::Function&) + 655
+14 opt             0x0000000001377f9b llvm::FPPassManager::runOnModule(llvm::Module&) + 43
+15 opt             0x0000000001377b0f llvm::legacy::PassManagerImpl::run(llvm::Module&) + 879
+16 opt             0x00000000005babf4 main + 3780
+17 libc.so.6       0x00007f12a1debead __libc_start_main + 253
+18 opt             0x00000000005ccd81
+Stack dump:
+0.	Program arguments: opt -load Debug+Asserts/lib/projectOne.so -CSEtest 
+1.	Running pass 'Function Pass Manager' on module '<stdin>'.
+2.	Running pass 'CSE test Pass' on function '@_Z1fi'

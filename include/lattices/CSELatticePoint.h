@@ -12,6 +12,8 @@
 #include <sstream>
 
 #include "LatticePoint.h"
+#include <utility>
+#include <algorithm>
 
 using namespace llvm;
 
@@ -27,6 +29,12 @@ public:
   CSELatticePoint(bool bottomIN, bool topIN, std::map<Value*, Instruction*> representationIN) : LatticePoint(LPK_CSELatticePoint, bottomIN, topIN), representation(representationIN) {}
 
   CSELatticePoint(CSELatticePoint &copy) : LatticePoint(LPK_CSELatticePoint, copy.isBottom, copy.isTop), representation(copy.representation) {}
+
+  CSELatticePoint(CSELatticePoint *copy) : LatticePoint(LPK_CSELatticePoint, copy->isBottom, copy->isTop), representation(copy->representation) {}
+  
+  // CSELatticePoint(const CSELatticePoint&);
+  // CSELatticePoint& operator=(const CSELatticePoint&);
+
 
   static bool classof(const LatticePoint *L) {
     return L->getKind() == LPK_CSELatticePoint;
