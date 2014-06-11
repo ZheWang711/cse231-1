@@ -5,6 +5,9 @@
 \usepackage{amsfonts}
 \usepackage{framed}
 
+% For including other sections 
+\usepackage{standalone}
+
 %% Simple AMSthm environments, numbered together.
 \newtheorem{lem}{Lemma}
 \newtheorem{thm}[lem]{Theorem}
@@ -46,63 +49,19 @@ pretty straightforward. I (marco) can write this.
 \section{Analyses}
 
 \subsection{Constant Propagation}
-\subsubsection{Mathematical Flow Functions}
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
+\input{CPsection}
 
-
-\subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
 \subsection{Available Expressions}
-\subsubsection{Mathematical Flow Functions}
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
-\subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+\input{CSEsection}
+
 \subsection{Range Analysis}
-\subsubsection{Mathematical Flow Functions}
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
-\subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+\input{RAsection}
+
+
 \subsection{Intra-Procedural Pointer Analysis}
-\subsubsection{Mathematical Flow Functions}
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
-\subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+\input{PAsection}
+
+
 \section{Testing}
 \begin{framed}
   Make sure to explain assumptions you make about the code you
