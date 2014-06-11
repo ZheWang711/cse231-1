@@ -108,9 +108,15 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
         lhs_const = result->representation[lhs->get()];
       }
 
-      // get predicate
       errs() << "ops: " << rhs->get() << " " << lhs->get();
-
+      // get the predicate
+      int predicate = 0;
+      predicate = cmp->isSigned() ? cmp->getSignedPredicate() : cmp->getUnsignedPredicate();
+      if (predicate == CmpInst::ICMP_EQ) {
+        errs() << "equals\n";
+      } else if (predicate == CmpInst::ICMP_NE) {
+        errs() << "not equals\n";
+      }
     }
   } else {
     errs() << "unconditional\n";
@@ -127,5 +133,4 @@ void CPFlowFunction::visitCmpInst(CmpInst &I) {
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
-
 }

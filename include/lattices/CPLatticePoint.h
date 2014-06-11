@@ -31,7 +31,6 @@ public:
   CPLatticePoint() : LatticePoint(LPK_CPLatticePoint), representation(std::map<Value*, ConstantInt*>()) {}
 
     static bool classof(const LatticePoint *L) {
-      errs() << L->getKind() << " classof?\n";
       return L->getKind() == LPK_CPLatticePoint;
     }
   LatticePoint* join(LatticePoint* in);

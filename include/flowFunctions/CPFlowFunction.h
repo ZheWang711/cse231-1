@@ -8,6 +8,7 @@
 
 #include "flowFunctions/FlowFunction.h"
 #include "lattices/CPLatticePoint.h"
+#include "llvm/IR/InstrTypes.h"
 #include "helper/helper.h"
 #include <map>
 
