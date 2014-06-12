@@ -153,30 +153,8 @@ pretty straightforward. I (marco) can write this.
 
 
 \section{Testing}
-\begin{framed}
-  Make sure to explain assumptions you make about the code you
-  analyze. For instance, for pointer analysis, you may have made some
-  assumptions about the aliasing information known about input
-  parameters. Explain those assumptions and why they are reasonable.
 
-  Part of this project is to come up with a useful set of benchmarks
-  on which to test and improve your analysis. Discuss why you chose
-  those benchmarks, and what makes them interesting. If your
-  implementation fails on some benchmarks (there's no shame in it!),
-  then explain why and how the analysis might be improved.
-\end{framed}
-\subsection{Benchmarks/Assumptions in Common}
-Because we have a common pool of benchmarks, we can list them here
-along with common assumptions on code. More specialized discussion of
-per-analysis benchmark goes below. Here, we can also introduce the
-Straight Line Program/Branching Program distinction.
-
-\subsection{Constant Propagation}
-\subsection{Available Expressions}
-\subsection{Range Analysis}
-\subsection{Intra-Procedural Pointer Analysis}
-
-
+\input{Testingsection}
 
 \section{Conclusion/Challenges}
 \begin{framed}
