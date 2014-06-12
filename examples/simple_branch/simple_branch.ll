@@ -11,11 +11,11 @@ entry:
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
-  %add1 = add nsw i32 20, %add
+  %add1 = add nsw i32 20, %0
   br label %if.end
 
 if.else:                                          ; preds = %entry
-  %sub = sub nsw i32 0, %add
+  %sub = sub nsw i32 0, %0
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then
