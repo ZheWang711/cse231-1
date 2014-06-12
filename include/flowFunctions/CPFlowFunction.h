@@ -33,6 +33,7 @@ public:
   void visitPHINode(PHINode &PI);
   void visitCmpInst(CmpInst &I);
   void visitTerminatorInst(TerminatorInst &I);
+  void visitInstruction(Instruction &I);
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);

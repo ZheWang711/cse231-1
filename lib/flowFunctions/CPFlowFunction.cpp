@@ -222,3 +222,10 @@ void CPFlowFunction::visitTerminatorInst(TerminatorInst &I){
     out_map[elm] = result;
   }
 }
+
+void CPFlowFunction::visitInstruction(Instruction &I) {
+  errs() << "Visiting instruction\n";
+  CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
+  info_in_casted.pop_back();
+  ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
+}
