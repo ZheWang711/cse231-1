@@ -11,19 +11,17 @@ entry:
   br label %while.cond
 
 while.cond:                                       ; preds = %while.body, %entry
-  %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ]
-  %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ]
+  %i.0 = phi i32 [ %i, %entry ], [ %add, %while.body ]
   %cmp = icmp slt i32 %i.0, 10
   br i1 %cmp, label %while.body, label %while.end
 
 while.body:                                       ; preds = %while.cond
-  %add = add nsw i32 %x.addr.0, %i.0
-  %add1 = add nsw i32 %i.0, 1
+  %add = add nsw i32 1, %i.0
   %v = add nsw i32 8, 1
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
-  ret i32 %x.addr.0
+  ret i32 %y
 }
 
 attributes #0 = { nounwind uwtable "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }

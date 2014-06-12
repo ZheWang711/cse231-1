@@ -9,7 +9,6 @@ std::vector<LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr,
     info_in_casted.push_back(in_lattice_point);
   }
   visit(instr);
-  errs() << "returned from visiting\n";
   if (!ret_value) {
     errs() << "NEED TO IMPL VISIT FOR THIS INSTR: ";
     instr->print(errs());
@@ -22,7 +21,6 @@ std::vector<LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr,
 }
 
 std::map<Value *, LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in, std::map<Value *, LatticePoint *> successor_map){
-  errs() << "In terminator operator\n";
   out_map = successor_map;
   info_in_casted = std::vector<CPLatticePoint *>();
   for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
@@ -35,7 +33,6 @@ std::map<Value *, LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* 
 }
 
 void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
-  errs() << "Calling alloca visitor";
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
 
@@ -45,7 +42,6 @@ void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
 }
 
 void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) { 
-  errs() << "\nCPflow visiting a binary operator\n";
   // join ?
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
@@ -75,18 +71,7 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   ret_value->representation[current] = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);
 }
 
-void CPFlowFunction::visitLoadInst(LoadInst &LI) {
-  errs() << "\nCPflow visiting a load\n";
-
-}
-
-void CPFlowFunction::visitStoreInst(StoreInst &SI) {
-  errs() << "\nCPflow visiting a store\n";
-
-}
-
 void CPFlowFunction::visitBranchInst(BranchInst &BI) {
-  errs() << "\nCPflow visiting a branch\n";
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   BranchInst* current = &BI;
@@ -120,8 +105,6 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       } else {
         lhs_const = ConstantInt::get(context, llvm::APInt(32, 0, true));
       }
-
-      errs() << "ops: " << rhs->get() << " " << lhs->get();
 
       // Create successors
       CPLatticePoint* true_branchCLP = new CPLatticePoint(false, false, std::map<Value*,ConstantInt*>(result->representation));
@@ -167,7 +150,6 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
 }
 
 void CPFlowFunction::visitPHINode(PHINode &PI) {
-  errs() << "\nCPflow visiting a phi\n";
   while (info_in_casted.size() > 1) {
     LatticePoint *l1 = info_in_casted.back();
     info_in_casted.pop_back();
@@ -211,11 +193,15 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     } else if (val1 == val2) {
       ret_value->representation.erase(val1);
     } else if (result->representation.count(val1) > 0 && result->representation.count(val2) > 0) {
+      errs() << "test";
       ret_value->representation.erase(val1);
       ret_value->representation.erase(val2);
     } else if (result->representation.count(val1) > 0) {
       ret_value->representation.erase(val1);
     } else if (result->representation.count(val2) > 0) {
+      ret_value->representation.erase(val2);
+    } else {
+      ret_value->representation.erase(val1);
       ret_value->representation.erase(val2);
     }
   }
@@ -227,7 +213,6 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
 }
 
 void CPFlowFunction::visitCmpInst(CmpInst &I) {
-  errs() << "\nCPflow visiting a cmp\n";
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
@@ -242,7 +227,6 @@ void CPFlowFunction::visitTerminatorInst(TerminatorInst &I){
 }
 
 void CPFlowFunction::visitInstruction(Instruction &I) {
-  errs() << "Visiting instruction\n";
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
