@@ -72,11 +72,12 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
 }
 
 void CPFlowFunction::visitBranchInst(BranchInst &BI) {
-  CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
-  info_in_casted.pop_back();
+  
   BranchInst* current = &BI;
 
   if (BI.isConditional()) {
+    CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
+    info_in_casted.pop_back();
     Value* cond = BI.getCondition();
     if (isa<ICmpInst>(cond)) {
       std::pair<Use*, Use *> branches = helper::getOps(BI);
@@ -131,20 +132,26 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
         out_map[false_branch->get()] = false_branchCLP;
       } else {
         for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+          CPLatticePoint* inCLP = new CPLatticePoint(*(info_in_casted.back()));
+          info_in_casted.pop_back();
           Value* elm = it->first;
-          out_map[elm] = new CPLatticePoint(*result);
+          out_map[elm] = new CPLatticePoint(*inCLP);
         }
       }
     } else {
       for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+        CPLatticePoint* inCLP = new CPLatticePoint(*(info_in_casted.back()));
+        info_in_casted.pop_back();
         Value* elm = it->first;
-        out_map[elm] = new CPLatticePoint(*result);
+        out_map[elm] = new CPLatticePoint(*inCLP);
       }
     }
   } else {
     for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+        CPLatticePoint* inCLP = new CPLatticePoint(*(info_in_casted.back()));
+        info_in_casted.pop_back();
         Value* elm = it->first;
-        out_map[elm] = new CPLatticePoint(*result);
+        out_map[elm] = new CPLatticePoint(*inCLP);
     }
   }
 }
