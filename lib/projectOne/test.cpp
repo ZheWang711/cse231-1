@@ -70,7 +70,7 @@ void visitBinaryOperator(BinaryOperator &BO) { ++Count; }
 
       	errs() << " \n Constant value is " << someConstant->getValue();
 
-       	CPFlowFunction cpf = CPFlowFunction();
+       	CPFlowFunction cpf = CPFlowFunction(someContext);
 
 //	    CountAllocaVisitor CAV;
     

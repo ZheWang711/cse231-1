@@ -55,7 +55,7 @@ using namespace llvm;
 
 //      	errs() << " \n Constant value is " << someConstant->getValue();
 
-       	CPFlowFunction cpf = CPFlowFunction();
+       	CPFlowFunction cpf = CPFlowFunction(F.getContext());
 //	std::vector<std::vector< LatticePoint* > > lps;
 
         std::map<Instruction*, LatticePoint*> result = Analysis::analyze(F, bottom, &cpf);

@@ -20,9 +20,10 @@ public:
   std::vector<CPLatticePoint *> info_in_casted;
   CPLatticePoint* ret_value = NULL;
   std::map<Value *, LatticePoint *> out_map;
+  LLVMContext& context;
 
   // Constructor
-  CPFlowFunction() : FlowFunction(FFK_CPFlowFunction) {}
+  CPFlowFunction(LLVMContext& c) : FlowFunction(FFK_CPFlowFunction), context(c) {}
 
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);

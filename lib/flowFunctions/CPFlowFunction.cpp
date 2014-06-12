@@ -61,16 +61,21 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
     errs() << "S1 isa ConstantInt\n";
   } else if (result->representation.count(S1->get()) > 0) {
     C1 = result->representation[S1->get()];
+  } else {
+    C1 = ConstantInt::get(context, llvm::APInt(32, 0, true));
   }
   if (isa<ConstantInt>(S2)) {
     C2 = dyn_cast<ConstantInt>(S2->get());
     errs() << "S2 isa ConstantInt\n";
   } else if (result->representation.count(S2->get()) > 0) {
     C2 = result->representation[S2->get()];
+  } else {
+    C2 = ConstantInt::get(context, llvm::APInt(32, 0, true));
   }
   // representation never initialized
   ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
   ret_value->representation[current] = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);
+  errs() << "here?!\n";
 }
 
 void CPFlowFunction::visitLoadInst(LoadInst &LI) {
@@ -109,7 +114,7 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
         errs() << "rhs isa ConstantInt\n";
       } else if (result->representation.count(rhs->get()) > 0) {
         rhs_const = result->representation[rhs->get()];
-      }
+      }  
       if (isa<ConstantInt>(lhs)) {
         lhs_const = dyn_cast<ConstantInt>(lhs->get());
         errs() << "lhs isa ConstantInt\n";
@@ -146,6 +151,11 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
         }
         out_map[true_branch->get()] = true_branchCLP;
         out_map[false_branch->get()] = false_branchCLP;
+      } else {
+        for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+          Value* elm = it->first;
+          out_map[elm] = new CPLatticePoint(*result);
+        }
       }
     } else {
       for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
@@ -190,6 +200,8 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     else if(isa<ConstantInt>(val1)){
       errs() << "v1 is const!\n";
       C1 = dyn_cast<ConstantInt>(val1);
+    } else {
+      C1 = ConstantInt::get(context, llvm::APInt(32, 0, true));
     }
     if (result->representation.count(val2) > 0) {
       C2 = ret_value->representation[val2];
@@ -197,6 +209,8 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     else if(isa<ConstantInt>(val2)){
       errs() << "v2 is const!\n";
       C2 = dyn_cast<ConstantInt>(val2);
+    } else {
+      C2 = ConstantInt::get(context, llvm::APInt(32, 0, true));
     }
     if (C1 == C2) resvalue = C1;
   }
