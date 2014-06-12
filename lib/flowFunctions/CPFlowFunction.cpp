@@ -187,6 +187,7 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     i++;
     ConstantInt* C1 = NULL;
     ConstantInt* C2 = NULL;
+    ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
 
     if (result->representation.count(val1) > 0) {
       C1 = ret_value->representation[val1];
@@ -204,14 +205,25 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     } else {
       C2 = ConstantInt::get(context, llvm::APInt(32, 0, true));
     }
-    if (C1 == C2) resvalue = C1;
+    // Prop the constant if equals, otherwise remove from map
+    if (C1 == C2) {
+      resvalue = C1;
+    } else if (val1 == val2) {
+      ret_value->representation.erase(val1);
+    } else if (result->representation.count(val1) > 0 && result->representation.count(val2) > 0) {
+      ret_value->representation.erase(val1);
+      ret_value->representation.erase(val2);
+    } else if (result->representation.count(val1) > 0) {
+      ret_value->representation.erase(val1);
+    } else if (result->representation.count(val2) > 0) {
+      ret_value->representation.erase(val2);
+    }
   }
   if (resvalue != NULL) {
-    ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
+    ret_value->isBottom = false;
+    ret_value->isTop = false;
     ret_value->representation[current] = resvalue;
-  } else {
-    ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
-  }
+  } else {}
 }
 
 void CPFlowFunction::visitCmpInst(CmpInst &I) {
