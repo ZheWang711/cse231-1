@@ -237,14 +237,9 @@ public:
       RAFlowFunction* f = cast<RAFlowFunction>(flowF);
       outputs = (*f)(I, inputs, successor_map);
     }
-    else if(isa<CPFlowFunction>(flowF)){ // Not implemented here. We do a hack to make it work.
-      std::vector<LatticePoint*> temp;
+    else if(isa<CPFlowFunction>(flowF)){ // Implemented for CPFlowfunctions!
       CPFlowFunction* f = cast<CPFlowFunction>(flowF);
-      temp = (*f)(I, inputs);
-      for (std::map<Value*, LatticePoint*>::iterator it=successor_map.begin(); it!=successor_map.end(); ++it){
-        Value* elm = it->first;
-        outputs[elm] = temp.front();
-      }
+      outputs = (*f)(I, inputs, successor_map);
     }
     else if(isa<CSEFlowFunction>(flowF)){ // Not implemented here. We do a hack to make it work.
       std::vector<LatticePoint*> temp;

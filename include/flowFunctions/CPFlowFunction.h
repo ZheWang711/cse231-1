@@ -19,6 +19,7 @@ public:
   // local variables for passing arguments
   std::vector<CPLatticePoint *> info_in_casted;
   CPLatticePoint* ret_value = NULL;
+  std::map<Value *, LatticePoint *> out_map;
 
   // Constructor
   CPFlowFunction() : FlowFunction(FFK_CPFlowFunction) {}
@@ -31,9 +32,11 @@ public:
   void visitBranchInst(BranchInst &BI);
   void visitPHINode(PHINode &PI);
   void visitCmpInst(CmpInst &I);
+  void visitTerminatorInst(TerminatorInst &I);
 
   // Flow Function Interface
   std::vector<LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in);
+  std::map<Value *, LatticePoint *> operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in, std::map<Value *, LatticePoint *> successor_map);
 
   static bool classof(const FlowFunction *F) {
     return F->getKind() == FFK_CPFlowFunction;

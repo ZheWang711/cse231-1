@@ -2,16 +2,12 @@
 
 std::vector<LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in){
   // first, ensure that info_in_casted is empty
-  errs() << "afsslfj\n";
   info_in_casted = std::vector<CPLatticePoint *>();
   
   for(std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it) {
-    errs() << info_in.size() << " inside loop\n";
     CPLatticePoint *in_lattice_point = dyn_cast<CPLatticePoint>(*it);
-    errs() << "in if\n";
     info_in_casted.push_back(in_lattice_point);
   }
-  errs() << "before visit\n";
   visit(instr);
   errs() << "returned from visiting\n";
   if (!ret_value) {
@@ -23,6 +19,19 @@ std::vector<LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr,
   std::vector<LatticePoint*> info_out;
   info_out.push_back(lp);
   return info_out;
+}
+
+std::map<Value *, LatticePoint *> CPFlowFunction::operator()(llvm::Instruction* instr, std::vector<LatticePoint *> info_in, std::map<Value *, LatticePoint *> successor_map){
+  errs() << "In terminator operator\n";
+  out_map = successor_map;
+  info_in_casted = std::vector<CPLatticePoint *>();
+  for (std::vector<LatticePoint *>::iterator it = info_in.begin(); it != info_in.end(); ++it){
+    CPLatticePoint* temp = dyn_cast<CPLatticePoint>(*it);
+    info_in_casted.push_back(temp);
+  }
+
+  this->visit(instr);
+  return out_map;
 }
 
 void CPFlowFunction::visitAllocaInst(AllocaInst &AI) {
@@ -109,17 +118,47 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       }
 
       errs() << "ops: " << rhs->get() << " " << lhs->get();
+
+      // Create successors
+      CPLatticePoint* true_branchCLP = new CPLatticePoint(false, false, std::map<Value*,ConstantInt*>(result->representation));
+      CPLatticePoint* false_branchCLP = new CPLatticePoint(false, false, std::map<Value*,ConstantInt*>(result->representation));
+
       // get the predicate
       int predicate = 0;
       predicate = cmp->isSigned() ? cmp->getSignedPredicate() : cmp->getUnsignedPredicate();
       if (predicate == CmpInst::ICMP_EQ) {
         errs() << "equals\n";
+        if (result->representation.count(rhs->get()) > 0) {
+           errs() << "wat.\n";
+           true_branchCLP->representation[rhs->get()] = lhs_const;
+        } else if (result->representation.count(lhs->get()) > 0) {
+           errs() << "wat2.\n";
+           true_branchCLP->representation[lhs->get()] = rhs_const;
+        }
+        out_map[true_branch->get()] = true_branchCLP;
+        out_map[false_branch->get()] = false_branchCLP;
       } else if (predicate == CmpInst::ICMP_NE) {
         errs() << "not equals\n";
+        if (result->representation.count(rhs->get()) > 0) {
+           false_branchCLP->representation[rhs->get()] = lhs_const;
+        } else if (result->representation.count(lhs->get()) > 0) {
+           false_branchCLP->representation[lhs->get()] = rhs_const;
+        }
+        out_map[true_branch->get()] = true_branchCLP;
+        out_map[false_branch->get()] = false_branchCLP;
+      }
+    } else {
+      for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+        Value* elm = it->first;
+        out_map[elm] = new CPLatticePoint(*result);
       }
     }
   } else {
     errs() << "unconditional\n";
+    for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+        Value* elm = it->first;
+        out_map[elm] = new CPLatticePoint(*result);
+    }
   }
 }
 
@@ -174,4 +213,12 @@ void CPFlowFunction::visitCmpInst(CmpInst &I) {
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
   ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
+}
+
+void CPFlowFunction::visitTerminatorInst(TerminatorInst &I){
+  for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
+    CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
+    Value* elm = it->first;
+    out_map[elm] = result;
+  }
 }

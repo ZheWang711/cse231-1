@@ -53,19 +53,16 @@ using namespace llvm;
 */
 	ConstantInt *someConstant = llvm::ConstantInt::get(someContext, llvm::APInt(/*nbits*/32, 5, /*bool*/true));
 
-      	errs() << " \n Constant value is " << someConstant->getValue();
+//      	errs() << " \n Constant value is " << someConstant->getValue();
 
        	CPFlowFunction cpf = CPFlowFunction();
 //	std::vector<std::vector< LatticePoint* > > lps;
-        errs() << "after cpf\n";
 
         std::map<Instruction*, LatticePoint*> result = Analysis::analyze(F, bottom, &cpf);
-        errs() << "after analyze\n";
 
      	for (inst_iterator I = inst_begin(F); I != inst_end(F) ; ++I){
 	  // cpf.visit(*I);
 	  //lps.push_back(cpf(&(*I), sampleArgs));
-          errs() << "test";
           LatticePoint* lp = result[&*I];
           CPLatticePoint* clp = dyn_cast<CPLatticePoint>(lp);
           errs() << clp->LPprint();
