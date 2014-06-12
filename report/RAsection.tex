@@ -67,7 +67,6 @@ Here we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Gi
 \[ F_{if( X > C) \text{ false-branch}}(in) =   F_{if( X \leq C) \text{ true-branch}}(in)\]
 
 
-
 \subsubsection{Implementation Considerations}
 \begin{framed}
   discuss how you actually went about implementing the lattice and
@@ -76,6 +75,10 @@ Here we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Gi
   infinite sets? How are input facts passed to your flow functions,
   and how do output facts get propagated?
 \end{framed}
+
+LLVM has a nice data structure for handling ranges called ConstantRange. This is a one-side inclusive interval $[a, b)$ that is meant to be taken as intersection with the integers. ConstantRange even has some convenience functions that make computing some of the above flow functions more bearable. 
+
+As with the above analyses, we explicitly specify whether or not a lattice point is top or bottom with boolean variables, and we use algebraic identities when working with them. 
 
 \end{document}
 
