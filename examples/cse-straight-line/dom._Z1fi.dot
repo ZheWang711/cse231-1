@@ -1,0 +1,5 @@
+digraph "Dominator tree for '_Z1fi' function" {
+	label="Dominator tree for '_Z1fi' function";
+
+	Node0x3ed6e30 [shape=record,label="{entry:\l  %add0 = add i32 2, 11\l  %add1 = add i32 2, 11\l  %add2 = add i32 %add1, %add1\l  ret i32 %add2\l}"];
+}

@@ -5,24 +5,24 @@ target triple = "x86_64-unknown-linux-gnu"
 ; Function Attrs: nounwind uwtable
 define i32 @_Z1fi(i32 %y) #0 {
 entry:
-  %add = add nsw i32 2, %y
-  %cmp = icmp sgt i32 %add, 10
+  %add0 = add nsw i32 2, %y
+  %cmp = icmp sgt i32 %add0, 10
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
-  %add1 = add nsw i32 20, %add
+  %add1 = add nsw i32 20, %add0
   br label %if.end
 
 if.else:                                          ; preds = %entry
-  %add2 = add nsw i32 20, %add
+  %add2 = add nsw i32 20, %add0
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then
-  %x.0 = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]
-;  %y.addr.0 = phi i32 [ %y, %if.then ], [ %add2, %if.else ]
-  %addb = add nsw i32 2, %y	     	
-  %x.1 = add nsw i32 20, %add
-  %add3 = add nsw i32 %x.0, %x.0
+  %x = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]
+  ;%y.addr.0 = phi i32 [ %y, %if.then ], [ %add2, %if.else ]
+  ;%addb = add nsw i32 2, %y	     	
+  ;%x.1 = add nsw i32 20, %adda
+  %add3 = add nsw i32 %x, %x
   ret i32 %add3
 }
 

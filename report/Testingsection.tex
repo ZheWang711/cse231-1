@@ -28,9 +28,23 @@
   then explain why and how the analysis might be improved.
 \end{framed}
 
-The difficulty of getting the various analyses to work properly on a piece of code is tightly coupled with the complexity of the underlying control flow graph. Pathologies that underly implementations of flow functions may not arise in straight-line programs but become painfully obvious when branches are introduced. Our benchmarks are designed to illustrate that our analyses are robust to non-trivial control flow structures.
+The difficulty of getting the various analyses to work properly on a
+piece of code is tightly coupled with the complexity of the underlying
+control flow graph. Pathologies that underly implementations of flow
+functions may not arise in straight-line programs but become painfully
+obvious when branches are introduced. Our benchmarks are designed to
+illustrate that our analyses are robust to non-trivial control flow
+structures.
 
-Broadly speaking, we have three types of benchmark. The first type is straight-line programs, which introduce no branches in control structure. They are the easiest to handle, and our analyses are accordingly precise on them. Simple branching programs are the second type, and they introduce conditional branches into fold, but do not exhibit loops. They are slightly more challenging, but SSA makes them much easier to handle. Our final type of benchmark is looping programs. As their name suggests, they have loops, which makes precision quite difficult.
+Broadly speaking, we have three types of benchmark. The first type is
+straight-line programs, which introduce no branches in control
+structure. They are the easiest to handle, and our analyses are
+accordingly precise on them. Simple branching programs are the second
+type, and they introduce conditional branches into fold, but do not
+exhibit loops. They are slightly more challenging, but SSA makes them
+much easier to handle. Our final type of benchmark is looping
+programs. As their name suggests, they have loops, which makes
+precision quite difficult.
 
 \subsection{Benchmarks/Assumptions in Common}
 Because we have a common pool of benchmarks, we can list them here
