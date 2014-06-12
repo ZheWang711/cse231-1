@@ -58,7 +58,6 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
 
   if (isa<ConstantInt>(S1)) {
     C1 = dyn_cast<ConstantInt>(S1);
-    errs() << "S1 isa ConstantInt\n";
   } else if (result->representation.count(S1->get()) > 0) {
     C1 = result->representation[S1->get()];
   } else {
@@ -66,7 +65,6 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   }
   if (isa<ConstantInt>(S2)) {
     C2 = dyn_cast<ConstantInt>(S2->get());
-    errs() << "S2 isa ConstantInt\n";
   } else if (result->representation.count(S2->get()) > 0) {
     C2 = result->representation[S2->get()];
   } else {
@@ -75,7 +73,6 @@ void CPFlowFunction::visitBinaryOperator(BinaryOperator &BO) {
   // representation never initialized
   ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
   ret_value->representation[current] = helper::foldBinaryOperator(BO.getOpcode(), C1, C2);
-  errs() << "here?!\n";
 }
 
 void CPFlowFunction::visitLoadInst(LoadInst &LI) {
@@ -111,15 +108,17 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       // get the rhs/lhs as a constant int
       if (isa<ConstantInt>(rhs)) {
         rhs_const = dyn_cast<ConstantInt>(rhs);
-        errs() << "rhs isa ConstantInt\n";
       } else if (result->representation.count(rhs->get()) > 0) {
         rhs_const = result->representation[rhs->get()];
-      }  
+      } else {
+        rhs_const = ConstantInt::get(context, llvm::APInt(32, 0, true));
+      } 
       if (isa<ConstantInt>(lhs)) {
         lhs_const = dyn_cast<ConstantInt>(lhs->get());
-        errs() << "lhs isa ConstantInt\n";
       } else if (result->representation.count(lhs->get()) > 0) {
         lhs_const = result->representation[lhs->get()];
+      } else {
+        lhs_const = ConstantInt::get(context, llvm::APInt(32, 0, true));
       }
 
       errs() << "ops: " << rhs->get() << " " << lhs->get();
@@ -132,18 +131,14 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       int predicate = 0;
       predicate = cmp->isSigned() ? cmp->getSignedPredicate() : cmp->getUnsignedPredicate();
       if (predicate == CmpInst::ICMP_EQ) {
-        errs() << "equals\n";
         if (result->representation.count(rhs->get()) > 0) {
-           errs() << "wat.\n";
            true_branchCLP->representation[rhs->get()] = lhs_const;
         } else if (result->representation.count(lhs->get()) > 0) {
-           errs() << "wat2.\n";
            true_branchCLP->representation[lhs->get()] = rhs_const;
         }
         out_map[true_branch->get()] = true_branchCLP;
         out_map[false_branch->get()] = false_branchCLP;
       } else if (predicate == CmpInst::ICMP_NE) {
-        errs() << "not equals\n";
         if (result->representation.count(rhs->get()) > 0) {
            false_branchCLP->representation[rhs->get()] = lhs_const;
         } else if (result->representation.count(lhs->get()) > 0) {
@@ -164,7 +159,6 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       }
     }
   } else {
-    errs() << "unconditional\n";
     for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
         Value* elm = it->first;
         out_map[elm] = new CPLatticePoint(*result);
@@ -198,7 +192,6 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
       C1 = ret_value->representation[val1];
     }
     else if(isa<ConstantInt>(val1)){
-      errs() << "v1 is const!\n";
       C1 = dyn_cast<ConstantInt>(val1);
     } else {
       C1 = ConstantInt::get(context, llvm::APInt(32, 0, true));
@@ -207,7 +200,6 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
       C2 = ret_value->representation[val2];
     }
     else if(isa<ConstantInt>(val2)){
-      errs() << "v2 is const!\n";
       C2 = dyn_cast<ConstantInt>(val2);
     } else {
       C2 = ConstantInt::get(context, llvm::APInt(32, 0, true));

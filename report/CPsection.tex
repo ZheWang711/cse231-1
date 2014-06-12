@@ -17,11 +17,6 @@
 
 \subsubsection{Mathematical Flow Functions}
 
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-  
-\end{framed}
 The constant propagation analysis is a `must' analysis. Thus, we define the lattice to be $(D, \sqsubseteq, \top, \perp, \sqcup, \sqcap)$ = $(2^A, \supseteq, A, \emptyset, \cap, \cup)$ where
 
 \[ A = \{x \rightarrow N~|~x \in \textup{Vars} \wedge x \in \mathbb{Z}\} \].
@@ -36,16 +31,13 @@ The flow functions implemented in our framework are as follows:
 
 At a join (i.e. PHI node), we take the intersection between the two incoming lattice points.
 
-\[ A \sqcup B = A \cap B\]
+\[ F_{\text{merge}}(in_1, in_2) = in_1 \sqcup in_2 \]
 
 \subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+
+Our design simply handles constant propagation by storing mappings of Value* to ConstantInt*. Because using mem2reg does constant folding already, the flow functions are limited to simply performing binary operations, propagating constants in branches when we check for equality and inequality, and handling PHI nodes.
+
+Binary operations are fairly straight forward. Since we know the value of the constants at compile time, we can evaluate them and propagate. For branching instructions, we know that if a statement such as \verb|if(x == 9)| evaluates to true, then \verb|x| has the value 9 in that branch. Similarly, if we have the statement \verb|if(x != 9)|, then we know the false branch can map \verb|x| to 9. Finally, at PHI nodes, we can simply find the intersection of two branches.
 
 \end{document}
 
