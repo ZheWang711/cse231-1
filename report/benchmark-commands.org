@@ -1,0 +1,19 @@
+* CSE
+** Straight Line
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-straight-line/can_do_cse.bc > /dev/null
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-straight-line/no_do_cse.bc > /dev/null
+** Branch
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-branch-tests/can_do_cse.bc > /dev/null
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-branch-tests/no_do_cse.bc > /dev/null 
+** Loops
+* CP
+
+* RA
+** Analysis Itself
+   opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_add/simple_add.bc > /dev/null
+   opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_branch/simple_branch.bc > /dev/null
+   opt -load Debug+Asserts/lib/projectOne.so -RATest examples/loop/loop.bc> /dev/null
+** Checking Warnings
+   opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_failure.bc > /dev/null
+   opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_success.bc > /dev/null
+* PA

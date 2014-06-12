@@ -1,0 +1,15 @@
+digraph canCSEStraightLine{
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start;
+	add0[label="%add0 = add i32 2, 11"];
+	add1[label="%add1 = add i32 2, 11"];
+	add2[label="%add2 = add i32 %add1, %add1"];
+	ret[label="ret i32 %add2"];
+
+	start -> add0[label="  &#8869;"];
+	add0 -> add1[label= "{%add0 -> %add0}"];
+	add1 -> add2[label= "{%add0 -> %add0, %add1 -> %add0}"];
+	add2 -> ret[label= "{%add0 -> %add0, %add1 -> %add0,\n %add2 -> %add2}"];		
+}
