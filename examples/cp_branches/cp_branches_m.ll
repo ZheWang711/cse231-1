@@ -10,6 +10,7 @@ entry:
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
+  %y = mul i32 3, 5
   br label %if.end
 
 if.else:                                          ; preds = %entry
