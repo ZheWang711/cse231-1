@@ -6,7 +6,7 @@ target triple = "x86_64-unknown-linux-gnu"
 define i32 @_Z1fi(i32 %y) #0 {
 entry:
   %addr = add i32 2, 11
-  %add = add i32 2, 11
+  %add = sub i32 2, 11
   %add1 = add i32 %add, %add
   ret i32 %add1
 }
