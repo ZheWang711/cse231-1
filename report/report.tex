@@ -171,5 +171,9 @@ Also unsure how honest to be here. Most of our challenges had to do
 with counter-intuitive LLVM design and poor documentation, as well as
 the unpredictability of C++ features.
 
+Since this project primarily dealt with framework design within preexisting, customized system, the majority of our challenges pertained to making our design work within the environment that LLVM provided to us. For example, getting the LatticePoint object-oriented hierarchy to work within LLVM's custom dyn\_cast implementation forced us to alter our design several times.
+
+On the other hand, we did manage to take advantage of native LLVM constructs, such as extending the InstVisitor class. Since InstVisitor already has the capability to ``decorate" each type of instruction with different ``visit" methods, we were able to implement a flow function by overriding the ``visit" method corresponding to the correct instruction. 
+
 \end{document}
 
