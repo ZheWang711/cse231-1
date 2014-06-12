@@ -79,7 +79,55 @@ analysis framework.
   your choice.
 \end{framed}
 
-Our interface 
+
+\begin{description}
+\item[LatticePoint] Every dataflow analysis requires a Lattice to work
+  over. The \emph{LatticePoint} class describes our interface to these
+  points. Anything that inherits from \emph{LatticePoint} must
+  implement:
+  \begin{description}
+  \item[equals$(LP) \rightarrow $Bool] Compare this latticepoint and
+    the argument for equality, returning a Boolean.
+  \item[join$(LP) \rightarrow LP$] Return a new LatticePoint
+    containing the join of this LatticePoint and the argument.
+  \item[isBottom$() \rightarrow $Bool] Returns true if this
+    latticePoint is Bottom
+  \item[isTop$() \rightarrow $Bool] Returns true if this latticePoint
+    is Top.
+  \end{description}
+\item[FlowFunction] This class provides an interface to calling flow
+  functions. Derived classes must implement a single special function:
+  \[
+  \textbf{operator}(Instruction, Vector \langle LP\rangle) \rightarrow
+  Vector \langle LP \rangle
+  \]
+  Implementing the ``operator'' function makes objects of this type
+  callable. To define each analysis we make a subclass of
+  \emph{FlowFunction} that can operate on a particular type of
+  \emph{LatticePoint}. When ``operator'' is called, a single step of
+  the flow function is exectued with the argument \emph{LatticePoints}
+  as incoming edges on the control flow graph. A vector of
+  \emph{LatticePoints} that should be on the outgoing edges of this
+  instruction is returned.
+\item[Analysis] This class contains the implementation of the worklist
+  algorithm. It is not an interface, and is not meant to be derived
+  from. It has one public function:
+  \[
+  \textbf{analyze}(Function, FlowFunction, LP) \rightarrow
+  Map \langle Instruction, LP \rangle
+  \]
+\end{description}
+
+To use our framework, a caller  first instanciates a ``bottom''
+\emph{LatticePoint} and a \emph{FlowFunction} of matching types. Then,
+in an LLVM Pass, the caller supplies a function and the aforementioned
+objects to \textbf{analyze}. 
+
+Adding an additional analysis to the framework amounts to providing
+new derived classes of \emph{LatticePoint} and \emph{FlowFunction}.
+
+% issue with this design: positional encoding of true/false branches
+% (or whatever) in the return type of operator()
 
 Unsure how honest to be here. Tradeoffs ended up being, how many C++
 features can we avoid and still have a functioning C++ program? Other
