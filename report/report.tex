@@ -31,11 +31,46 @@
   interesting/key findings.
 \end{framed}
 
+Our objective was to understand and experience the issues that arise
+when actually implementing program analyses. To this end, we
+constructed a dataflow analysis framework based on the LLVM compiler
+infastructure.
 
-Difficult, because there were no interesting findings. Consider:
-``huh, LLVM has an API for some of this stuff I guess,'' or ``Wow C++
-is painful.'' I (marco) will be able to make up some stuff for this
-once I'm done with CSE (which should soon).
+We confirmed through experience that SSA makes flow functions
+\emph{much} easier to write. We found that the most helpful part of
+the LLVM API is the object hierarchy for dealing with the graph of
+Value objects representing LLVM IR. Subclasses of Value are rich,
+representing functions, basic blocks, instructions, constants,
+etc. These IR object classes provide many useful convienence functions
+and make it easy to traverse the program. The least helpful parts of
+the LLVM API is the pass manager and the special LLVM replacement for
+C++ run-time type information; these features are obscure and
+difficult to use.
+
+The most surprising feature of LLVM was the InstVisitor template
+class. This class made our implementation much easier and cleaner than
+it would have been otherwise, but examples in the introductory
+documentation do not use it. For something so helpful to LLVM
+newcomers, InstVisitor is poorly advertised in the LLVM documentation.
+
+Though the analyses were relatively straightforward in terms of flow
+functions, the technical hurdles of actually making them work were
+nontrivial, and we learned a great deal. This project provided a solid
+foundation of practical experience for building programming-language
+tools based on LLVM. We document our implementation efforts in the
+following pages, beginning with the overall design for the dataflow
+analysis framework. 
+
+% We found numerous conceptual mismatches between the LLVM IR and other
+% programming languages (including assemblers). Registers may only be
+% assigned to at one site of the program (SSA), and variables in a
+% high-level language may be represented by either a sequence of these
+% registers or as a memory location. The expressions of a high-level
+% language can become chains of instructions in the IR, changing the
+% definition of CSE. The reasons for these design choices became clear
+% as we worked our way through implementation of the analyses, and will
+% be expanded on in the appropriate sections.
+
 
 \section{Interface Design}
 \begin{framed}
@@ -43,6 +78,8 @@ once I'm done with CSE (which should soon).
   also considered, and explain the tradeoffs that ultimately led to
   your choice.
 \end{framed}
+
+Our interface 
 
 Unsure how honest to be here. Tradeoffs ended up being, how many C++
 features can we avoid and still have a functioning C++ program? Other
