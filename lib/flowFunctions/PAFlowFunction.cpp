@@ -143,12 +143,13 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
   
   Value* y = &LI;
   Value* x = LI.getPointerOperand();
-  
+  /*
   errs() << "In load instruction: ";
   LI.print(errs());
   errs() << " Pointer is ";
   x->print(errs());
   errs() << "\n";
+  */
   
   PointerType* x_type = dyn_cast<PointerType>(x->getType());
   Type* x_points_to_type = x_type->getPointerElementType();
@@ -168,7 +169,7 @@ void PAFlowFunction::visitLoadInst(LoadInst     &LI){
         }
         else if(inRLP->pointers_to_anything.count(b) > 0){
           std::set<Value*> b_points_to_set = inRLP->representation[b];
-          for (std::set<Value*>::iterator it1 = x_points_to_set.begin(); it1!=x_points_to_set.end(); ++it){
+          for (std::set<Value*>::iterator it1 = b_points_to_set.begin(); it1!=b_points_to_set.end(); ++it){
             Value* a = *it1;
             y_points_to_set.insert(a);
           }
@@ -213,7 +214,67 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   Value* x = SI.getPointerOperand();
   Value* y = SI.getValueOperand();
   
+  // First we do the a --> b updates.
+  // To do this, we check if x points to pointers and y is a pointer type.
   
+  PointerType* x_type = dyn_cast<PointerType>(x->getType());
+  Type* x_points_to_type = x_type->getPointerElementType();
+  Type* y_type = y->getType();
+  
+  if (isa<PointerType>(x_points_to_type) && isa<PointerType>(y_type)) {
+    std::set<Value*> x_points_to_set;
+    std::set<Value*> y_points_to_set;
+    // Now does x actually point to anything?
+    if (inRLP->representation.count(x) > 0) {
+      x_points_to_set = inRLP->representation[x];
+      for (std::set<Value*>::iterator it = x_points_to_set.begin(); it!=x_points_to_set.end(); ++it){
+        Value* a = *it;
+        
+        // Does y point to everything? If so, add a to the pointers_to_anything set
+        if (inRLP->pointers_to_anything.count(y) > 0) {
+          inRLP->pointers_to_anything.insert(a);
+        }
+        // Does y point to something?
+        else if (inRLP->representation.count(y) > 0) {
+          y_points_to_set = inRLP->representation[y];
+          
+          // Does a already point to some stuff?
+          std::set<Value*> a_points_to_set;
+          if (inRLP->representation.count(a) > 0) {
+            a_points_to_set = inRLP->representation[a];
+          }
+          
+    
+          for (std::set<Value*>::iterator it1 = y_points_to_set.begin(); it1!=y_points_to_set.end(); ++it){
+            Value* b = *it1;
+            a_points_to_set.insert(b);
+          }
+        }
+      }
+    }
+  }
+  
+  // Now we do the x --> y update
+  // x now only points to y.
+  /*
+  if (inRLP->pointers_to_anything.count(x) > 0 ) {
+    inRLP->pointers_to_anything.erase(x);
+  }
+   */
+  
+  // Either access or create x's point to set.
+  std::set<Value*> x_points_to_set;
+  if (inRLP->representation.count(x) > 0) {
+    x_points_to_set = inRLP->representation[x];
+  }
+  
+  // Add y to x's point to set.
+  x_points_to_set.insert(y);
+  inRLP->representation[x] = x_points_to_set;
+  
+  
+  inRLP->isTop = false;
+  inRLP->isBottom = false;
   
   info_out.push_back(inRLP);
   /*
