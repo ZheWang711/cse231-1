@@ -256,9 +256,11 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   
   // Now we do the x --> y update
   // x now only points to y.
+  /*
   if (inRLP->pointers_to_anything.count(x) > 0 ) {
     inRLP->pointers_to_anything.erase(x);
   }
+   */
   
   // Either access or create x's point to set.
   std::set<Value*> x_points_to_set;
