@@ -1,0 +1,12 @@
+digraph "CFG for '_Z1fi' function" {
+	label="CFG for '_Z1fi' function";
+
+	Node0x3a718b0 [shape=record,label="{entry:\l  %add0 = add nsw i32 2, %y\l  %cmp = icmp sgt i32 %add0, 10\l  br i1 %cmp, label %if.then, label %if.else\l|{<s0>T|<s1>F}}"];
+	Node0x3a718b0:s0 -> Node0x3a71910;
+	Node0x3a718b0:s1 -> Node0x3a71970;
+	Node0x3a71910 [shape=record,label="{if.then:                                          \l  %add1 = add nsw i32 20, %add0\l  br label %if.end\l}"];
+	Node0x3a71910 -> Node0x3a719d0;
+	Node0x3a71970 [shape=record,label="{if.else:                                          \l  %add2 = add nsw i32 21, %add0\l  br label %if.end\l}"];
+	Node0x3a71970 -> Node0x3a719d0;
+	Node0x3a719d0 [shape=record,label="{if.end:                                           \l  %x = phi i32 [ %add1, %if.then ], [ %add2, %if.else ]\l  %add3 = add nsw i32 %x, %x\l  ret i32 %add3\l}"];
+}
