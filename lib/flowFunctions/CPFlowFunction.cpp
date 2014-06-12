@@ -125,12 +125,53 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
 
 void CPFlowFunction::visitPHINode(PHINode &PI) {
   errs() << "\nCPflow visiting a phi\n";
+  while (info_in_casted.size() > 1) {
+    LatticePoint *l1 = info_in_casted.back();
+    info_in_casted.pop_back();
+    LatticePoint *l2 = info_in_casted.back();
+    info_in_casted.pop_back();
+    CPLatticePoint* result = dyn_cast<CPLatticePoint>(l1->join(l2));
+    info_in_casted.push_back(result);
+  }
+  CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
+  PHINode* current = &PI;
+  int num_incoming_vals = PI.getNumIncomingValues();
+  ConstantInt* resvalue = NULL;
+  for (int i = 0; i != num_incoming_vals; ){
+    Value* val1 = PI.getIncomingValue(i);
+    i++;
+    Value* val2 = PI.getIncomingValue(i);
+    i++;
+    ConstantInt* C1 = NULL;
+    ConstantInt* C2 = NULL;
 
+    if (result->representation.count(val1) > 0) {
+      C1 = ret_value->representation[val1];
+    }
+    else if(isa<ConstantInt>(val1)){
+      errs() << "v1 is const!\n";
+      C1 = dyn_cast<ConstantInt>(val1);
+    }
+    if (result->representation.count(val2) > 0) {
+      C2 = ret_value->representation[val2];
+    }
+    else if(isa<ConstantInt>(val2)){
+      errs() << "v2 is const!\n";
+      C2 = dyn_cast<ConstantInt>(val2);
+    }
+    if (C1 == C2) resvalue = C1;
+  }
+  if (resvalue != NULL) {
+    ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
+    ret_value->representation[current] = resvalue;
+  } else {
+    ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
+  }
 }
 
 void CPFlowFunction::visitCmpInst(CmpInst &I) {
   errs() << "\nCPflow visiting a cmp\n";
   CPLatticePoint* result = new CPLatticePoint(*(info_in_casted.back()));
   info_in_casted.pop_back();
-  ret_value = new CPLatticePoint(false, false, std::map<Value*, ConstantInt*>(result->representation));
+  ret_value = new CPLatticePoint(result->isBottom, result->isTop, std::map<Value*, ConstantInt*>(result->representation));
 }
