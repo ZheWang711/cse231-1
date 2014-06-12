@@ -65,9 +65,9 @@ using namespace llvm;
 	  //lps.push_back(cpf(&(*I), sampleArgs));
           LatticePoint* lp = result[&*I];
           CPLatticePoint* clp = dyn_cast<CPLatticePoint>(lp);
-          errs() << clp->LPprint();
           I->print(errs());
           errs() << " --> ";
+          errs() << clp->LPprint();
       	}
 
         // for(std::vector<LatticePoint*>::iterator it = lps.begin(); it != lps.end(); ++it) {
