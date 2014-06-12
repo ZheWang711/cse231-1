@@ -28,8 +28,6 @@ public:
   // Visited Instructions
   void visitAllocaInst(AllocaInst &AI);
   void visitBinaryOperator(BinaryOperator &BO);
-  void visitLoadInst(LoadInst &LI);
-  void visitStoreInst(StoreInst &SI);
   void visitBranchInst(BranchInst &BI);
   void visitPHINode(PHINode &PI);
   void visitCmpInst(CmpInst &I);
