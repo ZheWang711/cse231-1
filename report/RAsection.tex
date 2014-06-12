@@ -10,6 +10,9 @@
 \newtheorem{thm}[lem]{Theorem}
 \newtheorem{conj}[lem]{Conjecture}
 
+\newcommand{\Z}{\mathbb{Z}}
+
+
 \theoremstyle{definition}
 \newtheorem{defn}[lem]{Definition}
 
@@ -17,43 +20,51 @@
 
 \subsubsection{Mathematical Flow Functions}
 
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
+Unlike the previous two analyses, range analysis is a `may' analysis. Thus the most conservative range for a variable is the full set and the most optimistic is the empty set. With these considerations in mind, let us define our lattice and flow functions. The domain of the analysis is the set of maps from variables to the set of ranges specified by the extended integers (i.e. allowing $+\infty$ and $-\infty$). Thus,
 
-Unlike the previous two analyses, range analysis is a `may' analysis. Thus the most conservative range for a variable is the full set and the most optimistic is the empty set. With these considerations in mind, let us define our lattice and flow functions. 
+\[ D = \text{Vars} \rightarrow \Z^{\infty} \times \Z^{\infty}. \]
 
-One may be tempted to write the domain as
+For $A \in D$ and $x \in $ Vars, we will interchangeably think of $A(x) = [a, b]$ as a range (i.e. a set of numbers) and a tuple (a pair of numbers). With this reasoning, let top will correspond to the constant map of full sets, i.e. for any variable $x \in $ Vars,
 
-\[ 2^{ \{ x \rightarrow [a , b] \; | \; x \in \text{Vars} \, \wedge \, -\infty \leq a \leq b \leq \infty \} }.  \]
+\[  \top(x) =  [-\infty, \infty]. \]
 
-While this has the correct intuition, it is quite imprecise, as we do not want there to be the possibility of a variable having more than one range. Given a variable $x \in$ Vars, let us define $D_x$ as the domain of $x$, i.e. 
+Similarly, bottom corresponds to the constant map of empty sets, i.e. for any variable $x \in $ Vars,
 
-\[ D_x =  2^{ \{ x \rightarrow [a , b] \; | \;  -\infty \leq a \leq b \leq \infty \} }. \]
+\[  \bot(x) =  [\infty, -\infty]. \]
 
-Then our final domain is the Cartesian product of $D_x$'s, which we write as
+Here we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Given two elements of our domain, $A, B \in D$, we write $A \sqsubseteq B$ if and only if $A(x) \subseteq B(x)$ for all $x \in$ Vars. We can also say for any $x \in $ Vars,
 
-\[ D = \prod_{x \in \text{Vars}} D_x. \]
-
-Top will correspond to the product of full sets, that is if $x_1, x_2, \ldots$ is an enumeration of Vars, then
-
-\[  \top = (x_1 \rightarrow [-\infty, \infty], x_2 \rightarrow [-\infty, \infty], \ldots). \]
-
-Similarly, we have
-
-\[ \bot =  (x_1 \rightarrow \emptyset , x_2 \rightarrow \emptyset, \ldots). \]
-
-Given two elements of our domain, $A, B \in D$, we can write $A = (x_1 \rightarrow [a_1, b_1] , x_2 \rightarrow [a_2, b_2], \ldots)$ and $B = (x_1 \rightarrow [a'_1, b'_1] , x_2 \rightarrow [a'_2, b'_2], \ldots)$. Then $A \sqsubseteq B$ if and only if $[a_i, b_]) \subseteq [a'_i, b'_i]$ for all $i$. Additionally, if for all $i$, we let $\overline{a_i} = \max \{ a_i, a'_i \}$ and $\underline{a_i} = \min \{ a_i, a'_i \}$ (similarly for $\overline{b_i}$ and $\underline{b_i})$, then we can write
-
-\[ A \sqcup B = (x_1 \rightarrow [\underline{a_i}, \overline{b_1} ], x_2 \rightarrow [\underline{a_2}, \overline{b_2} ] )\]
+\[ A \sqcup B(x) = [\min \{ \underline{A(x)}, \underline{B(x)} \} , \max \{  \overline{A(x)}, \overline{B(x)} \} ]\]
 
 \noindent and
 
-\[ A \sqcap B = (x_1 \rightarrow [\overline{a_i}, \underline{b_1} ], x_2 \rightarrow [\overline{a_2}, \underline{b_2} ] )\]
+\[ A \sqcap B(x) = [\max \{  \underline{A(x)} , \underline{B(x)} \} , \min \{ \overline{A(x)} , \overline{B(x)} \} ]\]
 
-\noindent where we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Now that the lattice has been defined, let's turn our attention to the various flow functions. To make the analysis more concrete, given an element $A \in D$ where let $A(x_i \rightarrow [a', b'])$ denote the exact same element of $D$ with the exception that the new range of $x_i$ is $[a', b']$.
+\noindent where we take the convention that $\overline{[a, b]} = b$ and $\underline{[a, b]} = a$. Now that the lattice has been defined, let's turn our attention to the various flow functions. To make the analysis more concrete, given an element $A \in D$ and variable $x$, let $A[x \rightarrow [a', b']]$ denote the exact same element of $D$ with the exception that $A(x) = [a', b']$. Now we enumerate the various flow functions.
 
+\[ F_{X:= C}(in) = in[X \rightarrow [C, C]] \]
+
+\[ F_{X:= Y \text{op} Z}(in) = in[X \rightarrow [\min L, \max L]]\text{ where } L = \{ a \text{ op } b \, | \, a \in in(Y) \wedge b \in in(Z)  \}\]
+
+\[ F_{if( X \leq C) \text{ true-branch}}(in) = in[X \rightarrow [-\infty, C] \cap in(X)  ] \]
+
+\[ F_{if( X \leq C) \text{ false-branch}}(in) = in[X \rightarrow [C + 1, \infty] \cap in(X)  ]\]
+
+\[ F_{if( X == C) \text{ true-branch}}(in) = in[X \rightarrow [C, C] \cap in(X)  ]\]
+
+\[ F_{if( X == C) \text{ false-branch}}(in) = in \]
+
+\[ F_{if( X < C) \text{ true-branch}}(in) =in[X \rightarrow [-\infty, C -1] \cap in(X)  ] \]
+
+\[ F_{if( X < C) \text{ false-branch}}(in) =  in[X \rightarrow [C, \infty] \cap in(X)  ]\]
+
+\[ F_{if( X \geq C) \text{ true-branch}}(in) =  F_{if( X < C) \text{ false-branch}}(in) \]
+
+\[ F_{if( X \geq C) \text{ false-branch}}(in) =  F_{if( X < C) \text{ true-branch}}(in)\]
+
+\[ F_{if( X > C) \text{ true-branch}}(in) =   F_{if( X \leq C) \text{ false-branch}}(in)\]
+
+\[ F_{if( X > C) \text{ false-branch}}(in) =   F_{if( X \leq C) \text{ true-branch}}(in)\]
 
 
 \subsubsection{Implementation Considerations}
@@ -64,6 +75,12 @@ Given two elements of our domain, $A, B \in D$, we can write $A = (x_1 \rightarr
   infinite sets? How are input facts passed to your flow functions,
   and how do output facts get propagated?
 \end{framed}
+
+LLVM has a nice data structure for handling ranges called ConstantRange. This is a one-side inclusive interval $[a, b)$ that is meant to be taken as intersection with the integers. ConstantRange even has some convenience functions that make computing some of the above flow functions more bearable. 
+
+As with the above analyses, we explicitly specify whether or not a lattice point is top or bottom with boolean variables, and we use algebraic identities when working with these special cases. For the rest of the cases, a range analysis lattice point is represented by a map from LLVM Value pointers to ConstantRange pointers. Since this is an optimistic `may' analysis, we use the convention that variables that are {not} in our map have the empty range.  
+
+ 
 
 \end{document}
 
