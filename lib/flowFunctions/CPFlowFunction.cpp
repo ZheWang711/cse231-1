@@ -115,17 +115,17 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
       int predicate = 0;
       predicate = cmp->isSigned() ? cmp->getSignedPredicate() : cmp->getUnsignedPredicate();
       if (predicate == CmpInst::ICMP_EQ) {
-        if (result->representation.count(rhs->get()) > 0) {
+        if (isa<ConstantInt>(lhs)) {
            true_branchCLP->representation[rhs->get()] = lhs_const;
-        } else if (result->representation.count(lhs->get()) > 0) {
+        } else if (isa<ConstantInt>(rhs)) {
            true_branchCLP->representation[lhs->get()] = rhs_const;
         }
         out_map[true_branch->get()] = true_branchCLP;
         out_map[false_branch->get()] = false_branchCLP;
       } else if (predicate == CmpInst::ICMP_NE) {
-        if (result->representation.count(rhs->get()) > 0) {
+        if (isa<ConstantInt>(lhs)) {
            false_branchCLP->representation[rhs->get()] = lhs_const;
-        } else if (result->representation.count(lhs->get()) > 0) {
+        } else if (isa<ConstantInt>(rhs)) {
            false_branchCLP->representation[lhs->get()] = rhs_const;
         }
         out_map[true_branch->get()] = true_branchCLP;
