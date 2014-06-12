@@ -463,6 +463,8 @@ void RAFlowFunction::visitLoadInst(LoadInst     &LI){
   }
   else{
     ConstantRange* current_range = new ConstantRange(32, true);
+    inRLP->isTop = false;
+    inRLP->isBottom = false;
     inRLP->representation[current] = current_range;
     info_out.push_back(inRLP);
   }
