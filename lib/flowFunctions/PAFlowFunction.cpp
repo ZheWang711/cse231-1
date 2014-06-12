@@ -270,12 +270,6 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   x_points_to_set.insert(y);
   inRLP->representation[x] = x_points_to_set;
   
-  // Now check if x points to pointers and y is a pointer type.
-  
-  PointerType* x_type = dyn_cast<PointerType>(x->getType());
-  Type* x_points_to_type = x_type->getPointerElementType();
-  Type* y_type = y->getType();
-  
   info_out.push_back(inRLP);
   /*
   errs() << "In store instruction: ";
