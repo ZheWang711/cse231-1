@@ -272,6 +272,10 @@ void PAFlowFunction::visitStoreInst(StoreInst   &SI){
   x_points_to_set.insert(y);
   inRLP->representation[x] = x_points_to_set;
   
+  
+  inRLP->isTop = false;
+  inRLP->isBottom = false;
+  
   info_out.push_back(inRLP);
   /*
   errs() << "In store instruction: ";
