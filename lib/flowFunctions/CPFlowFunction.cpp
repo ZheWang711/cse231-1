@@ -190,7 +190,7 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     // Prop the constant if equals, otherwise remove from map
     if (C1 == C2) {
       resvalue = C1;
-    } else if (val1 == val2) {
+    } /*else if (val1 == val2) {
       ret_value->representation.erase(val1);
     } else if (result->representation.count(val1) > 0 && result->representation.count(val2) > 0) {
       errs() << "test";
@@ -203,7 +203,7 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     } else {
       ret_value->representation.erase(val1);
       ret_value->representation.erase(val2);
-    }
+    }*/
   }
   if (resvalue != NULL) {
     ret_value->isBottom = false;
