@@ -23,7 +23,6 @@ public:
   
   // Visited Instructions
   void visitBinaryOperator(BinaryOperator &BO);
-  void visitBranchInst(BranchInst&I);
   void visitInstruction(Instruction &I);
   void visitCastInst(CastInst &I);
   void visitCmpInst(CmpInst &I);
