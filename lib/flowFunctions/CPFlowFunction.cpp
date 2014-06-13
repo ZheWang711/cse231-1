@@ -176,17 +176,17 @@ void CPFlowFunction::visitPHINode(PHINode &PI) {
     }
     else if(isa<ConstantInt>(val1)){
       C1 = dyn_cast<ConstantInt>(val1);
-    } else {
+    } /*else {
       C1 = ConstantInt::get(context, llvm::APInt(32, 0, true));
-    }
+    }*/
     if (result->representation.count(val2) > 0) {
       C2 = ret_value->representation[val2];
     }
     else if(isa<ConstantInt>(val2)){
       C2 = dyn_cast<ConstantInt>(val2);
-    } else {
+    } /*else {
       C2 = ConstantInt::get(context, llvm::APInt(32, 0, true));
-    }
+    }*/
     // Prop the constant if equals, otherwise remove from map
     if (C1 == C2) {
       resvalue = C1;
