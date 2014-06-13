@@ -1,5 +1,4 @@
 int f(int x){
-  
   // Purely local
   int a_1 = 10;
   int a_2 = 15;
