@@ -64,7 +64,9 @@ A straight line program where we can do CSE:
 \subsection{Range Analysis}
 \subsection{Intra-Procedural Pointer Analysis}
 
+\subsection{Range Checking}
 
+As per the assignment, we also implemented a range checking pass to make sure that array accesses remain inbound and raise warnings otherwise. This was fairly straightforward once the range analysis work was completed. To do this part, we simply ran our range analysis on the incoming function, then we scanned through the instructions for a getelementptr instruction. We then look at the lattice point at this instruction, query the index range, and raise a warning if it has a range that potentially falls outside of the range of the array.
 
 \end{document}
 
