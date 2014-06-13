@@ -22,8 +22,7 @@ Like range analysis, pointer analysis is a `may' analysis. The domain of the ana
 
 Top and bottom are the full set and the empty set, respectively. Thus, $top =\{ x \rightarrow y \; |  \; x \in \text{Vars} \, \wedge \, y \in \text{Vars} \}  $ and $\bot = \emptyset.$ Finally, we have $\sqsubseteq \, = \, \subseteq$, $\sqcup = \cup$, and $\sqcap = \cap$. The flow functions for pointer analysis can be written as follows
 
-\begin{table} 
-\centering % used for centering table 
+\begin{center}
 \begin{tabular}{c | c} % centered columns (4 columns) 
 Function & Output \\ [0.5ex] % inserts table 
 %heading 
@@ -36,8 +35,7 @@ $F_{X = *Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow B \
 $F_{*X = Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ A \rightarrow B \; | \; \exists B \in \text{Vars s.t. } X \rightarrow A \in in \, \wedge \, Y \rightarrow B \in in\}$\\ [1ex] % [1ex] adds vertical space 
 \hline %inserts single line 
 \end{tabular} 
-\label{table:PAFlowFuncs} % is used to refer this table in the text 
-\end{table} 
+\end{center}
 
 %\[ F_{X = C}(in) = in \setminus \{ X \rightarrow * \} \]
 %

@@ -42,31 +42,46 @@ Here we take the convention that $[a, b] = \emptyset$ if and only if $b < a$. Gi
 
 \noindent where we take the convention that $\overline{[a, b]} = b$ and $\underline{[a, b]} = a$. Now that the lattice has been defined, let's turn our attention to the various flow functions. To make the analysis more concrete, given an element $A \in D$ and variable $x$, let $A[x \rightarrow [a', b']]$ denote the exact same element of $D$ with the exception that $A(x) = [a', b']$. Now we enumerate the various flow functions.
 
-\[ F_{X:= C}(in) = in[X \rightarrow [C, C]] \]
+%\begin{table} 
+%\centering % used for centering table 
+\begin{center}
+\begin{tabular}{c | c} % centered columns (4 columns) 
+Function & Output \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+$F_{X = C}(in)$ & $in[X \rightarrow [C, C]]$ \\ % inserting body of the table 
+$F_{X = Y \text{op} Z}(in)$ & $in[X \rightarrow [\min L, \max L]]\text{ where } L = \{ a \text{ op } b \, | \, a \in in(Y) \wedge b \in in(Z)  \}$ \\ 
+$ F_{if( X \leq C) \text{ true-branch}}(in)$ & $ in[X \rightarrow [-\infty, C] \cap in(X)  ]$ \\ 
+$F_{if( X \leq C) \text{ false-branch}}(in)$ & $ in[X \rightarrow [C + 1, \infty] \cap in(X)  ]$\\ 
+$F_{if( X == C) \text{ true-branch}}(in)$ & $in[X \rightarrow [C, C] \cap in(X)  ] $\\
+$F_{if( X == C) \text{ false-branch}}(in)$ & $in $\\ 
+$F_{if( X < C) \text{ true-branch}}(in)  $ & $ in[X \rightarrow [-\infty, C -1] \cap in(X)  ]$\\ 
+$ F_{if( X < C) \text{ false-branch}}(in) $ & $in[X \rightarrow [C, \infty] \cap in(X)  ] $\\ 
+$ F_{if( X \geq C) \text{ true-branch}}(in)  $ & $F_{if( X < C) \text{ false-branch}}(in) $\\ 
+$  F_{if( X \geq C) \text{ false-branch}}(in) $ & $F_{if( X < C) \text{ true-branch}}(in) $\\ 
+$ F_{if( X > C) \text{ true-branch}}(in) $ & $ F_{if( X \leq C) \text{ false-branch}}(in)$\\ 
+$ F_{if( X > C) \text{ false-branch}}(in)  $ & $ F_{if( X \leq C) \text{ true-branch}}(in) $\\ 
+$ F_{\text{merge}}(in_1, in_2) $ & $ in_1 \sqcup in_2 $\\ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\end{center}
 
-\[ F_{X:= Y \text{op} Z}(in) = in[X \rightarrow [\min L, \max L]]\text{ where } L = \{ a \text{ op } b \, | \, a \in in(Y) \wedge b \in in(Z)  \}\]
+%\label{table:RAFlowFuncs} % is used to refer this table in the text 
+%\end{table} 
 
-\[ F_{if( X \leq C) \text{ true-branch}}(in) = in[X \rightarrow [-\infty, C] \cap in(X)  ] \]
-
-\[ F_{if( X \leq C) \text{ false-branch}}(in) = in[X \rightarrow [C + 1, \infty] \cap in(X)  ]\]
-
-\[ F_{if( X == C) \text{ true-branch}}(in) = in[X \rightarrow [C, C] \cap in(X)  ]\]
-
-\[ F_{if( X == C) \text{ false-branch}}(in) = in \]
-
-\[ F_{if( X < C) \text{ true-branch}}(in) =in[X \rightarrow [-\infty, C -1] \cap in(X)  ] \]
-
-\[ F_{if( X < C) \text{ false-branch}}(in) =  in[X \rightarrow [C, \infty] \cap in(X)  ]\]
-
-\[ F_{if( X \geq C) \text{ true-branch}}(in) =  F_{if( X < C) \text{ false-branch}}(in) \]
-
-\[ F_{if( X \geq C) \text{ false-branch}}(in) =  F_{if( X < C) \text{ true-branch}}(in)\]
-
-\[ F_{if( X > C) \text{ true-branch}}(in) =   F_{if( X \leq C) \text{ false-branch}}(in)\]
-
-\[ F_{if( X > C) \text{ false-branch}}(in) =   F_{if( X \leq C) \text{ true-branch}}(in)\]
-
-\[ F_{\text{merge}}(in_1, in_2) = in_1 \sqcup in_2 \]
+%\[ F_{if( X < C) \text{ true-branch}}(in) =in[X \rightarrow [-\infty, C -1] \cap in(X)  ] \]
+%
+%\[ F_{if( X < C) \text{ false-branch}}(in) =  in[X \rightarrow [C, \infty] \cap in(X)  ]\]
+%
+%\[ F_{if( X \geq C) \text{ true-branch}}(in) =  F_{if( X < C) \text{ false-branch}}(in) \]
+%
+%\[ F_{if( X \geq C) \text{ false-branch}}(in) =  F_{if( X < C) \text{ true-branch}}(in)\]
+%
+%\[ F_{if( X > C) \text{ true-branch}}(in) =   F_{if( X \leq C) \text{ false-branch}}(in)\]
+%
+%\[ F_{if( X > C) \text{ false-branch}}(in) =   F_{if( X \leq C) \text{ true-branch}}(in)\]
+%
+%\[ F_{\text{merge}}(in_1, in_2) = in_1 \sqcup in_2 \]
 
 \subsubsection{Implementation Considerations}
 \begin{framed}
