@@ -53,20 +53,70 @@ per-analysis benchmark goes below. Here, we can also introduce the
 Straight Line Program/Branching Program distinction.
 
 \subsection{Constant Propagation}
-\includegraphics[scale=.4]{figures/cp/simple_add/simple_add.pdf}
-\includegraphics[scale=.4]{figures/cp/cp_loop/cp_loop.pdf}
+\begin{center}
+  \includegraphics[scale=.4]{figures/cp/simple_add/simple_add.pdf}
+  \captionof{figure}{Constant propagation analysis on a straight line program}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cp/cp_loop/cp_loop.pdf}
+  \captionof{figure}{Constant propagation analysis on a looping program}
+\end{center}
+
+
+
 \subsection{Available Expressions}
 A straight line program where we can do CSE:
-\includegraphics[scale=.4]{figures/cse/straight-line/can-do.pdf}
-\includegraphics[scale=.4]{figures/cse/straight-line/no-do.pdf}
-\includegraphics[scale=.4]{figures/cse/branch/can-do-cse.pdf}
-\includegraphics[scale=.4]{figures/cse/branch/no-do.pdf}
-\includegraphics[scale=.4]{figures/cse/loop/loop-can-do-cse.pdf}
-\includegraphics[scale=.4]{figures/cse/loop/loop-no-do-cse.pdf}
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/straight-line/can-do.pdf}
+  \captionof{figure}{Available expression analysis of a straight-line program
+    where CSE is possible}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/straight-line/no-do.pdf}
+  \captionof{figure}{Available expression analysis of a straight-line program
+    where CSE is not possible}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/branch/can-do-cse.pdf}
+  \captionof{figure}{Available expression analysis of a branching program
+    where CSE is possible}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/branch/no-do.pdf}
+  \captionof{figure}{Available expression analysis of a branching program
+    where CSE is not possible}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/loop/loop-can-do-cse.pdf}
+  \captionof{figure}{Available expression analysis of a looping program
+    where CSE is possible}
+\end{center}
+
+
+\begin{center}
+  \includegraphics[scale=.4]{figures/cse/loop/loop-no-do-cse.pdf}
+  \captionof{figure}{Available expression analysis of a looping program
+    where CSE is not possible}
+\end{center}
+
 \subsection{Range Analysis}
-\includegraphics[scale=.4]{figures/ra/simple_add/simple_add.pdf}
-\includegraphics[scale=.4]{figures/ra/simple_branch/simple_branch.pdf}
-\includegraphics[scale=.4]{figures/ra/loop/loop.pdf}
+\begin{center}
+  \includegraphics[scale=.4]{figures/ra/simple_add/simple_add.pdf}
+  \captionof{figure}{Range analysis of a straight line program}
+\end{center}
+\begin{center}
+  \includegraphics[scale=.4]{figures/ra/simple_branch/simple_branch.pdf}
+  \captionof{figure}{Range analysis of a branching program}
+\end{center}
+\begin{center}
+  \includegraphics[scale=.4]{figures/ra/loop/loop.pdf}
+  \captionof{figure}{Range analysis of a looping program}
+\end{center}
 \subsection{Intra-Procedural Pointer Analysis}
 
 \subsection{Range Checking}
