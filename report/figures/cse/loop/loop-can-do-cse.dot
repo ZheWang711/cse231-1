@@ -1,0 +1,22 @@
+digraph noDoCSELoop {
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start;
+	start -> Node0x31488c0[label="  &#8869;"];
+	
+	Node0x31488c0 [shape=record,label="{entry:\l  %y = add nsw i32 1, 3\l  %i = add nsw i32 1, 3\l  br label %while.cond\l}"];
+	
+	Node0x31488c0 -> Node0x3148920[label="{%y -> %y, %i -> %y}"];
+	
+	Node0x3148920 [shape=record,label="{while.cond:                                       \l  %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ]\l  %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ]\l  %cmp = icmp slt i32 %i.0, 100\l  br i1 %cmp, label %while.body, label %while.end\l|{<s0>T|<s1>F}}"];
+
+	Node0x3148920:s0 -> Node0x3148980[label="{%y -> %y, %i -> %y}"];
+	Node0x3148920:s1 -> Node0x31489e0[label="{%y -> %y, %i -> %y}"];
+
+	Node0x3148980 [shape=record,label="{while.body:                                       \l  %add = add nsw i32 %x.addr.0, %i.0\l  %add1 = add nsw i32 %i.0, 1\l  br label %while.cond\l}"];
+
+	Node0x3148980:sw -> Node0x3148920:nw[label="{%y -> %y, %i -> %y,\l %add -> %add, %add1 -> %add1}"];
+	
+	Node0x31489e0 [shape=record,label="{while.end:                                        \l  ret i32 %x.addr.0\l}"];
+}

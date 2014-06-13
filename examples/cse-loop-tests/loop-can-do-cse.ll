@@ -5,8 +5,8 @@ target triple = "x86_64-unknown-linux-gnu"
 ; Function Attrs: nounwind uwtable
 define i32 @_Z1fi(i32 %x) #0 {
 entry:
-  %y = add nsw i32 0, 0
-  %i = add nsw i32 0, 0
+  %y = add nsw i32 1, 3
+  %i = add nsw i32 1, 3
   br label %while.cond
 
 while.cond:                                       ; preds = %while.body, %entry
@@ -21,7 +21,6 @@ while.body:                                       ; preds = %while.cond
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
-  %z = add nsw i32 0, 0				  						  
   ret i32 %x.addr.0
 }
 

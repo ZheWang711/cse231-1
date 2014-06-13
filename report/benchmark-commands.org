@@ -6,6 +6,8 @@
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-branch-tests/can_do_cse.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-branch-tests/no_do_cse.bc > /dev/null 
 ** Loops
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-can-do-cse.bc > /dev/null 
+   opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-no-do-cse.bc > /dev/null
 * CP
   opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/simple_add/simple_add.bc > /dev/null
   opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/simple_branch/simple_branch.bc > /dev/null
