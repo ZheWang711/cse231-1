@@ -39,13 +39,10 @@ $F_{merge}(in_1, in_2)$ & $in_1 \sqcup in_2$\\ [1ex] % [1ex] adds vertical space
 \end{center}
 
 \subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+
+Like the rest of the analyses, we handle top and bottom with boolean algebras. For the rest of the cases, a lattice point consists of a set of Value pointers that could potentially point to any variable and of a map from Value pointers to sets of Value pointers which are meant to be taken as the variables that this Value could point to. 
+
+To actually implement the above flow functions, we had to figure out how to map from LLVM operations (such as load and store) to C-style semantics that we covered in class. When in doubt, we erred on the side of caution. Thus, we interpreted statements such as $store \; y \; x$ as representing both $*x = y$ and $x = \& y$, and implemented the flow functions accordingly. LLVM does have a type system, which we used in order to maintain a stronger sense of precision, but our intuition told us to sacrifice precision for correctness.
 
 \end{document}
 
