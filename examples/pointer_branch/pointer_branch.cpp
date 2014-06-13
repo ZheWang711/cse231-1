@@ -1,4 +1,4 @@
-int f(){
+int f(int x){
   
   // Purely local
   int a_1 = 10;
