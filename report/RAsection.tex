@@ -66,37 +66,13 @@ $ F_{\text{merge}}(in_1, in_2) $ & $ in_1 \sqcup in_2 $\\ [1ex] % [1ex] adds ver
 \end{tabular} 
 \end{center}
 
-%\label{table:RAFlowFuncs} % is used to refer this table in the text 
-%\end{table} 
-
-%\[ F_{if( X < C) \text{ true-branch}}(in) =in[X \rightarrow [-\infty, C -1] \cap in(X)  ] \]
-%
-%\[ F_{if( X < C) \text{ false-branch}}(in) =  in[X \rightarrow [C, \infty] \cap in(X)  ]\]
-%
-%\[ F_{if( X \geq C) \text{ true-branch}}(in) =  F_{if( X < C) \text{ false-branch}}(in) \]
-%
-%\[ F_{if( X \geq C) \text{ false-branch}}(in) =  F_{if( X < C) \text{ true-branch}}(in)\]
-%
-%\[ F_{if( X > C) \text{ true-branch}}(in) =   F_{if( X \leq C) \text{ false-branch}}(in)\]
-%
-%\[ F_{if( X > C) \text{ false-branch}}(in) =   F_{if( X \leq C) \text{ true-branch}}(in)\]
-%
-%\[ F_{\text{merge}}(in_1, in_2) = in_1 \sqcup in_2 \]
-
 \subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
 
 LLVM has a nice data structure for handling ranges called ConstantRange. This is a one-side inclusive interval $[a, b)$ that is meant to be taken as intersection with the integers. ConstantRange handles empty sets by specifying that the interval $[a,a)$ is empty for all $a$ and full-sets by only considering finite ranges as valid ranges. ConstantRange even has some convenience functions that make computing some of the above flow functions more bearable. 
 
 As with the above analyses, we explicitly specify whether or not a lattice point is top or bottom with boolean variables, and we use algebraic identities when working with these special cases. For the rest of the cases, a range analysis lattice point is represented by a map from LLVM Value pointers to ConstantRange pointers. Since this is an optimistic `may' analysis, we use the convention that variables that are {not} in our map have the empty range.
 
- 
+When working with variables that have non-trivial ranges, we made use of the binary operator convenience functions such as ConstantRange::add, ConstantRange::sub, etc. and of the extremely useful ConstantRange::makeICmpRegion function which made the above relational operations much easier to compute.
 
 \end{document}
 
