@@ -130,12 +130,10 @@ void CPFlowFunction::visitBranchInst(BranchInst &BI) {
         out_map[true_branch->get()] = true_branchCLP;
         out_map[false_branch->get()] = false_branchCLP;
       } else {
-        errs() << "hello?\n";
         for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
           Value* elm = it->first;
           out_map[elm] = new CPLatticePoint(*result);
         }
-        errs() << "dsa\n";
       }
     } else {
       for (std::map<Value *, LatticePoint *>::iterator it=out_map.begin(); it != out_map.end(); ++it){
