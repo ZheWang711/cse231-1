@@ -77,7 +77,7 @@ std::string CPLatticePoint::LPprint() {
                   ss << val->getName().str();
                 else 
                   ss << val->getValueName();
-		ss << ": " << *(con->getValue().getRawData()) << ", ";
+		ss << ": " << con->getValue().toString(10,true) << ", ";
     }
     ss << " }\n";
     return ss.str();
