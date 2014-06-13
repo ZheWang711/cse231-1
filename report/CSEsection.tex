@@ -16,20 +16,60 @@
 \begin{document}
 
 \subsubsection{Mathematical Flow Functions}
+The available expressions analysis is a ``must'' analysis. Thus, we
+define the lattice to be $(D, \sqsubseteq, \top, \perp, \sqcup,
+\sqcap)$ = $(2^A, \supseteq, A, \emptyset, \cap, \cup)$ where
 
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-  
-\end{framed}
+\[ A = \{x \rightarrow N~|~x \in \textup{Values} \wedge x \in \textup{Instructions}\} \].
+
+Values and instructions are the LLVM types corrosponding to Value
+pointers and instruction pointers, respectively. The idea is that
+instructions are the set of expressions in LLVM.
+
+The flow functions implemented in our framework are as follows.
+
+\begin{center}
+\begin{tabular}{c | c} % centered columns (4 columns) 
+Function & Output \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+$F_{X:= Y \text{op} Z}(in)$ & $in \cup \{ X \rightarrow W : \exists \langle W, E\rangle \in in.  E = Y \text{op} Z\} \cup$ \\
+& $\{ X \rightarrow Y \text{op} Z : \neg\exists \langle W, E\rangle \in in.  E = Y \text{op} Z\}$\\
+$F_{if(*) \text{true-branch}}(in)$ & $in$ \\ 
+$F_{if(*) \text{false-branch}}(in)$ & $in$ \\ 
+$F_{X := \varphi(Y,Z)}(in_1, in_2)$ & $(in_1 \cap in_2) \cup \{X \rightarrow E : \langle Y, E \rangle \in in_1 \wedge \langle Z,E \rangle \in in_2 \}$\\
+$F_{X := \text{cmp}(Z,Y)}(in)$ & $in$\\
+ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\end{center}
 \subsubsection{Implementation Considerations}
-\begin{framed}
-  discuss how you actually went about implementing the lattice and
-  flow functions. For instance, some interesting questions are: what
-  data structure(s) did you use, and how do you represent potentially
-  infinite sets? How are input facts passed to your flow functions,
-  and how do output facts get propagated?
-\end{framed}
+Most of the implementation of available expression analysis flow
+functions was straightforward. There were, for example, no issues with
+potentially infinite sets because each program is a fintie set of
+expressions. The data structures used were simple
+\texttt{std::maps}. 
+
+The most involved thing we implemented was correctly deciding
+$\varphi$ nodes that have arbitrary numbers of arguments, not just a
+pair of arguments. This is not represented in the mathematical
+flowfunction above (the notation was too cumbersome), but our
+implementation handles $n$-ary $\varphi$ nodes by overlapping pairwise
+comparisons of all operands. 
+
+The most challenging aspect of this implementation would have been
+comparing distinct instructions to see whether they are semantically
+equal or not. Our implementation does the easiest thing possible,
+which is calling the member function of the Instruction class
+\texttt{isIdenticalToWhenDefined}. Unfortunately, this member function
+only decides syntactic equivalence. So, for example, a commutative
+operator like \texttt{add} will not compare equal if the operands are
+in the wrong order.
+
+If we had more time, we would have added some extra intelligence to
+the equivalence test. For example, for commutative operators it would
+be conceptually simple to swap operands into lexicographic order by
+pointer and then compare.
 
 \end{document}
 
