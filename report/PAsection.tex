@@ -16,28 +16,40 @@
 \begin{document}
 
 \subsubsection{Mathematical Flow Functions}
-
-\begin{framed}
-  define your lattice and flow functions in mathematical notation
-  (i.e., in the style used in the lecture notes and on the midterm).
-\end{framed}
 Like range analysis, pointer analysis is a `may' analysis. The domain of the analysis can be written as
 
 \[ D = 2^{\{ x \rightarrow y \; |  \; x \in \text{Vars} \, \wedge \, y \in \text{Vars} \}}. \]
 
 Top and bottom are the full set and the empty set, respectively. Thus, $top =\{ x \rightarrow y \; |  \; x \in \text{Vars} \, \wedge \, y \in \text{Vars} \}  $ and $\bot = \emptyset.$ Finally, we have $\sqsubseteq \, = \, \subseteq$, $\sqcup = \cup$, and $\sqcap = \cap$. The flow functions for pointer analysis can be written as follows
 
-\[ F_{X = C}(in) = in \setminus \{ X \rightarrow * \} \]
+\begin{table} 
+\centering % used for centering table 
+\begin{tabular}{c | c} % centered columns (4 columns) 
+Function & Output \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+$F_{X = C}(in)$ & $in \setminus \{ X \rightarrow * \}$ \\ % inserting body of the table 
+$F_{X = Y + Z}(in)$ & $in \setminus \{ X \rightarrow * \}$ \\ 
+$F_{X = Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Z \, | \, Y \rightarrow Z \in in \}$ \\ 
+$F_{X =  \& Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Y \}$\\ 
+$F_{X = *Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow B \; | \; \exists A \in \text{Vars s.t. }  Y \rightarrow A \in in \, \wedge \, A \rightarrow B \in in \}$\\
+$F_{*X = Y}(in)$ & $in \setminus \{ X \rightarrow * \} \cup \{ A \rightarrow B \; | \; \exists B \in \text{Vars s.t. } X \rightarrow A \in in \, \wedge \, Y \rightarrow B \in in\}$\\ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\label{table:PAFlowFuncs} % is used to refer this table in the text 
+\end{table} 
 
-\[ F_{X = Y + Z}(in) = in \setminus \{ X \rightarrow * \} \]
-
-\[ F_{X = Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Z \, | \, Y \rightarrow Z \in in \}\]
-
-\[ F_{X =  \& Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Y \}\]
-
-\[ F_{X = *Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow B \; | \; \exists A \in \text{Vars s.t. }  Y \rightarrow A \in in \, \wedge \, A \rightarrow B \in in \}\]
-
-\[ F_{*X = Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ A \rightarrow B \; | \; \exists B \in \text{Vars s.t. } X \rightarrow A \in in \, \wedge \, Y \rightarrow B \in in\}\]
+%\[ F_{X = C}(in) = in \setminus \{ X \rightarrow * \} \]
+%
+%\[ F_{X = Y + Z}(in) = in \setminus \{ X \rightarrow * \} \]
+%
+%\[ F_{X = Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Z \, | \, Y \rightarrow Z \in in \}\]
+%
+%\[ F_{X =  \& Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow Y \}\]
+%
+%\[ F_{X = *Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ X \rightarrow B \; | \; \exists A \in \text{Vars s.t. }  Y \rightarrow A \in in \, \wedge \, A \rightarrow B \in in \}\]
+%
+%\[ F_{*X = Y}(in) = in \setminus \{ X \rightarrow * \} \cup \{ A \rightarrow B \; | \; \exists B \in \text{Vars s.t. } X \rightarrow A \in in \, \wedge \, Y \rightarrow B \in in\}\]
 
 
 \subsubsection{Implementation Considerations}
