@@ -28,3 +28,7 @@ opt -load Debug+Asserts/lib/projectOne.so -PATest < (your bit code file) > /dev/
 
 opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass (your bit code file) > /dev/null
 
+
+******
+The benchmarks we tested on are in the folder examples/
+******
