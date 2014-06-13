@@ -1,0 +1,15 @@
+digraph simpleAddRA{
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start;
+	addr[label="%addr = add i32 2, 11"];
+	add[label="%add = sub i32 2, 11"];
+	add1[label="%add1 = add i32 %add, %add"];
+	ret[label="ret i32 %add1"];
+
+	start -> addr[label="  &#8869;"];
+	addr -> add[label= "{%addr -> [13,14)}"];
+	add -> add1[label= "{%addr -> [13,14), %add -> [-9,-8)}"];
+	add1 -> ret[label= "{%addr -> [13,14), %add -> [-9,-8),\l %add1 -> [-18,-17)}"];		
+}

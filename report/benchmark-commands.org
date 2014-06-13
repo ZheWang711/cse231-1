@@ -9,19 +9,58 @@
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-can-do-cse.bc > /dev/null 
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-no-do-cse.bc > /dev/null
 * CP
-  opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/simple_add/simple_add.bc > /dev/null
-  opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/simple_branch/simple_branch.bc > /dev/null
-  opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/loop/loop.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/simple_add/simple_add.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/simple_branch/simple_branch.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/loop/loop.bc > /dev/null
 ** Branching equality check
-  opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/cp_branches/cp_branches_m.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/cp_branches/cp_branches_m.bc > /dev/null
 ** Loops
-  opt -load Debug+Asserts/lib/projectOne.so -CPTest < examples/cp_loop/loop.bc > /dev/null
-
+  opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/cp_loop/loop.bc > /dev/null
 * RA
 ** Analysis Itself
    opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_add/simple_add.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_branch/simple_branch.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -RATest examples/loop/loop.bc> /dev/null
+   
+*** loop output
+ -----Starting Function Pass------ 
+We are dealing with the following function 
+
+; Function Attrs: nounwind uwtable
+define i32 @_Z1fi(i32 %x) #0 {
+entry:
+  %y = add nsw i32 0, 0
+  %i = add nsw i32 0, 0
+  br label %while.cond
+
+while.cond:                                       ; preds = %while.body, %entry
+  %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ]
+  %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ]
+  %cmp = icmp slt i32 %i.0, 100
+  br i1 %cmp, label %while.body, label %while.end
+
+while.body:                                       ; preds = %while.cond
+  %add = add nsw i32 %x.addr.0, %i.0
+  %add1 = add nsw i32 %i.0, 1
+  br label %while.cond
+
+while.end:                                        ; preds = %while.cond
+  ret i32 %x.addr.0
+}
+Our analysis returned the following 
+  %y = add nsw i32 0, 0 --> RALatticePoint: isBottom: 1, isTop: 0 | 
+  %i = add nsw i32 0, 0 --> RALatticePoint: isBottom: 0, isTop: 0 | {   %y = add nsw i32 0, 0 --> [0,1),  } 
+  br label %while.cond --> RALatticePoint: isBottom: 0, isTop: 0 | {   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),  } 
+  %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,100),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,101),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  %cmp = icmp slt i32 %i.0, 100 --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,101),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  br i1 %cmp, label %while.body, label %while.end --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,101),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  %add = add nsw i32 %x.addr.0, %i.0 --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,100),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  %add1 = add nsw i32 %i.0, 1 --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,100),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  br label %while.cond --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [0,100),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+  ret i32 %x.addr.0 --> RALatticePoint: isBottom: 0, isTop: 0 | {   %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ] --> [100,101),   %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ] --> full-set,   %y = add nsw i32 0, 0 --> [0,1),   %i = add nsw i32 0, 0 --> [0,1),   %add = add nsw i32 %x.addr.0, %i.0 --> full-set,   %add1 = add nsw i32 %i.0, 1 --> [1,101),  } 
+ -----Ending Function Pass------ 
+
 ** Checking Warnings
    opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_failure.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_success.bc > /dev/null

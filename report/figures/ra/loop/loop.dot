@@ -1,0 +1,19 @@
+digraph loopRA {
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start["label=(i32 %x)"];
+	start -> Node0x3a308b0[label="  &#8869;"];
+
+	Node0x3a308b0 [shape=record,label="{entry:\l  %y = add nsw i32 0, 0\l  %i = add nsw i32 0, 0\l  br label %while.cond\l}"];
+	Node0x3a308b0 -> Node0x3a30910[label="{%y--> [0,1), %i --> [0,1),} "];
+
+	Node0x3a30910 [shape=record,label="{while.cond:                                       \l  %i.0 = phi i32 [ %i, %entry ], [ %add1, %while.body ]\l  %x.addr.0 = phi i32 [ %y, %entry ], [ %add, %while.body ]\l  %cmp = icmp slt i32 %i.0, 100\l  br i1 %cmp, label %while.body, label %while.end\l|{<s0>T|<s1>F}}"];
+
+	Node0x3a30910:s0 -> Node0x3a30970[label="{%i.0 --> [0,101), %x.addr.0 --> full-set,\l %y --> [0,1), %i --> [0,1),\l %add --> full-set, %add1 --> [1,101),  } "];
+	Node0x3a30910:s1 -> Node0x3a309d0[label="{%i.0 --> [100,101), %x.addr.0 --> full-set,\l %y --> [0,1), %i --> [0,1),\l  %add --> full-set,   %add1 --> [1,101),  } "];
+
+	Node0x3a30970 [shape=record,label="{while.body:                                       \l  %add = add nsw i32 %x.addr.0, %i.0\l  %add1 = add nsw i32 %i.0, 1\l  br label %while.cond\l}"];
+	Node0x3a30970:sw -> Node0x3a30910:nw[label="{%i.0 --> [0,100), %x.addr.0 --> full-set,\l  %y --> [0,1), %i --> [0,1),\l   %add --> full-set,   %add1 --> [1,101),  } "];
+	Node0x3a309d0 [shape=record,label="{while.end:                                        \l  ret i32 %x.addr.0\l}"];
+}

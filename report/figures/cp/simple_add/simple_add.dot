@@ -1,0 +1,15 @@
+digraph simpleAddCP{
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start;
+	add0[label="%addr = add i32 2, 11"];
+	add1[label="%add = sub i32 2, 11"];
+	add2[label="%add1 = add i32 %add, %add"];
+	ret[label="ret i32 %add1"];
+
+	start -> add0[label="  &#8869;"];
+	add0 -> add1[label= "{%addr -> 13}"];
+	add1 -> add2[label= "{%addr -> 13, %add -> -9}"];
+	add2 -> ret[label= "{%addr -> 13, %add -> -9, %add1 -> -18}"];		
+}

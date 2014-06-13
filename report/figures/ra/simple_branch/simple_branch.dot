@@ -1,0 +1,25 @@
+digraph simpleBranchRA {
+	node [shape=record,fontname="Courier"];
+	edge [fontname="Courier"];
+
+	start[label="(i32 %y)"];
+	start -> Node0x2b798c0[label="  &#8869;"];
+
+	Node0x2b798c0 [shape=record,label="{entry:\l  %x = alloca i32, align 4\l  %0 = load i32* %x, align 4\l  %cmp = icmp sgt i32 %0, 10\l  br i1 %cmp, label %if.then, label %if.else\l|{<s0>T|<s1>F}}"];
+	
+	Node0x2b798c0:s0 -> Node0x2b79920[label="{%0 --> [11,-2147483648)}"];
+	Node0x2b798c0:s1 -> Node0x2b79980[label=" {%0 --> [-2147483648,11),}"];
+
+	Node0x2b79920 [shape=record,label="{if.then:                                          \l  %add1 = add nsw i32 20, %0\l  br label %if.end\l}"];
+	Node0x2b79920 -> Node0x2b799e0[label="{ %0 --> [11,-2147483648),\l %add1 --> [31,-2147483628), }"];
+
+	Node0x2b79980 [shape=record,label="{if.else:                                          \l  %sub = sub nsw i32 0, %0\l  br label %if.end\l}"];
+	Node0x2b79980 -> Node0x2b799e0[label="{ %0 --> [-2147483648,11),\l %sub = --> [-10,-2147483647)}"];
+
+
+	Node0x2b799e0 [shape=record,label="{if.end:                                           \l  %x.0 = phi i32 [ %add1, %if.then ], [ %sub, %if.else ]\l  %y.addr.0 = phi i32 [ %y, %if.then ], [ %sub, %if.else ]\l  %add2 = add nsw i32 %x.0, %x.0\l}"];
+	
+	Node0x2b799e0 -> end[label="{%x.0 --> [-10,-2147483628), %0 --> full-set,\l %add1 --> [31,-2147483628), %sub --> [-10,-2147483647),\l %y.addr.0 =  --> [-10,-2147483647), %add2 --> full-set,  }"];	
+	end[label="ret i32 %add2"]
+		
+}
