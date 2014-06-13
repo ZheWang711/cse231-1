@@ -73,7 +73,11 @@ std::string CPLatticePoint::LPprint() {
 	for(std::map<Value*, ConstantInt*>::iterator it = this->representation.begin(); it != representation.end(); ++it) {
 		Value* val = it->first;
 		ConstantInt* con = it->second;
-		ss << val->getValueName() << ": " << *(con->getValue().getRawData()) << ", ";
+                if (val->getName().size() < 10)
+                  ss << val->getName().str();
+                else 
+                  ss << val->getValueName();
+		ss << ": " << *(con->getValue().getRawData()) << ", ";
     }
     ss << " }\n";
     return ss.str();
