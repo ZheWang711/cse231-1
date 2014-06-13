@@ -40,7 +40,7 @@ $F_{\text{merge}}(in_1, in_2)$ & $in_1 \sqcup in_2$\\
 
 \subsubsection{Implementation Considerations}
 
-Our design simply handles constant propagation by storing mappings of Value* to ConstantInt*. Because using mem2reg does constant folding already, the flow functions are limited to simply performing binary operations, propagating constants in branches when we check for equality and inequality, and handling PHI nodes.
+Our design simply handles constant propagation by storing a map of Value* to ConstantInt* within each lattice point. Top and bottom are stored as boolean variables within a lattice point, and the initial lattice point at the start of the program always starts off as bottom (i.e. the mapping begins with the empty set). Because using mem2reg does constant folding already, the flow functions are limited to simply performing binary operations, propagating constants in branches when we check for equality and inequality, and handling PHI nodes.
 
 Binary operations are fairly straight forward. Since we know the value of the constants at compile time, we can evaluate them and propagate. For branching instructions, we know that if a statement such as \verb|if(x == 9)| evaluates to true, then \verb|x| has the value 9 in that branch. Similarly, if we have the statement \verb|if(x != 9)|, then we know the false branch can map \verb|x| to 9. Finally, at PHI nodes, we can simply find the intersection of two branches.
 
