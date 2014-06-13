@@ -20,7 +20,7 @@ The available expressions analysis is a ``must'' analysis. Thus, we
 define the lattice to be $(D, \sqsubseteq, \top, \perp, \sqcup,
 \sqcap)$ = $(2^A, \supseteq, A, \emptyset, \cap, \cup)$ where
 
-\[ A = \{x \rightarrow N~|~x \in \textup{Values} \wedge x \in \textup{Instructions}\} \].
+\[ A = \{X \rightarrow E~|~X \in \textup{Values} \wedge E \in \textup{Instructions}\} \].
 
 Values and instructions are the LLVM types corrosponding to Value
 pointers and instruction pointers, respectively. The idea is that

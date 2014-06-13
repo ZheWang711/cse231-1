@@ -1,6 +1,4 @@
 \documentclass{article}
-
-
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
@@ -29,13 +27,7 @@
 \begin{document}
 \maketitle
 
-
 \section{Overview}
-\begin{framed}
-  Discuss the high level goals of your work, along with any
-  interesting/key findings.
-\end{framed}
-
 Our objective was to understand and experience the issues that arise
 when actually implementing program analyses. To this end, we
 constructed a dataflow analysis framework based on the LLVM compiler
@@ -66,25 +58,10 @@ tools based on LLVM. We document our implementation efforts in the
 following pages, beginning with the overall design for the dataflow
 analysis framework. 
 
-% We found numerous conceptual mismatches between the LLVM IR and other
-% programming languages (including assemblers). Registers may only be
-% assigned to at one site of the program (SSA), and variables in a
-% high-level language may be represented by either a sequence of these
-% registers or as a memory location. The expressions of a high-level
-% language can become chains of instructions in the IR, changing the
-% definition of CSE. The reasons for these design choices became clear
-% as we worked our way through implementation of the analyses, and will
-% be expanded on in the appropriate sections.
+
 
 
 \section{Interface Design}
-\begin{framed}
-  Describe interface. Discuss what alternative designs you may have
-  also considered, and explain the tradeoffs that ultimately led to
-  your choice.
-\end{framed}
-
-
 \begin{description}
 \item[LatticePoint] Every dataflow analysis requires a Lattice to work
   over. The \emph{LatticePoint} class describes our interface to these
@@ -126,23 +103,27 @@ analysis framework.
 
 
 
-To use our framework, a caller  first instanciates a ``bottom''
+To use our framework, a caller first instanciates a ``bottom''
 \emph{LatticePoint} and a \emph{FlowFunction} of matching types. Then,
 in an LLVM Pass, the caller supplies a function and the aforementioned
-objects to \textbf{analyze}. 
-
-Adding an additional analysis to the framework amounts to providing
-new derived classes of \emph{LatticePoint} and \emph{FlowFunction}.
+objects to \textbf{analyze}. Adding an additional analysis to the
+framework amounts to providing new derived classes of
+\emph{LatticePoint} and \emph{FlowFunction}, and adding the new
+derived class to a list of runtime type-casts in the worklist
+algorithm code.
 
 % issue with this design: positional encoding of true/false branches
 % (or whatever) in the return type of operator()
 
-Unsure how honest to be here. Tradeoffs ended up being, how many C++
-features can we avoid and still have a functioning C++ program? Other
-than this issue, describing our interface (flowfunction object,
-latticepoint object, and a blob of code implementing the worklist
-algorithm that uses runtime polymorphism to use these objects) is
-pretty straightforward. I (marco) can write this.
+The main design tradeoff was trading code succinctness and genericity
+for avoiding C++ templates, which are hard to debug. Because our level
+of genericity was low (only four analyses being implemented) we could
+query run-time type information instead of using templates to make the
+worklist algorithm polymorphic. This is technical debt. If we had more
+time we would have ``lifted'' the algorithm to a template
+implementation which would make it easier to add new analyses, at the
+price of having to debug a template implementation of the worklist
+algorithm. We did not have the time for this.
 
 \section{Analyses}
 
@@ -175,20 +156,32 @@ pretty straightforward. I (marco) can write this.
 \input{Testingsection}
 
 \section{Conclusion/Challenges}
-\begin{framed}
-  As this project is significantly more exploratory than the first, we
-  want you to tell us what you found particularly
-  interesting/challenging/frustrating. What extensions to the project
-  did you attempt? (for instance, did you try combining the results of
-  analyses, or did you try your hand at interprocedural
-  analysis?). What aspects of LLVM made it easy/hard to implement your
-  design? If you could redo your project with what you know now, what
-  changes would you make?
-\end{framed}
+Since this project primarily dealt with framework design within
+preexisting, customized system, the majority of our challenges
+pertained to making our design work within the environment that LLVM
+provided to us. For example, getting the LatticePoint object-oriented
+hierarchy to work within LLVM's custom dyn\_cast implementation forced
+us to alter our design several times.
 
-Since this project primarily dealt with framework design within preexisting, customized system, the majority of our challenges pertained to making our design work within the environment that LLVM provided to us. For example, getting the LatticePoint object-oriented hierarchy to work within LLVM's custom dyn\_cast implementation forced us to alter our design several times.
+On the other hand, we did manage to take advantage of native LLVM
+constructs, such as extending the InstVisitor class. Since InstVisitor
+already has the capability to ``decorate" each type of instruction
+with different ``visit" methods, we were able to implement a flow
+function by overriding the ``visit" method corresponding to the
+correct instruction.
 
-On the other hand, we did manage to take advantage of native LLVM constructs, such as extending the InstVisitor class. Since InstVisitor already has the capability to ``decorate" each type of instruction with different ``visit" methods, we were able to implement a flow function by overriding the ``visit" method corresponding to the correct instruction. 
+We found numerous conceptual mismatches between the LLVM IR and other
+programming languages (including assemblers). Registers may only be
+assigned to at one site of the program (SSA), and variables in a
+high-level language may be represented by either a sequence of these
+registers or as a memory location. The expressions of a high-level
+language can become chains of instructions in the IR, changing the
+definition of CSE. The reasons for these design choices became clear
+as we worked our way through implementation of the analyses, but it
+would have been helpful if there had been some discussion of LLVM IR
+or LLVM architecture and concepts in class before we began the
+project.
 
 \end{document}
+
 

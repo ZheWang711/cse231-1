@@ -10,12 +10,12 @@ digraph loopCP {
 	
 	Node0x32d6910 [shape=record,label="{while.cond:                                       \l  %i.0 = phi i32 [ %i, %entry ], [ %add, %while.body ]\l  %cmp = icmp slt i32 %i.0, 10\l  br i1 %cmp, label %while.body, label %while.end\l|{<s0>T|<s1>F}}"];
 
-	Node0x32d6910:s0 -> Node0x32d6970[label="{ i.0: 0, t: 40,\l y: 0, i: 0,  }"];	
-	Node0x32d6910:s1 -> Node0x32d69d0[label="{ i.0: 0, t: 40,\l y: 0, i: 0,  }"];
+	Node0x32d6910:s0 -> Node0x32d6970[label="{ t: 40, y: 0,  }"];	
+	Node0x32d6910:s1 -> Node0x32d69d0[label="{ t: 40, y: 0,  }"];
 
 	
 	Node0x32d6970 [shape=record,label="{while.body:                                       \l  %add = add nsw i32 1, %i.0\l  %v = add nsw i32 8, 1\l  br label %while.cond\l}"];
 
-	Node0x32d6970:sw -> Node0x32d6910:nw[label="{ i.0: 0, t: 40, y: 0,\l i: 0, add: 1, v: 9,  }"];
+	Node0x32d6970:sw -> Node0x32d6910:nw[label="{ t: 40, y: 0,\l add: 1, v: 9, }"];
 	Node0x32d69d0 [shape=record,label="{while.end:                                        \l  ret i32 %y\l}"];
 }

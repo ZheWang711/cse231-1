@@ -1,4 +1,4 @@
-* CSE
+* Common Subexpression Elimination
 ** Straight Line
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-straight-line/can_do_cse.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-straight-line/no_do_cse.bc > /dev/null
@@ -8,7 +8,7 @@
 ** Loops
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-can-do-cse.bc > /dev/null 
    opt -load Debug+Asserts/lib/projectOne.so -CSEtest < examples/cse-loop-tests/loop-no-do-cse.bc > /dev/null
-* CP
+* Constant Propagation
   opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/simple_add/simple_add.bc > /dev/null
   opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/simple_branch/simple_branch.bc > /dev/null
   opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/loop/loop.bc > /dev/null
@@ -16,12 +16,11 @@
   opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/cp_branches/cp_branches_m.bc > /dev/null
 ** Loops
   opt -load Debug+Asserts/lib/projectOne.so -CPtest < examples/cp_loop/loop.bc > /dev/null
-* RA
+* Range Analysis
 ** Analysis Itself
    opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_add/simple_add.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -RATest examples/simple_branch/simple_branch.bc > /dev/null
-   opt -load Debug+Asserts/lib/projectOne.so -RATest examples/loop/loop.bc> /dev/null
-   
+   opt -load Debug+Asserts/lib/projectOne.so -RATest examples/loop/loop.bc> /dev/null   
 *** loop output
  -----Starting Function Pass------ 
 We are dealing with the following function 
@@ -64,4 +63,8 @@ Our analysis returned the following
 ** Checking Warnings
    opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_failure.bc > /dev/null
    opt -load Debug+Asserts/lib/projectOne.so -RangeCheckingPass examples/array_access/array_access_success.bc > /dev/null
-* PA
+* Pointer Analysis
+  opt -load Debug+Asserts/lib/projectOne.so -PATest < examples/pointer/pointer.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -PATest < examples/pointer_branch/pointer_branch.bc > /dev/null
+  opt -load Debug+Asserts/lib/projectOne.so -PATest < examples/pointer_loop/pointer_loop.bc > /dev/null
+
